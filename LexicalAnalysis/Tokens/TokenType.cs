@@ -1,0 +1,43 @@
+﻿namespace Zephyr.LexicalAnalysis.Tokens
+{
+    public enum TokenType
+    {
+        Integer,
+        DoubleLit,
+        Plus,
+        Minus,
+        Multiply,
+        Divide,
+        Id,
+        Semicolon,
+        LPar,
+        RPar,
+        Assign,
+        LBrace,
+        RBrace,
+        Print,
+        Comma,
+        Eof,
+        Tab,
+        Colon,
+        Return,
+        True,
+        False,
+        Equal,
+        Less,
+        LessEqual,
+        Greater, 
+        GreaterEqual,
+        NotEqual,
+        Not,
+        StringLit,
+        Get,
+        Set,
+        If,
+        Else,
+        While,
+        For,
+        Class,
+        Dot
+    }
+}
