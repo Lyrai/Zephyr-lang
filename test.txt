@@ -1,0 +1,44 @@
+class Ass:
+    string name
+    
+    string Name():
+        return this.name
+
+class Jopa < Ass:
+    Jopa ff
+    string str
+    string Get():
+        print this
+        return this.str
+        
+    Jopa AddA():
+        this.str = this.str + "a"
+        return this
+    Jopa AddS():
+        this.str = this.str + "s"
+        return this
+    void init():
+        this.str = ""
+    
+Jopa ss = Jopa()
+ss.AddA().AddS().AddS()
+ss.name = "achko"
+print ss.Name()
+double s
+int sum(int g, int f)
+    return g + f
+    
+int fib(int n):
+    if n <= 1 
+        return n;
+    return fib(n - 1) + fib(n - 2)
+    
+function sum():
+    int ss(int a):
+        return a + 5
+    return findFunc("ss", "int")
+void printFunc(function a):
+    print a(555)
+print sum(50, 5)
+function b = sum()
+printFunc(b)
