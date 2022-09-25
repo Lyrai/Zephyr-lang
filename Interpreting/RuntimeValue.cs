@@ -58,7 +58,11 @@ namespace Zephyr.Interpreting
                 (double v1, int v2) => v1 + v2,
                 (int v1, double v2) => v1 + v2,
                 (double v1, double v2) => v1 + v2,
-                (string v1, string v2) => v1 + v2
+                (string v1, string v2) => v1 + v2,
+                (string v1, int v2) => v1 + v2,
+                (string v1, double v2) => v1 + v2,
+                (int v1, string v2) => v1 + v2,
+                (double v1, string v2) => v1 + v2
             };
         }
         
