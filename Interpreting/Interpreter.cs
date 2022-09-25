@@ -186,6 +186,8 @@ namespace Zephyr.Interpreting
         public RuntimeValue VisitFuncDeclNode(FuncDeclNode n)
         {
             n.Symbol.Closure = _currentScope;
+            _currentScope.Define(n.Name);
+            _currentScope.Assign(n.Name, new RuntimeValue(n.Symbol));
             return None;
         }
 

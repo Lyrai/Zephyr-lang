@@ -101,7 +101,8 @@ namespace Zephyr.SemanticAnalysis
                 Name = name,
                 ReturnType = new TypeSymbol(n.ReturnType),
                 Parameters = parameters,
-                Body = n.Body
+                Body = n.Body,
+                Type = new TypeSymbol("function")
             };
 
             var parameterTypes = parameters.Select(x => x.Type).ToList();
@@ -242,12 +243,21 @@ namespace Zephyr.SemanticAnalysis
             
             var varSymbol = _table.Find<VarSymbol>(name);
 
-            if (varSymbol is null)
+            if (varSymbol is not null)
+            {
+                n.Symbol = varSymbol;
+
+                return varSymbol.Type;
+                
+            }
+
+            var funcSymbol = _table.Find<FuncSymbol>(name);
+            if(funcSymbol is null)
                 throw new UnknownIdentifierException(n);
+            
+            n.Symbol = funcSymbol;
 
-            n.Symbol = varSymbol;
-
-            return varSymbol.Type;
+            return funcSymbol.Type;
         }
 
         public object VisitClassNode(ClassNode n)
@@ -373,7 +383,7 @@ namespace Zephyr.SemanticAnalysis
         public object VisitBinOpNode(BinOpNode n)
         {
             var left = TypeSymbol.FromObject(Visit(n.Left));
-            var right = Visit(n.Right) as TypeSymbol;
+            var right = TypeSymbol.FromObject(Visit(n.Right));
             if (n.Token.Type == TokenType.Assign)
             {
                 if (n.Left is not VarNode && n.Left is not VarDeclNode && n.Left is not GetNode)

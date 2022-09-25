@@ -37,6 +37,9 @@ namespace Zephyr.SemanticAnalysis.Symbols
 
         public object Call(Interpreter interpreter, List<object> arguments)
         {
+            if (arguments.Count != Arity())
+                throw new ArgumentException($"Wrong number of arguments to call: expected {Arity()}, got {arguments.Count}");
+            
             var scope = new Scope(Closure);
             for (var i = 0; i < arguments.Count; i++)
             {

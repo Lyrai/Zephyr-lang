@@ -22,10 +22,12 @@
 
         public static TypeSymbol FromObject(object symbol)
         {
-            if (symbol is not VarSymbol varSymbol)
-                return (TypeSymbol) symbol;
-
-            return varSymbol.Type;
+            return symbol switch
+            {
+                VarSymbol varSymbol => varSymbol.Type,
+                FuncSymbol funcSymbol => funcSymbol.Type,
+                _ => (TypeSymbol) symbol
+            };
         }
     }
 }
