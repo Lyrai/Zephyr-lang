@@ -18,7 +18,7 @@ namespace Zephyr
             try
             {
                 sw.Start();
-                var c = File.ReadAllLines("../test.txt");
+                var c = File.ReadAllLines("../../../test.txt");
                 string code = string.Join('\n', c);
                 Lexer lexer = new Lexer(code);
                 lexer.Analyze();

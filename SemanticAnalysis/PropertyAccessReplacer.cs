@@ -53,7 +53,7 @@ namespace Zephyr.SemanticAnalysis
             if (n.Left is VarNode or GetNode)
             {
                 if(TryGetCall(n.Left, out var callNode))
-                        n.Replace(n.Right, callNode);
+                        n.Replace(n.Left, callNode);
             }
             else
             {
@@ -183,7 +183,7 @@ namespace Zephyr.SemanticAnalysis
                 
                 var name = node.Token.Value;
                 var callToken = node.Token with {Value = $"get_{name}"};
-                callNode = new FuncCallNode(new VarNode(callToken), callToken, new List<Node>());
+                callNode = new FuncCallNode(node, callToken, new List<Node>());
 
                 Visit(callNode);
 
@@ -202,7 +202,7 @@ namespace Zephyr.SemanticAnalysis
                     throw new SemanticException(node.Left, $"Property {_name} has no setter");
 
                 var callToken = node.Left.Token with {Value = $"set_{_name}"};
-                callNode = new FuncCallNode(new VarNode(callToken), callToken, new List<Node> {node.Right});
+                callNode = new FuncCallNode(node.Left, callToken, new List<Node> {node.Right});
                 Visit(callNode);
 
                 return true;

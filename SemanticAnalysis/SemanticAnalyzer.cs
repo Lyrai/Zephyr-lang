@@ -150,7 +150,7 @@ namespace Zephyr.SemanticAnalysis
                         if (s is not null && s.Type == _table.Find<TypeSymbol>("function"))
                             return _table.Find<TypeSymbol>("function");
                         
-                        throw new SemanticException(n, "Cannot call non-function");
+                        throw new SemanticException(n, $"Cannot call non-function {n.Name}");
                     }
                     break;
                 case FuncCallNode:

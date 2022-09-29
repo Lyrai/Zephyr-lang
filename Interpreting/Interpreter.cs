@@ -171,7 +171,7 @@ namespace Zephyr.Interpreting
             var callable = n.Callable ?? callee as ICallable;
 
             if (callable is null)
-                throw new ArgumentException("Cannot call non-function");
+                throw new ArgumentException($"Cannot call non-function {n.Name}");
 
             var arguments = new List<object>();
             foreach (var argument in n.Arguments)

@@ -6,7 +6,12 @@ class BaseClass:
 
 class DerivedClass < BaseClass:
     DerivedClass ff
-    string str
+    string test
+    string str:
+        get:
+            return this.test
+        set:
+            this.test = value
     string Get():
         print this
         return this.str
@@ -21,6 +26,8 @@ DerivedClass ss = DerivedClass()
 ss.AddString("test string to add")
 ss.name = "test"
 print ss.Name()
+print ss.str
+ss.str = "abc"
 print ss.str
 double s
     
