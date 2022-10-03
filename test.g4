@@ -1,9 +1,13 @@
 grammar test;
 
+@parser::members {
+    int nestingLevel = 0;
+}
+
 program: (statement SEMICOLON?)* EOF;
 statementList: (INDENT statement SEMICOLON?)*;
 statement: 
-    INDENT (decl 
+    (decl 
     | classDecl 
     | printStmt 
     | returnStmt 
@@ -14,14 +18,17 @@ statement:
     | assignExpr
 );
 
-decl: 
-    funcDecl
+decl: type ID
+    (funcDecl
+    //| COLON (INDENT 'get' statement)? (INDENT 'set' statement)?
     | propertyDecl
     | varDecl
-;
+);
 
-classDecl: 'class' ID ('<' ID)? COLON classBody;
-classBody: (INDENT (classDecl | decl))*;
+varDecl1: type ID;
+
+classDecl: 'class' ID ('<' ID)? COLON {nestingLevel++;} classBody;
+classBody: (indent[1] (classDecl | decl))+;
 
 printStmt: 'print' assignExpr;
 
@@ -39,16 +46,16 @@ whileStmt: 'while' assignExpr statement;
 forStmt: 'for' (varDecl | equality)? COMMA equality COMMA assignExpr 
     statement;
 
-funcDecl: type ID '(' funcParameters ')' 
+funcDecl: '(' funcParameters? ')' 
     statement;
 
-funcParameters: varDecl (COMMA varDecl)*;
+funcParameters: varDecl1 (COMMA varDecl1)*;
 
-varDecl: type ID (ASSIGN equality);
+varDecl: (ASSIGN equality)?;
 
-propertyDecl: type ID COLON ('get' statement)? ('set' statement);
+propertyDecl: COLON ('get' statement)? ('set' statement);
 
-assignExpr: ID equality (ASSIGN assignExpr);
+assignExpr: equality (ASSIGN assignExpr)?;
 equality: comparison ((EQUAL | NOT_EQUAL) comparison)*;
 comparison: expression (
     (GREATER_EQUAL | GREATER | LESS_EQUAL | LESS)
@@ -61,7 +68,12 @@ primary: literal | ID | '(' equality ')';
 literal: '"'.*?'"' | INT | FLOAT;
 type: ID; 
 
-INDENT: '\t' | ' '{4};
+indent[int i] returns [int r]: {i > 0}? INDENT indent[i - 1] | {$r = $i};
+
+//NEWLINE: [\n]+;
+//EMPTY: [\n];
+WS: [ \n\r] -> skip;
+INDENT: '    ';
 ID: [a-zA-Z_][1-9a-zA-Z_]*;
 COLON: ':';
 SEMICOLON: ';';
@@ -81,4 +93,6 @@ MULTIPLY: '*';
 NOT: '!';
 INT: [0-9]+;
 FLOAT: [0-9]+ DOT [0-9]+;
-WS: [ \r\n] -> skip;
+
+
+//WS1: ' ' -> skip;
