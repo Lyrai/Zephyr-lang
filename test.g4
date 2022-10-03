@@ -1,68 +1,68 @@
-﻿grammar test;
+grammar test;
 
-Program: (Statement SEMICOLON?)*;
-StatementList: (INDENT Statement SEMICOLON?)*;
-Statement: 
-    INDENT (Decl 
-    | ClassDecl 
-    | PrintStmt 
-    | ReturnStmt 
-    | Compound
-    | IfStmt
-    | WhileStmt
-    | ForStmt
-    | AssignExpr
+program: (statement SEMICOLON?)* EOF;
+statementList: (INDENT statement SEMICOLON?)*;
+statement: 
+    INDENT (decl 
+    | classDecl 
+    | printStmt 
+    | returnStmt 
+    | compound
+    | ifStmt
+    | whileStmt
+    | forStmt
+    | assignExpr
 );
 
-Decl: 
-    FuncDecl
-    | PropertyDecl
-    | VarDecl
+decl: 
+    funcDecl
+    | propertyDecl
+    | varDecl
 ;
 
-ClassDecl: 'class' Id ('<' Id)? COLON ClassBody;
-ClassBody: (INDENT (ClassDecl | Decl))*;
+classDecl: 'class' ID ('<' ID)? COLON classBody;
+classBody: (INDENT (classDecl | decl))*;
 
-PrintStmt: 'print' AssignExpr;
+printStmt: 'print' assignExpr;
 
-ReturnStmt: 'return' (SEMICOLON | AssignExpr);
+returnStmt: 'return' (SEMICOLON | assignExpr);
 
-Compound: COLON StatementList;
+compound: COLON statementList;
 
-IfStmt: 'if' AssignExpr 
-    Statement 
+ifStmt: 'if' assignExpr 
+    statement 
     ('else' 
-    Statement);
+    statement);
 
-WhileStmt: 'while' AssignExpr Statement;
+whileStmt: 'while' assignExpr statement;
 
-ForStmt: 'for' (VarDecl | Equality)? COMMA Equality COMMA AssignExpr 
-    Statement;
+forStmt: 'for' (varDecl | equality)? COMMA equality COMMA assignExpr 
+    statement;
 
-FuncDecl: Type Id '(' FuncParameters ')' 
-    Statement;
+funcDecl: type ID '(' funcParameters ')' 
+    statement;
 
-FuncParameters: VarDecl (COMMA VarDecl)*;
+funcParameters: varDecl (COMMA varDecl)*;
 
-VarDecl: Type Id (ASSIGN Equality);
+varDecl: type ID (ASSIGN equality);
 
-PropertyDecl: Type Id COLON ('get' Statement)? ('set' Statement);
+propertyDecl: type ID COLON ('get' statement)? ('set' statement);
 
-AssignExpr: Id Equality (ASSIGN AssignExpr);
-Equality: Comparison ((EQUAL | NOT_EQUAL) Comparison)*;
-Comparison: Expression (
+assignExpr: ID equality (ASSIGN assignExpr);
+equality: comparison ((EQUAL | NOT_EQUAL) comparison)*;
+comparison: expression (
     (GREATER_EQUAL | GREATER | LESS_EQUAL | LESS)
-    Expression)*;
-Expression: Term ((PLUS | MINUS) Term)*;
-Term: Factor ((DIVIDE | MULTIPLY) Factor)*;
-Factor: (MINUS | PLUS | NOT) Factor | Call;
-Call: Primary (('(' (')' | Equality (COMMA Equality)* ')')) | DOT Id)*;
-Primary: Literal | Id | '(' Equality ')';
-Literal: '"'.*?'"' | [0-9]+ (DOT [0-9]+);
-Type: Id; 
+    expression)*;
+expression: term ((PLUS | MINUS) term)*;
+term: factor ((DIVIDE | MULTIPLY) factor)*;
+factor: (MINUS | PLUS | NOT) factor | call;
+call: primary (('(' (')' | equality (COMMA equality)* ')')) | DOT ID)*;
+primary: literal | ID | '(' equality ')';
+literal: '"'.*?'"' | INT | FLOAT;
+type: ID; 
 
 INDENT: '\t' | ' '{4};
-Id: [a-zA-Z_][1-9a-zA-Z_]*;
+ID: [a-zA-Z_][1-9a-zA-Z_]*;
 COLON: ':';
 SEMICOLON: ';';
 COMMA: ',';
@@ -79,4 +79,6 @@ MINUS: '-';
 DIVIDE: '/';
 MULTIPLY: '*';
 NOT: '!';
+INT: [0-9]+;
+FLOAT: [0-9]+ DOT [0-9]+;
 WS: [ \r\n] -> skip;
