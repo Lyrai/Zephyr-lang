@@ -22,18 +22,16 @@ namespace Zephyr
             {
                 
                 sw.Start();
-                var c = File.ReadAllLines("../../../test.txt");
+                var c = File.ReadAllLines("../../../test_antlr.txt");
                 string code = string.Join('\n', c);
                 ICharStream stream = CharStreams.fromString(code);
                 ITokenSource l = new testLexer(stream);
                 ITokenStream tokenStream = new CommonTokenStream(l);
-                int i = 1;
-                while (tokenStream.LT(i).Type != -1)
-                {
-                    var token = tokenStream.LT(i);
-                    Console.WriteLine($"Token {token.Type} text {token.Text}");
-                    ++i;
-                }
+                var parser = new test(tokenStream);
+                var tree = parser.program();
+                var visitor = new TestVisitor();
+                var nodeTree = visitor.Visit(tree);
+
                 /*Lexer lexer = new Lexer(code);
                 lexer.Analyze();
                 var tokens = lexer.GetTokens();
@@ -41,14 +39,14 @@ namespace Zephyr
                 Parser parser = new Parser(tokens);
                 var tree = parser.Parse();
 
-                SemanticAnalyzer analyzer = new SemanticAnalyzer(tree);
+                SemanticAnalyzer analyzer = new SemanticAnalyzer(nodeTree);
                 analyzer.Analyze();
                 sw.Stop();
                 Console.WriteLine($"Analysis in {sw.ElapsedMilliseconds}ms");
                 
                 sw.Reset();
                 sw.Start();
-                Interpreter interpreter = new Interpreter(tree);
+                Interpreter interpreter = new Interpreter(nodeTree);
                 if(_hasError == false)
                     interpreter.Interpret();
                 sw.Stop();

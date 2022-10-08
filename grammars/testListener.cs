@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from ..\zephyr\Zephyr\grammars\test.g4 by ANTLR 4.11.1
+// Generated from test.g4 by ANTLR 4.11.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -71,15 +71,25 @@ public interface ItestListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitDecl([NotNull] test.DeclContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="test.varDecl1"/>.
+	/// Enter a parse tree produced by <see cref="test.classBodyDecl"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterVarDecl1([NotNull] test.VarDecl1Context context);
+	void EnterClassBodyDecl([NotNull] test.ClassBodyDeclContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="test.varDecl1"/>.
+	/// Exit a parse tree produced by <see cref="test.classBodyDecl"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitVarDecl1([NotNull] test.VarDecl1Context context);
+	void ExitClassBodyDecl([NotNull] test.ClassBodyDeclContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="test.typedVarDecl"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterTypedVarDecl([NotNull] test.TypedVarDeclContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="test.typedVarDecl"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitTypedVarDecl([NotNull] test.TypedVarDeclContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="test.classDecl"/>.
 	/// </summary>
@@ -190,16 +200,6 @@ public interface ItestListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitVarDecl([NotNull] test.VarDeclContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="test.propertyDecl"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterPropertyDecl([NotNull] test.PropertyDeclContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="test.propertyDecl"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitPropertyDecl([NotNull] test.PropertyDeclContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="test.assignExpr"/>.
 	/// </summary>

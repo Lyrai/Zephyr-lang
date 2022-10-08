@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from ..\zephyr\Zephyr\grammars\test.g4 by ANTLR 4.11.1
+// Generated from test.g4 by ANTLR 4.11.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -84,17 +84,29 @@ public partial class testBaseListener : ItestListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitDecl([NotNull] test.DeclContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="test.varDecl1"/>.
+	/// Enter a parse tree produced by <see cref="test.classBodyDecl"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterVarDecl1([NotNull] test.VarDecl1Context context) { }
+	public virtual void EnterClassBodyDecl([NotNull] test.ClassBodyDeclContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="test.varDecl1"/>.
+	/// Exit a parse tree produced by <see cref="test.classBodyDecl"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitVarDecl1([NotNull] test.VarDecl1Context context) { }
+	public virtual void ExitClassBodyDecl([NotNull] test.ClassBodyDeclContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="test.typedVarDecl"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterTypedVarDecl([NotNull] test.TypedVarDeclContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="test.typedVarDecl"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitTypedVarDecl([NotNull] test.TypedVarDeclContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="test.classDecl"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -227,18 +239,6 @@ public partial class testBaseListener : ItestListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitVarDecl([NotNull] test.VarDeclContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="test.propertyDecl"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterPropertyDecl([NotNull] test.PropertyDeclContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="test.propertyDecl"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitPropertyDecl([NotNull] test.PropertyDeclContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="test.assignExpr"/>.
 	/// <para>The default implementation does nothing.</para>

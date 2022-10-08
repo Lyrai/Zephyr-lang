@@ -5,8 +5,7 @@ options { tokenVocab = testLexer; }
 program: statementList EOF;
 statementList: (statement SEMICOLON?)*;
 statement: 
-    (decl 
-    | classDecl 
+    (decl
     | printStmt 
     | returnStmt 
     | compound
@@ -16,43 +15,59 @@ statement:
     | assignExpr
 );
 
-decl: type ID
-    (funcDecl
-    //| COLON (INDENT 'get' statement)? (INDENT 'set' statement)?
-    | propertyDecl
+decl: 
+    (classDecl
+    | funcDecl
+//    | propertyDecl
     | varDecl
 );
 
-varDecl1: type ID;
+classBodyDecl:
+    (funcDecl
+//    | propertyDecl
+    | typedVarDecl
+    | classDecl
+);
 
-classDecl: 'class' ID ('<' ID)? COLON INDENT classBody DEDENT;
-classBody: ((classDecl | decl))+;
+typedVarDecl: ID ':' type;
+
+classDecl: 'class' ID ('<' ID)? classBody 'end';
+classBody: (classBodyDecl)*;
 
 printStmt: 'print' assignExpr;
 
-returnStmt: 'return' (SEMICOLON | assignExpr);
+returnStmt: 'return' assignExpr?;
 
-compound: COLON INDENT statementList DEDENT;
+compound: '{' statementList '}';
 
 ifStmt: 'if' assignExpr 
     statement 
     ('else' 
-    statement);
+    statement)?;
 
 whileStmt: 'while' assignExpr statement;
 
-forStmt: 'for' (varDecl | equality)? COMMA equality COMMA assignExpr 
+forStmt: 'for' varDecl COMMA equality COMMA assignExpr 
     statement;
 
-funcDecl: '(' funcParameters? ')' 
-    statement;
+funcDecl: 'fn' ID '(' funcParameters? ')' ('->' type)?
+    statementList END;
 
-funcParameters: varDecl1 (COMMA varDecl1)*;
+funcParameters: typedVarDecl (COMMA typedVarDecl)*;
 
-varDecl: (ASSIGN equality)?;
+varDecl: 'let' ID ':' type (ASSIGN assignExpr)?;
 
-propertyDecl: COLON ('get' statement)? ('set' statement);
+//propertyDecl: 'property' typedVarDecl (('get' statementList END) ('set' statementList END)? | ('set' statementList END) ('get' statementList END)?) ;
 
+//expression: equality (ASSIGN expression)?;
+//
+//equality: 
+//      equality (EQUAL | NOT_EQUAL) equality # eq
+//    | equality (GREATER_EQUAL | GREATER | LESS_EQUAL | LESS) equality # cmp
+//    | equality (PLUS | MINUS) equality # add
+//    | equality (DIVIDE | MULTIPLY) equality # mul
+//    | factor # fact
+//;
 assignExpr: equality (ASSIGN assignExpr)?;
 equality: comparison ((EQUAL | NOT_EQUAL) comparison)*;
 comparison: expression (
@@ -63,5 +78,5 @@ term: factor ((DIVIDE | MULTIPLY) factor)*;
 factor: (MINUS | PLUS | NOT) factor | call;
 call: primary (('(' (')' | equality (COMMA equality)* ')')) | DOT ID)*;
 primary: literal | ID | '(' equality ')';
-literal: '"'.*?'"' | INT | FLOAT;
+literal: STRING_LITERAL | INT | FLOAT;
 type: ID;
