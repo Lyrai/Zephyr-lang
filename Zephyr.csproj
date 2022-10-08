@@ -6,4 +6,20 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Antlr4.Runtime.Standard" Version="4.11.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="gen\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="gen\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="gen\**" />
+    </ItemGroup>
+
 </Project>

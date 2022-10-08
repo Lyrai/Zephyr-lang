@@ -1,11 +1,9 @@
-grammar test;
+parser grammar test;
 
-@parser::members {
-    int nestingLevel = 0;
-}
+options { tokenVocab = testLexer; }
 
-program: (statement SEMICOLON?)* EOF;
-statementList: (INDENT statement SEMICOLON?)*;
+program: statementList EOF;
+statementList: (statement SEMICOLON?)*;
 statement: 
     (decl 
     | classDecl 
@@ -27,14 +25,14 @@ decl: type ID
 
 varDecl1: type ID;
 
-classDecl: 'class' ID ('<' ID)? COLON {nestingLevel++;} classBody;
-classBody: (indent[1] (classDecl | decl))+;
+classDecl: 'class' ID ('<' ID)? COLON INDENT classBody DEDENT;
+classBody: ((classDecl | decl))+;
 
 printStmt: 'print' assignExpr;
 
 returnStmt: 'return' (SEMICOLON | assignExpr);
 
-compound: COLON statementList;
+compound: COLON INDENT statementList DEDENT;
 
 ifStmt: 'if' assignExpr 
     statement 
@@ -66,33 +64,4 @@ factor: (MINUS | PLUS | NOT) factor | call;
 call: primary (('(' (')' | equality (COMMA equality)* ')')) | DOT ID)*;
 primary: literal | ID | '(' equality ')';
 literal: '"'.*?'"' | INT | FLOAT;
-type: ID; 
-
-indent[int i] returns [int r]: {i > 0}? INDENT indent[i - 1] | {$r = $i};
-
-//NEWLINE: [\n]+;
-//EMPTY: [\n];
-WS: [ \n\r] -> skip;
-INDENT: '    ';
-ID: [a-zA-Z_][1-9a-zA-Z_]*;
-COLON: ':';
-SEMICOLON: ';';
-COMMA: ',';
-DOT: '.';
-ASSIGN: '=';
-EQUAL: '==';
-NOT_EQUAL: '!=';
-GREATER_EQUAL: '>=';
-GREATER: '>';
-LESS_EQUAL: '<=';
-LESS: '<';
-PLUS: '+';
-MINUS: '-';
-DIVIDE: '/';
-MULTIPLY: '*';
-NOT: '!';
-INT: [0-9]+;
-FLOAT: [0-9]+ DOT [0-9]+;
-
-
-//WS1: ' ' -> skip;
+type: ID;

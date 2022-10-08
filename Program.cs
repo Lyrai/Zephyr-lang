@@ -5,6 +5,9 @@ using Zephyr.Interpreting;
 using Zephyr.LexicalAnalysis;
 using Zephyr.SemanticAnalysis;
 using Zephyr.SyntaxAnalysis;
+using Antlr4.Runtime;
+using Lexer = Zephyr.LexicalAnalysis.Lexer;
+using Parser = Zephyr.SyntaxAnalysis.Parser;
 
 namespace Zephyr
 {
@@ -17,10 +20,21 @@ namespace Zephyr
             Stopwatch sw = new Stopwatch();
             try
             {
+                
                 sw.Start();
                 var c = File.ReadAllLines("../../../test.txt");
                 string code = string.Join('\n', c);
-                Lexer lexer = new Lexer(code);
+                ICharStream stream = CharStreams.fromString(code);
+                ITokenSource l = new testLexer(stream);
+                ITokenStream tokenStream = new CommonTokenStream(l);
+                int i = 1;
+                while (tokenStream.LT(i).Type != -1)
+                {
+                    var token = tokenStream.LT(i);
+                    Console.WriteLine($"Token {token.Type} text {token.Text}");
+                    ++i;
+                }
+                /*Lexer lexer = new Lexer(code);
                 lexer.Analyze();
                 var tokens = lexer.GetTokens();
 
@@ -38,7 +52,7 @@ namespace Zephyr
                 if(_hasError == false)
                     interpreter.Interpret();
                 sw.Stop();
-                Console.WriteLine($"Executed in {sw.ElapsedMilliseconds}ms");
+                Console.WriteLine($"Executed in {sw.ElapsedMilliseconds}ms");*/
             }
             catch (Exception e)
             {
