@@ -37,7 +37,7 @@ namespace Zephyr
                 var tokens = lexer.GetTokens();
 
                 Parser parser = new Parser(tokens);
-                var tree = parser.Parse();
+                var tree = parser.Parse();*/
 
                 SemanticAnalyzer analyzer = new SemanticAnalyzer(nodeTree);
                 analyzer.Analyze();
@@ -50,7 +50,7 @@ namespace Zephyr
                 if(_hasError == false)
                     interpreter.Interpret();
                 sw.Stop();
-                Console.WriteLine($"Executed in {sw.ElapsedMilliseconds}ms");*/
+                Console.WriteLine($"Executed in {sw.ElapsedMilliseconds}ms");
             }
             catch (Exception e)
             {

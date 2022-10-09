@@ -228,6 +228,18 @@ public partial class testBaseListener : ItestListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitFuncParameters([NotNull] test.FuncParametersContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="test.funcArguments"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterFuncArguments([NotNull] test.FuncArgumentsContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="test.funcArguments"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitFuncArguments([NotNull] test.FuncArgumentsContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="test.varDecl"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>

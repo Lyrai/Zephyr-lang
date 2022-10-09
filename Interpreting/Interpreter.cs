@@ -8,21 +8,20 @@ namespace Zephyr.Interpreting
 {
     public class Interpreter : INodeVisitor<RuntimeValue>
     {
-        private readonly List<Node> _nodes;
+        private readonly Node _node;
         private readonly Scope _globals;
         private Scope _currentScope;
 
-        public Interpreter(List<Node> nodes)
+        public Interpreter(Node node)
         {
-            _nodes = nodes;
+            _node = node;
             _globals = new Scope();
             _currentScope = _globals;
         }
 
         public void Interpret()
         {
-            foreach (var node in _nodes)
-                Evaluate(node);
+            Evaluate(_node);
         }
 
         public RuntimeValue VisitClassNode(ClassNode n)

@@ -191,6 +191,16 @@ public interface ItestListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitFuncParameters([NotNull] test.FuncParametersContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="test.funcArguments"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterFuncArguments([NotNull] test.FuncArgumentsContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="test.funcArguments"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitFuncArguments([NotNull] test.FuncArgumentsContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="test.varDecl"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

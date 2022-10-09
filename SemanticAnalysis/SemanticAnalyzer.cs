@@ -10,7 +10,7 @@ namespace Zephyr.SemanticAnalysis
 {
     public class SemanticAnalyzer : INodeVisitor<object>
     {
-        private readonly List<Node> _nodes;
+        private readonly Node _node;
         private readonly TypeSymbol _doubleSymbol;
         private readonly TypeSymbol _intSymbol;
         private readonly TypeSymbol _boolSymbol;
@@ -29,9 +29,9 @@ namespace Zephyr.SemanticAnalysis
             TokenType.GreaterEqual
         };
 
-        public SemanticAnalyzer(List<Node> nodes)
+        public SemanticAnalyzer(Node node)
         {
-            _nodes = nodes;
+            _node = node;
             _table = new ScopedSymbolTable(ScopeType.TopLevel);
             _intSymbol = _table.Find<TypeSymbol>("int");
             _doubleSymbol = _table.Find<TypeSymbol>("double");
@@ -42,7 +42,7 @@ namespace Zephyr.SemanticAnalysis
 
         public void Analyze()
         {
-            Visit(_nodes);
+            Visit(_node);
         }
 
         public object VisitVarDeclNode(VarDeclNode n)
@@ -82,7 +82,7 @@ namespace Zephyr.SemanticAnalysis
             
             var symbol = new PropertySymbol(n, typeSymbol);
             _table.Add(n.Name, symbol);
-            PropertyAccessReplacer replacer = new(_nodes, symbol);
+            PropertyAccessReplacer replacer = new(_node, symbol);
             replacer.Replace();
 
             return typeSymbol;
@@ -111,8 +111,7 @@ namespace Zephyr.SemanticAnalysis
                 throw new DuplicateIdentifierException(n);
             
             _table.Parent.Add(name, symbol);
-            if(_currentClassSymbol is not null)
-                _currentClassSymbol.Methods.Add(name, symbol);
+            _currentClassSymbol?.Methods.Add(name, symbol);
             Visit(n.Body);
             _table = _table.Parent;
             n.Symbol = symbol;

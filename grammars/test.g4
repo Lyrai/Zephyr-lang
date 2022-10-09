@@ -54,6 +54,7 @@ funcDecl: 'fn' ID '(' funcParameters? ')' ('->' type)?
     statementList END;
 
 funcParameters: typedVarDecl (COMMA typedVarDecl)*;
+funcArguments: equality (',' equality)*;
 
 varDecl: 'let' ID ':' type (ASSIGN assignExpr)?;
 
@@ -76,7 +77,7 @@ comparison: expression (
 expression: term ((PLUS | MINUS) term)*;
 term: factor ((DIVIDE | MULTIPLY) factor)*;
 factor: (MINUS | PLUS | NOT) factor | call;
-call: primary (('(' (')' | equality (COMMA equality)* ')')) | DOT ID)*;
+call: primary (('(' funcArguments? ')') | DOT ID)*;
 primary: literal | ID | '(' equality ')';
-literal: STRING_LITERAL | INT | FLOAT;
+literal: STRING_LITERAL | INT | FLOAT | 'true' | 'false';
 type: ID;

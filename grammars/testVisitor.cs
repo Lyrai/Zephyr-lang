@@ -128,6 +128,12 @@ public interface ItestVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitFuncParameters([NotNull] test.FuncParametersContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="test.funcArguments"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitFuncArguments([NotNull] test.FuncArgumentsContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="test.varDecl"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

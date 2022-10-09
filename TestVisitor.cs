@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using Antlr4.Runtime.Tree;
 using Zephyr.LexicalAnalysis.Tokens;
 using Zephyr.SyntaxAnalysis.ASTNodes;
@@ -7,6 +9,11 @@ namespace Zephyr
 {
     public class TestVisitor : testBaseVisitor<Node>
     {
+        public override Node VisitProgram(test.ProgramContext context)
+        {
+            return Visit(context.statementList());
+        }
+
         public override Node VisitStatementList(test.StatementListContext context)
         {
             var nodes = new List<Node>();
@@ -19,16 +26,22 @@ namespace Zephyr
 
         public override Node VisitFuncDecl(test.FuncDeclContext context)
         {
+            
             var idToken = new Token(TokenType.Id, 
                 context.ID().GetText(), 
                 context.ID().Symbol.Column,
                 context.ID().Symbol.Line);
 
-            
+            List<Node> parameters = new List<Node>();
+            if (context.funcParameters() is not null)
+                parameters = GetBody(context.funcParameters());
+            string type = "void";
+            if (context.type() is not null)
+                type = context.type().GetText();
             return new FuncDeclNode(idToken,
                 GetBody(context.statementList()), 
-                GetBody(context.funcParameters()),
-                context.type().GetText());
+                parameters,
+                type);
         }
 
         public override Node VisitVarDecl(test.VarDeclContext context)
@@ -37,7 +50,6 @@ namespace Zephyr
                 context.ID().GetText(), 
                 context.ID().Symbol.Column,
                 context.ID().Symbol.Line);
-            
             var typeToken = new Token(TokenType.Id, 
                 context.type().GetText(), 
                 context.type().ID().Symbol.Column,
@@ -47,9 +59,11 @@ namespace Zephyr
                 new TypeNode(typeToken));
             ITerminalNode assign;
             if ((assign = context.ASSIGN()) is not null)
+            {
                 node = new BinOpNode(new Token(TokenType.Assign, assign.GetText(),
-                    assign.Symbol.Column, assign.Symbol.Line),
+                        assign.Symbol.Column, assign.Symbol.Line),
                     node, Visit(context.assignExpr()));
+            }
 
             return node;
         }
@@ -60,12 +74,10 @@ namespace Zephyr
                 context.ID().GetText(), 
                 context.ID().Symbol.Column,
                 context.ID().Symbol.Line);
-            
             var typeToken = new Token(TokenType.Id, 
                 context.type().GetText(), 
                 context.type().ID().Symbol.Column,
                 context.type().ID().Symbol.Line);
-
             return new VarDeclNode(new VarNode(idToken),
                 new TypeNode(typeToken));
         }
@@ -76,7 +88,6 @@ namespace Zephyr
                 context.ID(0).GetText(), 
                 context.ID(0).Symbol.Column,
                 context.ID(0).Symbol.Line);
-            
             VarNode parentNode = null;
             if(context.ID(1) is not null)
             {
@@ -109,7 +120,6 @@ namespace Zephyr
                 context.RETURN().Symbol.Line);
 
             var expr = context.assignExpr() is not null ? Visit(context.assignExpr()) : null;
-
             return new ReturnNode(token, expr);
         }
 
@@ -128,7 +138,6 @@ namespace Zephyr
             var condition = Visit(context.assignExpr());
             var thenBlock = Visit(context.statement(0));
             var elseBlock = context.ELSE() is not null? Visit(context.statement(1)) : null;
-
             return new IfNode(token, condition, thenBlock, elseBlock);
         }
 
@@ -194,8 +203,10 @@ namespace Zephyr
         {
             var node = Visit(context.comparison(0));
             Token token = null;
-            foreach (var child in context.children)
+            var children = context.children;
+            for(int i = 0; i < children.Count; i++)
             {
+                var child = context.GetChild(i);
                 if (child is ITerminalNode terminal)
                 {
                     token = terminal.Symbol.Text switch
@@ -203,10 +214,7 @@ namespace Zephyr
                         "==" => new Token(TokenType.Equal, "==", terminal.Symbol.Column, terminal.Symbol.Line),
                         "!=" => new Token(TokenType.NotEqual, "!=", terminal.Symbol.Column, terminal.Symbol.Line)
                     };
-                }
-                else
-                {
-                    node = new BinOpNode(token, node, Visit(child));
+                    node = new BinOpNode(token, node, Visit(context.GetChild(++i)));
                 }
             }
 
@@ -217,8 +225,10 @@ namespace Zephyr
         {
             var node = Visit(context.expression(0));
             Token token = null;
-            foreach (var child in context.children)
+            var children = context.children;
+            for(int i = 0; i < children.Count; i++)
             {
+                var child = context.GetChild(i);
                 if (child is ITerminalNode terminal)
                 {
                     token = terminal.Symbol.Text switch
@@ -228,10 +238,7 @@ namespace Zephyr
                         ">" => new Token(TokenType.Greater, ">", terminal.Symbol.Column, terminal.Symbol.Line),
                         ">=" => new Token(TokenType.GreaterEqual, ">=", terminal.Symbol.Column, terminal.Symbol.Line)
                     };
-                }
-                else
-                {
-                    node = new BinOpNode(token, node, Visit(child));
+                    node = new BinOpNode(token, node, Visit(context.GetChild(++i)));
                 }
             }
 
@@ -242,8 +249,10 @@ namespace Zephyr
         {
             var node = Visit(context.term(0));
             Token token = null;
-            foreach (var child in context.children)
+            var children = context.children;
+            for(int i = 0; i < children.Count; i++)
             {
+                var child = context.GetChild(i);
                 if (child is ITerminalNode terminal)
                 {
                     token = terminal.Symbol.Text switch
@@ -251,10 +260,7 @@ namespace Zephyr
                         "+" => new Token(TokenType.Plus, "+", terminal.Symbol.Column, terminal.Symbol.Line),
                         "-" => new Token(TokenType.Minus, "-", terminal.Symbol.Column, terminal.Symbol.Line)
                     };
-                }
-                else
-                {
-                    node = new BinOpNode(token, node, Visit(child));
+                    node = new BinOpNode(token, node, Visit(context.GetChild(++i)));
                 }
             }
 
@@ -265,8 +271,10 @@ namespace Zephyr
         {
             var node = Visit(context.factor(0));
             Token token = null;
-            foreach (var child in context.children)
+            var children = context.children;
+            for(int i = 0; i < children.Count; i++)
             {
+                var child = context.GetChild(i);
                 if (child is ITerminalNode terminal)
                 {
                     token = terminal.Symbol.Text switch
@@ -274,9 +282,7 @@ namespace Zephyr
                         "*" => new Token(TokenType.Multiply, "*", terminal.Symbol.Column, terminal.Symbol.Line),
                         "/" => new Token(TokenType.Divide, "/", terminal.Symbol.Column, terminal.Symbol.Line)
                     };
-                }
-                else
-                {
+
                     node = new BinOpNode(token, node, Visit(child));
                 }
             }
@@ -311,17 +317,89 @@ namespace Zephyr
 
         public override Node VisitCall(test.CallContext context)
         {
-            return base.VisitCall(context);
+            var node = Visit(context.primary());
+            var children = context.children;
+            for (int i = 0; i < children.Count; i++)
+            {
+                if (context.GetChild(i) is ITerminalNode terminal)
+                {
+                    if (terminal.Symbol.Text == "(")
+                    {
+                        var args = context.GetChild(++i);
+                        List<Node> arguments = new List<Node>();
+                        if(args is not null)
+                        {
+                            arguments = GetBody(args);
+                        }
+                        node = new FuncCallNode(node, node.Token, arguments);
+                    }
+                    else if (terminal.Symbol.Text == ".")
+                    {
+                        var id = context.GetChild(++i);
+                        if(id is ITerminalNode term)
+                        {
+                            var token = new Token(TokenType.Id, term.GetText(), term.Symbol.Column, term.Symbol.Line);
+                            node = new GetNode(token, node);
+                        }
+                    }
+                }
+            }
+
+            return node;
         }
 
         public override Node VisitPrimary(test.PrimaryContext context)
         {
-            return base.VisitPrimary(context);
+            if (context.literal() is not null)
+            {
+                return Visit(context.literal());
+            }
+            
+            if (context.ID() is not null)
+            {
+                var token = new Token(TokenType.StringLit,
+                    context.ID().GetText(),
+                    context.ID().Symbol.Line,
+                    context.ID().Symbol.Line);
+
+                return new VarNode(token);
+            }
+
+            return Visit(context.equality());
         }
 
         public override Node VisitLiteral(test.LiteralContext context)
         {
-            return base.VisitLiteral(context);
+            var lit = context;
+            Token token = null;
+            if (lit.INT() is not null)
+                token = new Token(TokenType.Integer,
+                    int.Parse(lit.INT().GetText()), 
+                    lit.INT().Symbol.Column,
+                    lit.INT().Symbol.Line);
+            else if (lit.STRING_LITERAL() is not null)
+                token = new Token(TokenType.StringLit,
+                    lit.STRING_LITERAL().GetText().Trim('"'),
+                    lit.STRING_LITERAL().Symbol.Line,
+                    lit.STRING_LITERAL().Symbol.Line);
+            else if (lit.FLOAT() is not null)
+                token = new Token(TokenType.DoubleLit,
+                    double.Parse(lit.FLOAT().GetText(), CultureInfo.InvariantCulture),
+                    lit.FLOAT().Symbol.Column,
+                    lit.FLOAT().Symbol.Line);
+            else if (lit.TRUE() is not null)
+                token = new Token(TokenType.True,
+                    bool.Parse(lit.TRUE().GetText()),
+                    lit.TRUE().Symbol.Column,
+                    lit.TRUE().Symbol.Line);
+            else if (lit.FALSE() is not null)
+                token = new Token(TokenType.False,
+                    bool.Parse(lit.FALSE().GetText()),
+                    lit.FALSE().Symbol.Column,
+                    lit.FALSE().Symbol.Line);
+
+
+            return new LiteralNode(token, token.Value);
         }
 
         private List<Node> GetBody(IParseTree node)
@@ -329,6 +407,9 @@ namespace Zephyr
             var list = new List<Node>(node.ChildCount);
             for (int i = 0; i < node.ChildCount; i++)
             {
+                if(node.GetChild(i) is ITerminalNode)
+                    continue;
+                
                 list.Add(Visit(node.GetChild(i)));
             }
 

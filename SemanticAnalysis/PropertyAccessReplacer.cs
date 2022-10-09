@@ -8,20 +8,20 @@ namespace Zephyr.SemanticAnalysis
 {
     public class PropertyAccessReplacer : INodeVisitor<object>
     {
-        private readonly List<Node> _nodes;
+        private readonly Node _node;
         private readonly string _name;
         private readonly PropertySymbol _symbol;
 
-        public PropertyAccessReplacer(List<Node> nodes, PropertySymbol symbol)
+        public PropertyAccessReplacer(Node node, PropertySymbol symbol)
         {
-            _nodes = nodes;
+            _node = node;
             _name = symbol.Name;
             _symbol = symbol;
         }
 
         public void Replace()
         {
-            VisitNodesList(_nodes);
+            Visit(_node);
         }
 
         public object VisitClassNode(ClassNode n)
