@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from test.g4 by ANTLR 4.11.1
+// Generated from ZephyrParser.g4 by ANTLR 4.11.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -25,7 +25,7 @@ using IToken = Antlr4.Runtime.IToken;
 using ParserRuleContext = Antlr4.Runtime.ParserRuleContext;
 
 /// <summary>
-/// This class provides an empty implementation of <see cref="ItestVisitor{Result}"/>,
+/// This class provides an empty implementation of <see cref="IZephyrParserVisitor{Result}"/>,
 /// which can be extended to create a visitor which only needs to handle a subset
 /// of the available methods.
 /// </summary>
@@ -33,9 +33,9 @@ using ParserRuleContext = Antlr4.Runtime.ParserRuleContext;
 [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.11.1")]
 [System.Diagnostics.DebuggerNonUserCode]
 [System.CLSCompliant(false)]
-public partial class testBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, ItestVisitor<Result> {
+public partial class ZephyrParserBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, IZephyrParserVisitor<Result> {
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.program"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.program"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -43,9 +43,9 @@ public partial class testBaseVisitor<Result> : AbstractParseTreeVisitor<Result>,
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitProgram([NotNull] test.ProgramContext context) { return VisitChildren(context); }
+	public virtual Result VisitProgram([NotNull] ZephyrParser.ProgramContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.statementList"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.statementList"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -53,9 +53,9 @@ public partial class testBaseVisitor<Result> : AbstractParseTreeVisitor<Result>,
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitStatementList([NotNull] test.StatementListContext context) { return VisitChildren(context); }
+	public virtual Result VisitStatementList([NotNull] ZephyrParser.StatementListContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.statement"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.statement"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -63,9 +63,9 @@ public partial class testBaseVisitor<Result> : AbstractParseTreeVisitor<Result>,
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitStatement([NotNull] test.StatementContext context) { return VisitChildren(context); }
+	public virtual Result VisitStatement([NotNull] ZephyrParser.StatementContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.decl"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.decl"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -73,9 +73,9 @@ public partial class testBaseVisitor<Result> : AbstractParseTreeVisitor<Result>,
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitDecl([NotNull] test.DeclContext context) { return VisitChildren(context); }
+	public virtual Result VisitDecl([NotNull] ZephyrParser.DeclContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.classBodyDecl"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.classBodyDecl"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -83,9 +83,9 @@ public partial class testBaseVisitor<Result> : AbstractParseTreeVisitor<Result>,
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitClassBodyDecl([NotNull] test.ClassBodyDeclContext context) { return VisitChildren(context); }
+	public virtual Result VisitClassBodyDecl([NotNull] ZephyrParser.ClassBodyDeclContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.typedVarDecl"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.typedVarDecl"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -93,9 +93,9 @@ public partial class testBaseVisitor<Result> : AbstractParseTreeVisitor<Result>,
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitTypedVarDecl([NotNull] test.TypedVarDeclContext context) { return VisitChildren(context); }
+	public virtual Result VisitTypedVarDecl([NotNull] ZephyrParser.TypedVarDeclContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.classDecl"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.classDecl"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -103,9 +103,9 @@ public partial class testBaseVisitor<Result> : AbstractParseTreeVisitor<Result>,
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitClassDecl([NotNull] test.ClassDeclContext context) { return VisitChildren(context); }
+	public virtual Result VisitClassDecl([NotNull] ZephyrParser.ClassDeclContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.classBody"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.classBody"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -113,9 +113,9 @@ public partial class testBaseVisitor<Result> : AbstractParseTreeVisitor<Result>,
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitClassBody([NotNull] test.ClassBodyContext context) { return VisitChildren(context); }
+	public virtual Result VisitClassBody([NotNull] ZephyrParser.ClassBodyContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.printStmt"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.printStmt"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -123,9 +123,9 @@ public partial class testBaseVisitor<Result> : AbstractParseTreeVisitor<Result>,
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitPrintStmt([NotNull] test.PrintStmtContext context) { return VisitChildren(context); }
+	public virtual Result VisitPrintStmt([NotNull] ZephyrParser.PrintStmtContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.returnStmt"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.returnStmt"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -133,9 +133,9 @@ public partial class testBaseVisitor<Result> : AbstractParseTreeVisitor<Result>,
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitReturnStmt([NotNull] test.ReturnStmtContext context) { return VisitChildren(context); }
+	public virtual Result VisitReturnStmt([NotNull] ZephyrParser.ReturnStmtContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.compound"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.compound"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -143,9 +143,9 @@ public partial class testBaseVisitor<Result> : AbstractParseTreeVisitor<Result>,
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitCompound([NotNull] test.CompoundContext context) { return VisitChildren(context); }
+	public virtual Result VisitCompound([NotNull] ZephyrParser.CompoundContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.ifStmt"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.ifStmt"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -153,9 +153,9 @@ public partial class testBaseVisitor<Result> : AbstractParseTreeVisitor<Result>,
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitIfStmt([NotNull] test.IfStmtContext context) { return VisitChildren(context); }
+	public virtual Result VisitIfStmt([NotNull] ZephyrParser.IfStmtContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.whileStmt"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.whileStmt"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -163,9 +163,9 @@ public partial class testBaseVisitor<Result> : AbstractParseTreeVisitor<Result>,
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitWhileStmt([NotNull] test.WhileStmtContext context) { return VisitChildren(context); }
+	public virtual Result VisitWhileStmt([NotNull] ZephyrParser.WhileStmtContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.forStmt"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.forStmt"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -173,9 +173,9 @@ public partial class testBaseVisitor<Result> : AbstractParseTreeVisitor<Result>,
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitForStmt([NotNull] test.ForStmtContext context) { return VisitChildren(context); }
+	public virtual Result VisitForStmt([NotNull] ZephyrParser.ForStmtContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.funcDecl"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.funcDecl"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -183,9 +183,9 @@ public partial class testBaseVisitor<Result> : AbstractParseTreeVisitor<Result>,
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitFuncDecl([NotNull] test.FuncDeclContext context) { return VisitChildren(context); }
+	public virtual Result VisitFuncDecl([NotNull] ZephyrParser.FuncDeclContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.funcParameters"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.funcParameters"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -193,9 +193,9 @@ public partial class testBaseVisitor<Result> : AbstractParseTreeVisitor<Result>,
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitFuncParameters([NotNull] test.FuncParametersContext context) { return VisitChildren(context); }
+	public virtual Result VisitFuncParameters([NotNull] ZephyrParser.FuncParametersContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.funcArguments"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.funcArguments"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -203,9 +203,9 @@ public partial class testBaseVisitor<Result> : AbstractParseTreeVisitor<Result>,
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitFuncArguments([NotNull] test.FuncArgumentsContext context) { return VisitChildren(context); }
+	public virtual Result VisitFuncArguments([NotNull] ZephyrParser.FuncArgumentsContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.varDecl"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.varDecl"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -213,9 +213,9 @@ public partial class testBaseVisitor<Result> : AbstractParseTreeVisitor<Result>,
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitVarDecl([NotNull] test.VarDeclContext context) { return VisitChildren(context); }
+	public virtual Result VisitVarDecl([NotNull] ZephyrParser.VarDeclContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.assignExpr"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.assignExpr"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -223,9 +223,9 @@ public partial class testBaseVisitor<Result> : AbstractParseTreeVisitor<Result>,
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitAssignExpr([NotNull] test.AssignExprContext context) { return VisitChildren(context); }
+	public virtual Result VisitAssignExpr([NotNull] ZephyrParser.AssignExprContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.equality"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.equality"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -233,9 +233,9 @@ public partial class testBaseVisitor<Result> : AbstractParseTreeVisitor<Result>,
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitEquality([NotNull] test.EqualityContext context) { return VisitChildren(context); }
+	public virtual Result VisitEquality([NotNull] ZephyrParser.EqualityContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.comparison"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.factor"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -243,9 +243,9 @@ public partial class testBaseVisitor<Result> : AbstractParseTreeVisitor<Result>,
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitComparison([NotNull] test.ComparisonContext context) { return VisitChildren(context); }
+	public virtual Result VisitFactor([NotNull] ZephyrParser.FactorContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.expression"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.call"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -253,9 +253,9 @@ public partial class testBaseVisitor<Result> : AbstractParseTreeVisitor<Result>,
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitExpression([NotNull] test.ExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitCall([NotNull] ZephyrParser.CallContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.term"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.primary"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -263,9 +263,9 @@ public partial class testBaseVisitor<Result> : AbstractParseTreeVisitor<Result>,
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitTerm([NotNull] test.TermContext context) { return VisitChildren(context); }
+	public virtual Result VisitPrimary([NotNull] ZephyrParser.PrimaryContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.factor"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.literal"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -273,9 +273,9 @@ public partial class testBaseVisitor<Result> : AbstractParseTreeVisitor<Result>,
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitFactor([NotNull] test.FactorContext context) { return VisitChildren(context); }
+	public virtual Result VisitLiteral([NotNull] ZephyrParser.LiteralContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.call"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.type"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -283,35 +283,5 @@ public partial class testBaseVisitor<Result> : AbstractParseTreeVisitor<Result>,
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitCall([NotNull] test.CallContext context) { return VisitChildren(context); }
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.primary"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitPrimary([NotNull] test.PrimaryContext context) { return VisitChildren(context); }
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.literal"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitLiteral([NotNull] test.LiteralContext context) { return VisitChildren(context); }
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.type"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitType([NotNull] test.TypeContext context) { return VisitChildren(context); }
+	public virtual Result VisitType([NotNull] ZephyrParser.TypeContext context) { return VisitChildren(context); }
 }

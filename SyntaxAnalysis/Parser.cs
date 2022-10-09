@@ -18,19 +18,19 @@ namespace Zephyr.SyntaxAnalysis
             _nestingLevel = 0;
         }
 
-        public List<Node> Parse()
+        public Node Parse()
         {
             return Program();
         }
 
-        private List<Node> Program()
+        private Node Program()
         {
             var nodes = StatementList();
             var eof = Match(Eof);
             if (eof is null && _currentToken.Value.Type == Tab)
                 throw new ParserException(_currentToken.Value, "Expected colon at the beginning of a block");
 
-            return nodes;
+            return new CompoundNode(nodes);
         }
 
         private Node Compound()

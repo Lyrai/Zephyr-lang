@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from test.g4 by ANTLR 4.11.1
+// Generated from ZephyrParser.g4 by ANTLR 4.11.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -25,178 +25,160 @@ using IToken = Antlr4.Runtime.IToken;
 
 /// <summary>
 /// This interface defines a complete generic visitor for a parse tree produced
-/// by <see cref="test"/>.
+/// by <see cref="ZephyrParser"/>.
 /// </summary>
 /// <typeparam name="Result">The return type of the visit operation.</typeparam>
 [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.11.1")]
 [System.CLSCompliant(false)]
-public interface ItestVisitor<Result> : IParseTreeVisitor<Result> {
+public interface IZephyrParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.program"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.program"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitProgram([NotNull] test.ProgramContext context);
+	Result VisitProgram([NotNull] ZephyrParser.ProgramContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.statementList"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.statementList"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitStatementList([NotNull] test.StatementListContext context);
+	Result VisitStatementList([NotNull] ZephyrParser.StatementListContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.statement"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.statement"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitStatement([NotNull] test.StatementContext context);
+	Result VisitStatement([NotNull] ZephyrParser.StatementContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.decl"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.decl"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitDecl([NotNull] test.DeclContext context);
+	Result VisitDecl([NotNull] ZephyrParser.DeclContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.classBodyDecl"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.classBodyDecl"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitClassBodyDecl([NotNull] test.ClassBodyDeclContext context);
+	Result VisitClassBodyDecl([NotNull] ZephyrParser.ClassBodyDeclContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.typedVarDecl"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.typedVarDecl"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitTypedVarDecl([NotNull] test.TypedVarDeclContext context);
+	Result VisitTypedVarDecl([NotNull] ZephyrParser.TypedVarDeclContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.classDecl"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.classDecl"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitClassDecl([NotNull] test.ClassDeclContext context);
+	Result VisitClassDecl([NotNull] ZephyrParser.ClassDeclContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.classBody"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.classBody"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitClassBody([NotNull] test.ClassBodyContext context);
+	Result VisitClassBody([NotNull] ZephyrParser.ClassBodyContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.printStmt"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.printStmt"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitPrintStmt([NotNull] test.PrintStmtContext context);
+	Result VisitPrintStmt([NotNull] ZephyrParser.PrintStmtContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.returnStmt"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.returnStmt"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitReturnStmt([NotNull] test.ReturnStmtContext context);
+	Result VisitReturnStmt([NotNull] ZephyrParser.ReturnStmtContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.compound"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.compound"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitCompound([NotNull] test.CompoundContext context);
+	Result VisitCompound([NotNull] ZephyrParser.CompoundContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.ifStmt"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.ifStmt"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitIfStmt([NotNull] test.IfStmtContext context);
+	Result VisitIfStmt([NotNull] ZephyrParser.IfStmtContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.whileStmt"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.whileStmt"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitWhileStmt([NotNull] test.WhileStmtContext context);
+	Result VisitWhileStmt([NotNull] ZephyrParser.WhileStmtContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.forStmt"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.forStmt"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitForStmt([NotNull] test.ForStmtContext context);
+	Result VisitForStmt([NotNull] ZephyrParser.ForStmtContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.funcDecl"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.funcDecl"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitFuncDecl([NotNull] test.FuncDeclContext context);
+	Result VisitFuncDecl([NotNull] ZephyrParser.FuncDeclContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.funcParameters"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.funcParameters"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitFuncParameters([NotNull] test.FuncParametersContext context);
+	Result VisitFuncParameters([NotNull] ZephyrParser.FuncParametersContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.funcArguments"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.funcArguments"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitFuncArguments([NotNull] test.FuncArgumentsContext context);
+	Result VisitFuncArguments([NotNull] ZephyrParser.FuncArgumentsContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.varDecl"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.varDecl"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitVarDecl([NotNull] test.VarDeclContext context);
+	Result VisitVarDecl([NotNull] ZephyrParser.VarDeclContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.assignExpr"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.assignExpr"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitAssignExpr([NotNull] test.AssignExprContext context);
+	Result VisitAssignExpr([NotNull] ZephyrParser.AssignExprContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.equality"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.equality"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitEquality([NotNull] test.EqualityContext context);
+	Result VisitEquality([NotNull] ZephyrParser.EqualityContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.comparison"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.factor"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitComparison([NotNull] test.ComparisonContext context);
+	Result VisitFactor([NotNull] ZephyrParser.FactorContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.expression"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.call"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitExpression([NotNull] test.ExpressionContext context);
+	Result VisitCall([NotNull] ZephyrParser.CallContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.term"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.primary"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitTerm([NotNull] test.TermContext context);
+	Result VisitPrimary([NotNull] ZephyrParser.PrimaryContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.factor"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.literal"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitFactor([NotNull] test.FactorContext context);
+	Result VisitLiteral([NotNull] ZephyrParser.LiteralContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.call"/>.
+	/// Visit a parse tree produced by <see cref="ZephyrParser.type"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitCall([NotNull] test.CallContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.primary"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitPrimary([NotNull] test.PrimaryContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.literal"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitLiteral([NotNull] test.LiteralContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="test.type"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitType([NotNull] test.TypeContext context);
+	Result VisitType([NotNull] ZephyrParser.TypeContext context);
 }

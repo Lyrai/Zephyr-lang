@@ -25,9 +25,9 @@ namespace Zephyr
                 var c = File.ReadAllLines("../../../test_antlr.txt");
                 string code = string.Join('\n', c);
                 ICharStream stream = CharStreams.fromString(code);
-                ITokenSource l = new testLexer(stream);
+                ITokenSource l = new ZephyrLexer(stream);
                 ITokenStream tokenStream = new CommonTokenStream(l);
-                var parser = new test(tokenStream);
+                var parser = new ZephyrParser(tokenStream);
                 var tree = parser.program();
                 var visitor = new TestVisitor();
                 var nodeTree = visitor.Visit(tree);
@@ -37,7 +37,7 @@ namespace Zephyr
                 var tokens = lexer.GetTokens();
 
                 Parser parser = new Parser(tokens);
-                var tree = parser.Parse();*/
+                var nodeTree = parser.Parse();*/
 
                 SemanticAnalyzer analyzer = new SemanticAnalyzer(nodeTree);
                 analyzer.Analyze();

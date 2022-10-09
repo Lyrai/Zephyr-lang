@@ -1,4 +1,4 @@
-parser grammar test;
+parser grammar ZephyrParser;
 
 options { tokenVocab = testLexer; }
 
@@ -60,22 +60,22 @@ varDecl: 'let' ID ':' type (ASSIGN assignExpr)?;
 
 //propertyDecl: 'property' typedVarDecl (('get' statementList END) ('set' statementList END)? | ('set' statementList END) ('get' statementList END)?) ;
 
-//expression: equality (ASSIGN expression)?;
-//
-//equality: 
-//      equality (EQUAL | NOT_EQUAL) equality # eq
-//    | equality (GREATER_EQUAL | GREATER | LESS_EQUAL | LESS) equality # cmp
-//    | equality (PLUS | MINUS) equality # add
-//    | equality (DIVIDE | MULTIPLY) equality # mul
-//    | factor # fact
-//;
 assignExpr: equality (ASSIGN assignExpr)?;
-equality: comparison ((EQUAL | NOT_EQUAL) comparison)*;
-comparison: expression (
-    (GREATER_EQUAL | GREATER | LESS_EQUAL | LESS)
-    expression)*;
-expression: term ((PLUS | MINUS) term)*;
-term: factor ((DIVIDE | MULTIPLY) factor)*;
+
+equality: 
+      equality (EQUAL | NOT_EQUAL) equality
+    | equality (GREATER_EQUAL | GREATER | LESS_EQUAL | LESS) equality
+    | equality (PLUS | MINUS) equality
+    | equality (DIVIDE | MULTIPLY) equality
+    | factor
+;
+//assignExpr: equality (ASSIGN assignExpr)?;
+//equality: comparison ((EQUAL | NOT_EQUAL) comparison)*;
+//comparison: expression (
+//    (GREATER_EQUAL | GREATER | LESS_EQUAL | LESS)
+//    expression)*;
+//expression: term ((PLUS | MINUS) term)*;
+//term: factor ((DIVIDE | MULTIPLY) factor)*;
 factor: (MINUS | PLUS | NOT) factor | call;
 call: primary (('(' funcArguments? ')') | DOT ID)*;
 primary: literal | ID | '(' equality ')';

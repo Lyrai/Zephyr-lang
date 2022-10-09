@@ -1,4 +1,4 @@
-﻿lexer grammar testLexer;
+﻿lexer grammar ZephyrLexer;
 
 tokens { STRING_LITERAL }
 

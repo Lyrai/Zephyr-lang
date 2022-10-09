@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from testLexer.g4 by ANTLR 4.11.1
+// Generated from ZephyrLexer.g4 by ANTLR 4.11.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -29,7 +29,7 @@ using DFA = Antlr4.Runtime.Dfa.DFA;
 
 [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.11.1")]
 [System.CLSCompliant(false)]
-public partial class testLexer : Lexer {
+public partial class ZephyrLexer : Lexer {
 	protected static DFA[] decisionToDFA;
 	protected static PredictionContextCache sharedContextCache = new PredictionContextCache();
 	public const int
@@ -59,10 +59,10 @@ public partial class testLexer : Lexer {
 	};
 
 
-	public testLexer(ICharStream input)
+	public ZephyrLexer(ICharStream input)
 	: this(input, Console.Out, Console.Error) { }
 
-	public testLexer(ICharStream input, TextWriter output, TextWriter errorOutput)
+	public ZephyrLexer(ICharStream input, TextWriter output, TextWriter errorOutput)
 	: base(input, output, errorOutput)
 	{
 		Interpreter = new LexerATNSimulator(this, _ATN, decisionToDFA, sharedContextCache);
@@ -94,7 +94,7 @@ public partial class testLexer : Lexer {
 		}
 	}
 
-	public override string GrammarFileName { get { return "testLexer.g4"; } }
+	public override string GrammarFileName { get { return "ZephyrLexer.g4"; } }
 
 	public override string[] RuleNames { get { return ruleNames; } }
 
@@ -104,7 +104,7 @@ public partial class testLexer : Lexer {
 
 	public override int[] SerializedAtn { get { return _serializedATN; } }
 
-	static testLexer() {
+	static ZephyrLexer() {
 		decisionToDFA = new DFA[_ATN.NumberOfDecisions];
 		for (int i = 0; i < _ATN.NumberOfDecisions; i++) {
 			decisionToDFA[i] = new DFA(_ATN.GetDecisionState(i), i);

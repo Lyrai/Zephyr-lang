@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from test.g4 by ANTLR 4.11.1
+// Generated from ZephyrParser.g4 by ANTLR 4.11.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -32,7 +32,7 @@ using DFA = Antlr4.Runtime.Dfa.DFA;
 
 [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.11.1")]
 [System.CLSCompliant(false)]
-public partial class test : Parser {
+public partial class ZephyrParser : Parser {
 	protected static DFA[] decisionToDFA;
 	protected static PredictionContextCache sharedContextCache = new PredictionContextCache();
 	public const int
@@ -48,14 +48,14 @@ public partial class test : Parser {
 		RULE_printStmt = 8, RULE_returnStmt = 9, RULE_compound = 10, RULE_ifStmt = 11, 
 		RULE_whileStmt = 12, RULE_forStmt = 13, RULE_funcDecl = 14, RULE_funcParameters = 15, 
 		RULE_funcArguments = 16, RULE_varDecl = 17, RULE_assignExpr = 18, RULE_equality = 19, 
-		RULE_comparison = 20, RULE_expression = 21, RULE_term = 22, RULE_factor = 23, 
-		RULE_call = 24, RULE_primary = 25, RULE_literal = 26, RULE_type = 27;
+		RULE_factor = 20, RULE_call = 21, RULE_primary = 22, RULE_literal = 23, 
+		RULE_type = 24;
 	public static readonly string[] ruleNames = {
 		"program", "statementList", "statement", "decl", "classBodyDecl", "typedVarDecl", 
 		"classDecl", "classBody", "printStmt", "returnStmt", "compound", "ifStmt", 
 		"whileStmt", "forStmt", "funcDecl", "funcParameters", "funcArguments", 
-		"varDecl", "assignExpr", "equality", "comparison", "expression", "term", 
-		"factor", "call", "primary", "literal", "type"
+		"varDecl", "assignExpr", "equality", "factor", "call", "primary", "literal", 
+		"type"
 	};
 
 	private static readonly string[] _LiteralNames = {
@@ -84,22 +84,22 @@ public partial class test : Parser {
 		}
 	}
 
-	public override string GrammarFileName { get { return "test.g4"; } }
+	public override string GrammarFileName { get { return "ZephyrParser.g4"; } }
 
 	public override string[] RuleNames { get { return ruleNames; } }
 
 	public override int[] SerializedAtn { get { return _serializedATN; } }
 
-	static test() {
+	static ZephyrParser() {
 		decisionToDFA = new DFA[_ATN.NumberOfDecisions];
 		for (int i = 0; i < _ATN.NumberOfDecisions; i++) {
 			decisionToDFA[i] = new DFA(_ATN.GetDecisionState(i), i);
 		}
 	}
 
-		public test(ITokenStream input) : this(input, Console.Out, Console.Error) { }
+		public ZephyrParser(ITokenStream input) : this(input, Console.Out, Console.Error) { }
 
-		public test(ITokenStream input, TextWriter output, TextWriter errorOutput)
+		public ZephyrParser(ITokenStream input, TextWriter output, TextWriter errorOutput)
 		: base(input, output, errorOutput)
 	{
 		Interpreter = new ParserATNSimulator(this, _ATN, decisionToDFA, sharedContextCache);
@@ -109,7 +109,7 @@ public partial class test : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public StatementListContext statementList() {
 			return GetRuleContext<StatementListContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Eof() { return GetToken(test.Eof, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Eof() { return GetToken(ZephyrParser.Eof, 0); }
 		public ProgramContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -117,17 +117,17 @@ public partial class test : Parser {
 		public override int RuleIndex { get { return RULE_program; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.EnterProgram(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.ExitProgram(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ItestVisitor<TResult> typedVisitor = visitor as ItestVisitor<TResult>;
+			IZephyrParserVisitor<TResult> typedVisitor = visitor as IZephyrParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitProgram(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -140,9 +140,9 @@ public partial class test : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 56;
+			State = 50;
 			statementList();
-			State = 57;
+			State = 51;
 			Match(Eof);
 			}
 		}
@@ -164,9 +164,9 @@ public partial class test : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public StatementContext statement(int i) {
 			return GetRuleContext<StatementContext>(i);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] SEMICOLON() { return GetTokens(test.SEMICOLON); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] SEMICOLON() { return GetTokens(ZephyrParser.SEMICOLON); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode SEMICOLON(int i) {
-			return GetToken(test.SEMICOLON, i);
+			return GetToken(ZephyrParser.SEMICOLON, i);
 		}
 		public StatementListContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -175,17 +175,17 @@ public partial class test : Parser {
 		public override int RuleIndex { get { return RULE_statementList; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.EnterStatementList(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.ExitStatementList(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ItestVisitor<TResult> typedVisitor = visitor as ItestVisitor<TResult>;
+			IZephyrParserVisitor<TResult> typedVisitor = visitor as IZephyrParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitStatementList(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -199,27 +199,27 @@ public partial class test : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 65;
+			State = 59;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (((_la) & ~0x3f) == 0 && ((1L << _la) & 1868319418090L) != 0) {
 				{
 				{
-				State = 59;
+				State = 53;
 				statement();
-				State = 61;
+				State = 55;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 				if (_la==SEMICOLON) {
 					{
-					State = 60;
+					State = 54;
 					Match(SEMICOLON);
 					}
 				}
 
 				}
 				}
-				State = 67;
+				State = 61;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
@@ -268,17 +268,17 @@ public partial class test : Parser {
 		public override int RuleIndex { get { return RULE_statement; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.EnterStatement(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.ExitStatement(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ItestVisitor<TResult> typedVisitor = visitor as ItestVisitor<TResult>;
+			IZephyrParserVisitor<TResult> typedVisitor = visitor as IZephyrParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitStatement(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -291,50 +291,50 @@ public partial class test : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 76;
+			State = 70;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case CLASS:
 			case FN:
 			case LET:
 				{
-				State = 68;
+				State = 62;
 				decl();
 				}
 				break;
 			case PRINT:
 				{
-				State = 69;
+				State = 63;
 				printStmt();
 				}
 				break;
 			case RETURN:
 				{
-				State = 70;
+				State = 64;
 				returnStmt();
 				}
 				break;
 			case LBRACE:
 				{
-				State = 71;
+				State = 65;
 				compound();
 				}
 				break;
 			case IF:
 				{
-				State = 72;
+				State = 66;
 				ifStmt();
 				}
 				break;
 			case WHILE:
 				{
-				State = 73;
+				State = 67;
 				whileStmt();
 				}
 				break;
 			case FOR:
 				{
-				State = 74;
+				State = 68;
 				forStmt();
 				}
 				break;
@@ -349,7 +349,7 @@ public partial class test : Parser {
 			case INT:
 			case FLOAT:
 				{
-				State = 75;
+				State = 69;
 				assignExpr();
 				}
 				break;
@@ -386,17 +386,17 @@ public partial class test : Parser {
 		public override int RuleIndex { get { return RULE_decl; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.EnterDecl(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.ExitDecl(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ItestVisitor<TResult> typedVisitor = visitor as ItestVisitor<TResult>;
+			IZephyrParserVisitor<TResult> typedVisitor = visitor as IZephyrParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitDecl(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -409,24 +409,24 @@ public partial class test : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 81;
+			State = 75;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case CLASS:
 				{
-				State = 78;
+				State = 72;
 				classDecl();
 				}
 				break;
 			case FN:
 				{
-				State = 79;
+				State = 73;
 				funcDecl();
 				}
 				break;
 			case LET:
 				{
-				State = 80;
+				State = 74;
 				varDecl();
 				}
 				break;
@@ -463,17 +463,17 @@ public partial class test : Parser {
 		public override int RuleIndex { get { return RULE_classBodyDecl; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.EnterClassBodyDecl(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.ExitClassBodyDecl(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ItestVisitor<TResult> typedVisitor = visitor as ItestVisitor<TResult>;
+			IZephyrParserVisitor<TResult> typedVisitor = visitor as IZephyrParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitClassBodyDecl(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -486,24 +486,24 @@ public partial class test : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 86;
+			State = 80;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case FN:
 				{
-				State = 83;
+				State = 77;
 				funcDecl();
 				}
 				break;
 			case ID:
 				{
-				State = 84;
+				State = 78;
 				typedVarDecl();
 				}
 				break;
 			case CLASS:
 				{
-				State = 85;
+				State = 79;
 				classDecl();
 				}
 				break;
@@ -524,8 +524,8 @@ public partial class test : Parser {
 	}
 
 	public partial class TypedVarDeclContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ID() { return GetToken(test.ID, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode COLON() { return GetToken(test.COLON, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ID() { return GetToken(ZephyrParser.ID, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode COLON() { return GetToken(ZephyrParser.COLON, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public TypeContext type() {
 			return GetRuleContext<TypeContext>(0);
 		}
@@ -536,17 +536,17 @@ public partial class test : Parser {
 		public override int RuleIndex { get { return RULE_typedVarDecl; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.EnterTypedVarDecl(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.ExitTypedVarDecl(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ItestVisitor<TResult> typedVisitor = visitor as ItestVisitor<TResult>;
+			IZephyrParserVisitor<TResult> typedVisitor = visitor as IZephyrParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitTypedVarDecl(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -559,11 +559,11 @@ public partial class test : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 88;
+			State = 82;
 			Match(ID);
-			State = 89;
+			State = 83;
 			Match(COLON);
-			State = 90;
+			State = 84;
 			type();
 			}
 		}
@@ -579,16 +579,16 @@ public partial class test : Parser {
 	}
 
 	public partial class ClassDeclContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode CLASS() { return GetToken(test.CLASS, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] ID() { return GetTokens(test.ID); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode CLASS() { return GetToken(ZephyrParser.CLASS, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] ID() { return GetTokens(ZephyrParser.ID); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ID(int i) {
-			return GetToken(test.ID, i);
+			return GetToken(ZephyrParser.ID, i);
 		}
 		[System.Diagnostics.DebuggerNonUserCode] public ClassBodyContext classBody() {
 			return GetRuleContext<ClassBodyContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode END() { return GetToken(test.END, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LESS() { return GetToken(test.LESS, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode END() { return GetToken(ZephyrParser.END, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LESS() { return GetToken(ZephyrParser.LESS, 0); }
 		public ClassDeclContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -596,17 +596,17 @@ public partial class test : Parser {
 		public override int RuleIndex { get { return RULE_classDecl; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.EnterClassDecl(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.ExitClassDecl(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ItestVisitor<TResult> typedVisitor = visitor as ItestVisitor<TResult>;
+			IZephyrParserVisitor<TResult> typedVisitor = visitor as IZephyrParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitClassDecl(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -620,25 +620,25 @@ public partial class test : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 92;
+			State = 86;
 			Match(CLASS);
-			State = 93;
+			State = 87;
 			Match(ID);
-			State = 96;
+			State = 90;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==LESS) {
 				{
-				State = 94;
+				State = 88;
 				Match(LESS);
-				State = 95;
+				State = 89;
 				Match(ID);
 				}
 			}
 
-			State = 98;
+			State = 92;
 			classBody();
-			State = 99;
+			State = 93;
 			Match(END);
 			}
 		}
@@ -667,17 +667,17 @@ public partial class test : Parser {
 		public override int RuleIndex { get { return RULE_classBody; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.EnterClassBody(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.ExitClassBody(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ItestVisitor<TResult> typedVisitor = visitor as ItestVisitor<TResult>;
+			IZephyrParserVisitor<TResult> typedVisitor = visitor as IZephyrParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitClassBody(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -691,17 +691,17 @@ public partial class test : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 104;
+			State = 98;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (((_la) & ~0x3f) == 0 && ((1L << _la) & 139272L) != 0) {
 				{
 				{
-				State = 101;
+				State = 95;
 				classBodyDecl();
 				}
 				}
-				State = 106;
+				State = 100;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
@@ -719,7 +719,7 @@ public partial class test : Parser {
 	}
 
 	public partial class PrintStmtContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode PRINT() { return GetToken(test.PRINT, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode PRINT() { return GetToken(ZephyrParser.PRINT, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public AssignExprContext assignExpr() {
 			return GetRuleContext<AssignExprContext>(0);
 		}
@@ -730,17 +730,17 @@ public partial class test : Parser {
 		public override int RuleIndex { get { return RULE_printStmt; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.EnterPrintStmt(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.ExitPrintStmt(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ItestVisitor<TResult> typedVisitor = visitor as ItestVisitor<TResult>;
+			IZephyrParserVisitor<TResult> typedVisitor = visitor as IZephyrParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitPrintStmt(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -753,9 +753,9 @@ public partial class test : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 107;
+			State = 101;
 			Match(PRINT);
-			State = 108;
+			State = 102;
 			assignExpr();
 			}
 		}
@@ -771,7 +771,7 @@ public partial class test : Parser {
 	}
 
 	public partial class ReturnStmtContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RETURN() { return GetToken(test.RETURN, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RETURN() { return GetToken(ZephyrParser.RETURN, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public AssignExprContext assignExpr() {
 			return GetRuleContext<AssignExprContext>(0);
 		}
@@ -782,17 +782,17 @@ public partial class test : Parser {
 		public override int RuleIndex { get { return RULE_returnStmt; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.EnterReturnStmt(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.ExitReturnStmt(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ItestVisitor<TResult> typedVisitor = visitor as ItestVisitor<TResult>;
+			IZephyrParserVisitor<TResult> typedVisitor = visitor as IZephyrParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitReturnStmt(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -805,14 +805,14 @@ public partial class test : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 110;
+			State = 104;
 			Match(RETURN);
-			State = 112;
+			State = 106;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,7,Context) ) {
 			case 1:
 				{
-				State = 111;
+				State = 105;
 				assignExpr();
 				}
 				break;
@@ -831,11 +831,11 @@ public partial class test : Parser {
 	}
 
 	public partial class CompoundContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LBRACE() { return GetToken(test.LBRACE, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LBRACE() { return GetToken(ZephyrParser.LBRACE, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public StatementListContext statementList() {
 			return GetRuleContext<StatementListContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RBRACE() { return GetToken(test.RBRACE, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RBRACE() { return GetToken(ZephyrParser.RBRACE, 0); }
 		public CompoundContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -843,17 +843,17 @@ public partial class test : Parser {
 		public override int RuleIndex { get { return RULE_compound; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.EnterCompound(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.ExitCompound(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ItestVisitor<TResult> typedVisitor = visitor as ItestVisitor<TResult>;
+			IZephyrParserVisitor<TResult> typedVisitor = visitor as IZephyrParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitCompound(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -866,11 +866,11 @@ public partial class test : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 114;
+			State = 108;
 			Match(LBRACE);
-			State = 115;
+			State = 109;
 			statementList();
-			State = 116;
+			State = 110;
 			Match(RBRACE);
 			}
 		}
@@ -889,7 +889,7 @@ public partial class test : Parser {
 		public AssignExprContext condition;
 		public StatementContext thenBranch;
 		public StatementContext elseBranch;
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode IF() { return GetToken(test.IF, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode IF() { return GetToken(ZephyrParser.IF, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public AssignExprContext assignExpr() {
 			return GetRuleContext<AssignExprContext>(0);
 		}
@@ -899,7 +899,7 @@ public partial class test : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public StatementContext statement(int i) {
 			return GetRuleContext<StatementContext>(i);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ELSE() { return GetToken(test.ELSE, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ELSE() { return GetToken(ZephyrParser.ELSE, 0); }
 		public IfStmtContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -907,17 +907,17 @@ public partial class test : Parser {
 		public override int RuleIndex { get { return RULE_ifStmt; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.EnterIfStmt(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.ExitIfStmt(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ItestVisitor<TResult> typedVisitor = visitor as ItestVisitor<TResult>;
+			IZephyrParserVisitor<TResult> typedVisitor = visitor as IZephyrParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitIfStmt(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -930,20 +930,20 @@ public partial class test : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 118;
+			State = 112;
 			Match(IF);
-			State = 119;
+			State = 113;
 			_localctx.condition = assignExpr();
-			State = 120;
+			State = 114;
 			_localctx.thenBranch = statement();
-			State = 123;
+			State = 117;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,8,Context) ) {
 			case 1:
 				{
-				State = 121;
+				State = 115;
 				Match(ELSE);
-				State = 122;
+				State = 116;
 				_localctx.elseBranch = statement();
 				}
 				break;
@@ -964,7 +964,7 @@ public partial class test : Parser {
 	public partial class WhileStmtContext : ParserRuleContext {
 		public AssignExprContext condition;
 		public StatementContext body;
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode WHILE() { return GetToken(test.WHILE, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode WHILE() { return GetToken(ZephyrParser.WHILE, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public AssignExprContext assignExpr() {
 			return GetRuleContext<AssignExprContext>(0);
 		}
@@ -978,17 +978,17 @@ public partial class test : Parser {
 		public override int RuleIndex { get { return RULE_whileStmt; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.EnterWhileStmt(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.ExitWhileStmt(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ItestVisitor<TResult> typedVisitor = visitor as ItestVisitor<TResult>;
+			IZephyrParserVisitor<TResult> typedVisitor = visitor as IZephyrParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitWhileStmt(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1001,11 +1001,11 @@ public partial class test : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 125;
+			State = 119;
 			Match(WHILE);
-			State = 126;
+			State = 120;
 			_localctx.condition = assignExpr();
-			State = 127;
+			State = 121;
 			_localctx.body = statement();
 			}
 		}
@@ -1025,10 +1025,10 @@ public partial class test : Parser {
 		public EqualityContext condition;
 		public AssignExprContext postAction;
 		public StatementContext body;
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode FOR() { return GetToken(test.FOR, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] COMMA() { return GetTokens(test.COMMA); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode FOR() { return GetToken(ZephyrParser.FOR, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] COMMA() { return GetTokens(ZephyrParser.COMMA); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode COMMA(int i) {
-			return GetToken(test.COMMA, i);
+			return GetToken(ZephyrParser.COMMA, i);
 		}
 		[System.Diagnostics.DebuggerNonUserCode] public VarDeclContext varDecl() {
 			return GetRuleContext<VarDeclContext>(0);
@@ -1049,17 +1049,17 @@ public partial class test : Parser {
 		public override int RuleIndex { get { return RULE_forStmt; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.EnterForStmt(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.ExitForStmt(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ItestVisitor<TResult> typedVisitor = visitor as ItestVisitor<TResult>;
+			IZephyrParserVisitor<TResult> typedVisitor = visitor as IZephyrParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitForStmt(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1072,19 +1072,19 @@ public partial class test : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 129;
+			State = 123;
 			Match(FOR);
-			State = 130;
+			State = 124;
 			_localctx.initializer = varDecl();
-			State = 131;
+			State = 125;
 			Match(COMMA);
-			State = 132;
-			_localctx.condition = equality();
-			State = 133;
+			State = 126;
+			_localctx.condition = equality(0);
+			State = 127;
 			Match(COMMA);
-			State = 134;
+			State = 128;
 			_localctx.postAction = assignExpr();
-			State = 135;
+			State = 129;
 			_localctx.body = statement();
 			}
 		}
@@ -1101,18 +1101,18 @@ public partial class test : Parser {
 
 	public partial class FuncDeclContext : ParserRuleContext {
 		public StatementListContext body;
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode FN() { return GetToken(test.FN, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ID() { return GetToken(test.ID, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LPAR() { return GetToken(test.LPAR, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RPAR() { return GetToken(test.RPAR, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode END() { return GetToken(test.END, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode FN() { return GetToken(ZephyrParser.FN, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ID() { return GetToken(ZephyrParser.ID, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LPAR() { return GetToken(ZephyrParser.LPAR, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RPAR() { return GetToken(ZephyrParser.RPAR, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode END() { return GetToken(ZephyrParser.END, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public StatementListContext statementList() {
 			return GetRuleContext<StatementListContext>(0);
 		}
 		[System.Diagnostics.DebuggerNonUserCode] public FuncParametersContext funcParameters() {
 			return GetRuleContext<FuncParametersContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ARROW() { return GetToken(test.ARROW, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ARROW() { return GetToken(ZephyrParser.ARROW, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public TypeContext type() {
 			return GetRuleContext<TypeContext>(0);
 		}
@@ -1123,17 +1123,17 @@ public partial class test : Parser {
 		public override int RuleIndex { get { return RULE_funcDecl; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.EnterFuncDecl(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.ExitFuncDecl(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ItestVisitor<TResult> typedVisitor = visitor as ItestVisitor<TResult>;
+			IZephyrParserVisitor<TResult> typedVisitor = visitor as IZephyrParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitFuncDecl(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1147,39 +1147,39 @@ public partial class test : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 137;
+			State = 131;
 			Match(FN);
-			State = 138;
+			State = 132;
 			Match(ID);
-			State = 139;
+			State = 133;
 			Match(LPAR);
-			State = 141;
+			State = 135;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==ID) {
 				{
-				State = 140;
+				State = 134;
 				funcParameters();
 				}
 			}
 
-			State = 143;
+			State = 137;
 			Match(RPAR);
-			State = 146;
+			State = 140;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==ARROW) {
 				{
-				State = 144;
+				State = 138;
 				Match(ARROW);
-				State = 145;
+				State = 139;
 				type();
 				}
 			}
 
-			State = 148;
+			State = 142;
 			_localctx.body = statementList();
-			State = 149;
+			State = 143;
 			Match(END);
 			}
 		}
@@ -1204,9 +1204,9 @@ public partial class test : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public TypedVarDeclContext typedVarDecl(int i) {
 			return GetRuleContext<TypedVarDeclContext>(i);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] COMMA() { return GetTokens(test.COMMA); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] COMMA() { return GetTokens(ZephyrParser.COMMA); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode COMMA(int i) {
-			return GetToken(test.COMMA, i);
+			return GetToken(ZephyrParser.COMMA, i);
 		}
 		public FuncParametersContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -1215,17 +1215,17 @@ public partial class test : Parser {
 		public override int RuleIndex { get { return RULE_funcParameters; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.EnterFuncParameters(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.ExitFuncParameters(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ItestVisitor<TResult> typedVisitor = visitor as ItestVisitor<TResult>;
+			IZephyrParserVisitor<TResult> typedVisitor = visitor as IZephyrParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitFuncParameters(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1239,23 +1239,23 @@ public partial class test : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 151;
+			State = 145;
 			_localctx._typedVarDecl = typedVarDecl();
 			_localctx._parameters.Add(_localctx._typedVarDecl);
-			State = 156;
+			State = 150;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==COMMA) {
 				{
 				{
-				State = 152;
+				State = 146;
 				Match(COMMA);
-				State = 153;
+				State = 147;
 				_localctx._typedVarDecl = typedVarDecl();
 				_localctx._paramters.Add(_localctx._typedVarDecl);
 				}
 				}
-				State = 158;
+				State = 152;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
@@ -1281,9 +1281,9 @@ public partial class test : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public EqualityContext equality(int i) {
 			return GetRuleContext<EqualityContext>(i);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] COMMA() { return GetTokens(test.COMMA); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] COMMA() { return GetTokens(ZephyrParser.COMMA); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode COMMA(int i) {
-			return GetToken(test.COMMA, i);
+			return GetToken(ZephyrParser.COMMA, i);
 		}
 		public FuncArgumentsContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -1292,17 +1292,17 @@ public partial class test : Parser {
 		public override int RuleIndex { get { return RULE_funcArguments; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.EnterFuncArguments(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.ExitFuncArguments(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ItestVisitor<TResult> typedVisitor = visitor as ItestVisitor<TResult>;
+			IZephyrParserVisitor<TResult> typedVisitor = visitor as IZephyrParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitFuncArguments(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1316,23 +1316,23 @@ public partial class test : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 159;
-			_localctx._equality = equality();
+			State = 153;
+			_localctx._equality = equality(0);
 			_localctx._args.Add(_localctx._equality);
-			State = 164;
+			State = 158;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==COMMA) {
 				{
 				{
-				State = 160;
+				State = 154;
 				Match(COMMA);
-				State = 161;
-				_localctx._equality = equality();
+				State = 155;
+				_localctx._equality = equality(0);
 				_localctx._args.Add(_localctx._equality);
 				}
 				}
-				State = 166;
+				State = 160;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
@@ -1350,13 +1350,13 @@ public partial class test : Parser {
 	}
 
 	public partial class VarDeclContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LET() { return GetToken(test.LET, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ID() { return GetToken(test.ID, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode COLON() { return GetToken(test.COLON, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LET() { return GetToken(ZephyrParser.LET, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ID() { return GetToken(ZephyrParser.ID, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode COLON() { return GetToken(ZephyrParser.COLON, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public TypeContext type() {
 			return GetRuleContext<TypeContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ASSIGN() { return GetToken(test.ASSIGN, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ASSIGN() { return GetToken(ZephyrParser.ASSIGN, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public AssignExprContext assignExpr() {
 			return GetRuleContext<AssignExprContext>(0);
 		}
@@ -1367,17 +1367,17 @@ public partial class test : Parser {
 		public override int RuleIndex { get { return RULE_varDecl; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.EnterVarDecl(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.ExitVarDecl(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ItestVisitor<TResult> typedVisitor = visitor as ItestVisitor<TResult>;
+			IZephyrParserVisitor<TResult> typedVisitor = visitor as IZephyrParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitVarDecl(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1391,22 +1391,22 @@ public partial class test : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 167;
+			State = 161;
 			Match(LET);
-			State = 168;
+			State = 162;
 			Match(ID);
-			State = 169;
+			State = 163;
 			Match(COLON);
-			State = 170;
+			State = 164;
 			type();
-			State = 173;
+			State = 167;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==ASSIGN) {
 				{
-				State = 171;
+				State = 165;
 				Match(ASSIGN);
-				State = 172;
+				State = 166;
 				assignExpr();
 				}
 			}
@@ -1428,7 +1428,7 @@ public partial class test : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public EqualityContext equality() {
 			return GetRuleContext<EqualityContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ASSIGN() { return GetToken(test.ASSIGN, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ASSIGN() { return GetToken(ZephyrParser.ASSIGN, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public AssignExprContext assignExpr() {
 			return GetRuleContext<AssignExprContext>(0);
 		}
@@ -1439,17 +1439,17 @@ public partial class test : Parser {
 		public override int RuleIndex { get { return RULE_assignExpr; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.EnterAssignExpr(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.ExitAssignExpr(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ItestVisitor<TResult> typedVisitor = visitor as ItestVisitor<TResult>;
+			IZephyrParserVisitor<TResult> typedVisitor = visitor as IZephyrParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitAssignExpr(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1463,16 +1463,16 @@ public partial class test : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 175;
-			equality();
-			State = 178;
+			State = 169;
+			equality(0);
+			State = 172;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==ASSIGN) {
 				{
-				State = 176;
+				State = 170;
 				Match(ASSIGN);
-				State = 177;
+				State = 171;
 				assignExpr();
 				}
 			}
@@ -1491,20 +1491,25 @@ public partial class test : Parser {
 	}
 
 	public partial class EqualityContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ComparisonContext[] comparison() {
-			return GetRuleContexts<ComparisonContext>();
+		[System.Diagnostics.DebuggerNonUserCode] public FactorContext factor() {
+			return GetRuleContext<FactorContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ComparisonContext comparison(int i) {
-			return GetRuleContext<ComparisonContext>(i);
+		[System.Diagnostics.DebuggerNonUserCode] public EqualityContext[] equality() {
+			return GetRuleContexts<EqualityContext>();
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] EQUAL() { return GetTokens(test.EQUAL); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode EQUAL(int i) {
-			return GetToken(test.EQUAL, i);
+		[System.Diagnostics.DebuggerNonUserCode] public EqualityContext equality(int i) {
+			return GetRuleContext<EqualityContext>(i);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] NOT_EQUAL() { return GetTokens(test.NOT_EQUAL); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NOT_EQUAL(int i) {
-			return GetToken(test.NOT_EQUAL, i);
-		}
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode EQUAL() { return GetToken(ZephyrParser.EQUAL, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NOT_EQUAL() { return GetToken(ZephyrParser.NOT_EQUAL, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode GREATER_EQUAL() { return GetToken(ZephyrParser.GREATER_EQUAL, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode GREATER() { return GetToken(ZephyrParser.GREATER, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LESS_EQUAL() { return GetToken(ZephyrParser.LESS_EQUAL, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LESS() { return GetToken(ZephyrParser.LESS, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode PLUS() { return GetToken(ZephyrParser.PLUS, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode MINUS() { return GetToken(ZephyrParser.MINUS, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode DIVIDE() { return GetToken(ZephyrParser.DIVIDE, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode MULTIPLY() { return GetToken(ZephyrParser.MULTIPLY, 0); }
 		public EqualityContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -1512,17 +1517,17 @@ public partial class test : Parser {
 		public override int RuleIndex { get { return RULE_equality; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.EnterEquality(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.ExitEquality(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ItestVisitor<TResult> typedVisitor = visitor as ItestVisitor<TResult>;
+			IZephyrParserVisitor<TResult> typedVisitor = visitor as IZephyrParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitEquality(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1530,215 +1535,120 @@ public partial class test : Parser {
 
 	[RuleVersion(0)]
 	public EqualityContext equality() {
-		EqualityContext _localctx = new EqualityContext(Context, State);
-		EnterRule(_localctx, 38, RULE_equality);
-		int _la;
-		try {
-			EnterOuterAlt(_localctx, 1);
-			{
-			State = 180;
-			comparison();
-			State = 185;
-			ErrorHandler.Sync(this);
-			_la = TokenStream.LA(1);
-			while (_la==EQUAL || _la==NOT_EQUAL) {
-				{
-				{
-				State = 181;
-				_la = TokenStream.LA(1);
-				if ( !(_la==EQUAL || _la==NOT_EQUAL) ) {
-				ErrorHandler.RecoverInline(this);
-				}
-				else {
-					ErrorHandler.ReportMatch(this);
-				    Consume();
-				}
-				State = 182;
-				comparison();
-				}
-				}
-				State = 187;
-				ErrorHandler.Sync(this);
-				_la = TokenStream.LA(1);
-			}
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			ErrorHandler.ReportError(this, re);
-			ErrorHandler.Recover(this, re);
-		}
-		finally {
-			ExitRule();
-		}
-		return _localctx;
+		return equality(0);
 	}
 
-	public partial class ComparisonContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ExpressionContext[] expression() {
-			return GetRuleContexts<ExpressionContext>();
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public ExpressionContext expression(int i) {
-			return GetRuleContext<ExpressionContext>(i);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] GREATER_EQUAL() { return GetTokens(test.GREATER_EQUAL); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode GREATER_EQUAL(int i) {
-			return GetToken(test.GREATER_EQUAL, i);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] GREATER() { return GetTokens(test.GREATER); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode GREATER(int i) {
-			return GetToken(test.GREATER, i);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] LESS_EQUAL() { return GetTokens(test.LESS_EQUAL); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LESS_EQUAL(int i) {
-			return GetToken(test.LESS_EQUAL, i);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] LESS() { return GetTokens(test.LESS); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LESS(int i) {
-			return GetToken(test.LESS, i);
-		}
-		public ComparisonContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
-		}
-		public override int RuleIndex { get { return RULE_comparison; } }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
-			if (typedListener != null) typedListener.EnterComparison(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
-			if (typedListener != null) typedListener.ExitComparison(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ItestVisitor<TResult> typedVisitor = visitor as ItestVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitComparison(this);
-			else return visitor.VisitChildren(this);
-		}
-	}
-
-	[RuleVersion(0)]
-	public ComparisonContext comparison() {
-		ComparisonContext _localctx = new ComparisonContext(Context, State);
-		EnterRule(_localctx, 40, RULE_comparison);
-		int _la;
-		try {
-			EnterOuterAlt(_localctx, 1);
-			{
-			State = 188;
-			expression();
-			State = 193;
-			ErrorHandler.Sync(this);
-			_la = TokenStream.LA(1);
-			while (((_la) & ~0x3f) == 0 && ((1L << _la) & 4026531840L) != 0) {
-				{
-				{
-				State = 189;
-				_la = TokenStream.LA(1);
-				if ( !(((_la) & ~0x3f) == 0 && ((1L << _la) & 4026531840L) != 0) ) {
-				ErrorHandler.RecoverInline(this);
-				}
-				else {
-					ErrorHandler.ReportMatch(this);
-				    Consume();
-				}
-				State = 190;
-				expression();
-				}
-				}
-				State = 195;
-				ErrorHandler.Sync(this);
-				_la = TokenStream.LA(1);
-			}
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			ErrorHandler.ReportError(this, re);
-			ErrorHandler.Recover(this, re);
-		}
-		finally {
-			ExitRule();
-		}
-		return _localctx;
-	}
-
-	public partial class ExpressionContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public TermContext[] term() {
-			return GetRuleContexts<TermContext>();
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public TermContext term(int i) {
-			return GetRuleContext<TermContext>(i);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] PLUS() { return GetTokens(test.PLUS); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode PLUS(int i) {
-			return GetToken(test.PLUS, i);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] MINUS() { return GetTokens(test.MINUS); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode MINUS(int i) {
-			return GetToken(test.MINUS, i);
-		}
-		public ExpressionContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
-		}
-		public override int RuleIndex { get { return RULE_expression; } }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
-			if (typedListener != null) typedListener.EnterExpression(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
-			if (typedListener != null) typedListener.ExitExpression(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ItestVisitor<TResult> typedVisitor = visitor as ItestVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitExpression(this);
-			else return visitor.VisitChildren(this);
-		}
-	}
-
-	[RuleVersion(0)]
-	public ExpressionContext expression() {
-		ExpressionContext _localctx = new ExpressionContext(Context, State);
-		EnterRule(_localctx, 42, RULE_expression);
+	private EqualityContext equality(int _p) {
+		ParserRuleContext _parentctx = Context;
+		int _parentState = State;
+		EqualityContext _localctx = new EqualityContext(Context, _parentState);
+		EqualityContext _prevctx = _localctx;
+		int _startState = 38;
+		EnterRecursionRule(_localctx, 38, RULE_equality, _p);
 		int _la;
 		try {
 			int _alt;
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 196;
-			term();
-			State = 201;
+			{
+			State = 175;
+			factor();
+			}
+			Context.Stop = TokenStream.LT(-1);
+			State = 191;
 			ErrorHandler.Sync(this);
-			_alt = Interpreter.AdaptivePredict(TokenStream,17,Context);
+			_alt = Interpreter.AdaptivePredict(TokenStream,16,Context);
 			while ( _alt!=2 && _alt!=global::Antlr4.Runtime.Atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
+					if ( ParseListeners!=null )
+						TriggerExitRuleEvent();
+					_prevctx = _localctx;
 					{
-					{
-					State = 197;
-					_la = TokenStream.LA(1);
-					if ( !(_la==PLUS || _la==MINUS) ) {
-					ErrorHandler.RecoverInline(this);
-					}
-					else {
-						ErrorHandler.ReportMatch(this);
-					    Consume();
-					}
-					State = 198;
-					term();
+					State = 189;
+					ErrorHandler.Sync(this);
+					switch ( Interpreter.AdaptivePredict(TokenStream,15,Context) ) {
+					case 1:
+						{
+						_localctx = new EqualityContext(_parentctx, _parentState);
+						PushNewRecursionContext(_localctx, _startState, RULE_equality);
+						State = 177;
+						if (!(Precpred(Context, 5))) throw new FailedPredicateException(this, "Precpred(Context, 5)");
+						State = 178;
+						_la = TokenStream.LA(1);
+						if ( !(_la==EQUAL || _la==NOT_EQUAL) ) {
+						ErrorHandler.RecoverInline(this);
+						}
+						else {
+							ErrorHandler.ReportMatch(this);
+						    Consume();
+						}
+						State = 179;
+						equality(6);
+						}
+						break;
+					case 2:
+						{
+						_localctx = new EqualityContext(_parentctx, _parentState);
+						PushNewRecursionContext(_localctx, _startState, RULE_equality);
+						State = 180;
+						if (!(Precpred(Context, 4))) throw new FailedPredicateException(this, "Precpred(Context, 4)");
+						State = 181;
+						_la = TokenStream.LA(1);
+						if ( !(((_la) & ~0x3f) == 0 && ((1L << _la) & 4026531840L) != 0) ) {
+						ErrorHandler.RecoverInline(this);
+						}
+						else {
+							ErrorHandler.ReportMatch(this);
+						    Consume();
+						}
+						State = 182;
+						equality(5);
+						}
+						break;
+					case 3:
+						{
+						_localctx = new EqualityContext(_parentctx, _parentState);
+						PushNewRecursionContext(_localctx, _startState, RULE_equality);
+						State = 183;
+						if (!(Precpred(Context, 3))) throw new FailedPredicateException(this, "Precpred(Context, 3)");
+						State = 184;
+						_la = TokenStream.LA(1);
+						if ( !(_la==PLUS || _la==MINUS) ) {
+						ErrorHandler.RecoverInline(this);
+						}
+						else {
+							ErrorHandler.ReportMatch(this);
+						    Consume();
+						}
+						State = 185;
+						equality(4);
+						}
+						break;
+					case 4:
+						{
+						_localctx = new EqualityContext(_parentctx, _parentState);
+						PushNewRecursionContext(_localctx, _startState, RULE_equality);
+						State = 186;
+						if (!(Precpred(Context, 2))) throw new FailedPredicateException(this, "Precpred(Context, 2)");
+						State = 187;
+						_la = TokenStream.LA(1);
+						if ( !(_la==DIVIDE || _la==MULTIPLY) ) {
+						ErrorHandler.RecoverInline(this);
+						}
+						else {
+							ErrorHandler.ReportMatch(this);
+						    Consume();
+						}
+						State = 188;
+						equality(3);
+						}
+						break;
 					}
 					} 
 				}
-				State = 203;
+				State = 193;
 				ErrorHandler.Sync(this);
-				_alt = Interpreter.AdaptivePredict(TokenStream,17,Context);
+				_alt = Interpreter.AdaptivePredict(TokenStream,16,Context);
 			}
 			}
 		}
@@ -1748,91 +1658,7 @@ public partial class test : Parser {
 			ErrorHandler.Recover(this, re);
 		}
 		finally {
-			ExitRule();
-		}
-		return _localctx;
-	}
-
-	public partial class TermContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public FactorContext[] factor() {
-			return GetRuleContexts<FactorContext>();
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public FactorContext factor(int i) {
-			return GetRuleContext<FactorContext>(i);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] DIVIDE() { return GetTokens(test.DIVIDE); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode DIVIDE(int i) {
-			return GetToken(test.DIVIDE, i);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] MULTIPLY() { return GetTokens(test.MULTIPLY); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode MULTIPLY(int i) {
-			return GetToken(test.MULTIPLY, i);
-		}
-		public TermContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
-		}
-		public override int RuleIndex { get { return RULE_term; } }
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void EnterRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
-			if (typedListener != null) typedListener.EnterTerm(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override void ExitRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
-			if (typedListener != null) typedListener.ExitTerm(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ItestVisitor<TResult> typedVisitor = visitor as ItestVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTerm(this);
-			else return visitor.VisitChildren(this);
-		}
-	}
-
-	[RuleVersion(0)]
-	public TermContext term() {
-		TermContext _localctx = new TermContext(Context, State);
-		EnterRule(_localctx, 44, RULE_term);
-		int _la;
-		try {
-			EnterOuterAlt(_localctx, 1);
-			{
-			State = 204;
-			factor();
-			State = 209;
-			ErrorHandler.Sync(this);
-			_la = TokenStream.LA(1);
-			while (_la==DIVIDE || _la==MULTIPLY) {
-				{
-				{
-				State = 205;
-				_la = TokenStream.LA(1);
-				if ( !(_la==DIVIDE || _la==MULTIPLY) ) {
-				ErrorHandler.RecoverInline(this);
-				}
-				else {
-					ErrorHandler.ReportMatch(this);
-				    Consume();
-				}
-				State = 206;
-				factor();
-				}
-				}
-				State = 211;
-				ErrorHandler.Sync(this);
-				_la = TokenStream.LA(1);
-			}
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			ErrorHandler.ReportError(this, re);
-			ErrorHandler.Recover(this, re);
-		}
-		finally {
-			ExitRule();
+			UnrollRecursionContexts(_parentctx);
 		}
 		return _localctx;
 	}
@@ -1841,9 +1667,9 @@ public partial class test : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public FactorContext factor() {
 			return GetRuleContext<FactorContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode MINUS() { return GetToken(test.MINUS, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode PLUS() { return GetToken(test.PLUS, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NOT() { return GetToken(test.NOT, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode MINUS() { return GetToken(ZephyrParser.MINUS, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode PLUS() { return GetToken(ZephyrParser.PLUS, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NOT() { return GetToken(ZephyrParser.NOT, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public CallContext call() {
 			return GetRuleContext<CallContext>(0);
 		}
@@ -1854,17 +1680,17 @@ public partial class test : Parser {
 		public override int RuleIndex { get { return RULE_factor; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.EnterFactor(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.ExitFactor(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ItestVisitor<TResult> typedVisitor = visitor as ItestVisitor<TResult>;
+			IZephyrParserVisitor<TResult> typedVisitor = visitor as IZephyrParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitFactor(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1873,10 +1699,10 @@ public partial class test : Parser {
 	[RuleVersion(0)]
 	public FactorContext factor() {
 		FactorContext _localctx = new FactorContext(Context, State);
-		EnterRule(_localctx, 46, RULE_factor);
+		EnterRule(_localctx, 40, RULE_factor);
 		int _la;
 		try {
-			State = 215;
+			State = 197;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case PLUS:
@@ -1884,7 +1710,7 @@ public partial class test : Parser {
 			case NOT:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 212;
+				State = 194;
 				_la = TokenStream.LA(1);
 				if ( !(((_la) & ~0x3f) == 0 && ((1L << _la) & 81604378624L) != 0) ) {
 				ErrorHandler.RecoverInline(this);
@@ -1893,7 +1719,7 @@ public partial class test : Parser {
 					ErrorHandler.ReportMatch(this);
 				    Consume();
 				}
-				State = 213;
+				State = 195;
 				factor();
 				}
 				break;
@@ -1906,7 +1732,7 @@ public partial class test : Parser {
 			case FLOAT:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 214;
+				State = 196;
 				call();
 				}
 				break;
@@ -1929,21 +1755,21 @@ public partial class test : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public PrimaryContext primary() {
 			return GetRuleContext<PrimaryContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] DOT() { return GetTokens(test.DOT); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] DOT() { return GetTokens(ZephyrParser.DOT); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode DOT(int i) {
-			return GetToken(test.DOT, i);
+			return GetToken(ZephyrParser.DOT, i);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] ID() { return GetTokens(test.ID); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] ID() { return GetTokens(ZephyrParser.ID); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ID(int i) {
-			return GetToken(test.ID, i);
+			return GetToken(ZephyrParser.ID, i);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] LPAR() { return GetTokens(test.LPAR); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] LPAR() { return GetTokens(ZephyrParser.LPAR); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LPAR(int i) {
-			return GetToken(test.LPAR, i);
+			return GetToken(ZephyrParser.LPAR, i);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] RPAR() { return GetTokens(test.RPAR); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] RPAR() { return GetTokens(ZephyrParser.RPAR); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RPAR(int i) {
-			return GetToken(test.RPAR, i);
+			return GetToken(ZephyrParser.RPAR, i);
 		}
 		[System.Diagnostics.DebuggerNonUserCode] public FuncArgumentsContext[] funcArguments() {
 			return GetRuleContexts<FuncArgumentsContext>();
@@ -1958,17 +1784,17 @@ public partial class test : Parser {
 		public override int RuleIndex { get { return RULE_call; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.EnterCall(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.ExitCall(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ItestVisitor<TResult> typedVisitor = visitor as ItestVisitor<TResult>;
+			IZephyrParserVisitor<TResult> typedVisitor = visitor as IZephyrParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitCall(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1977,48 +1803,48 @@ public partial class test : Parser {
 	[RuleVersion(0)]
 	public CallContext call() {
 		CallContext _localctx = new CallContext(Context, State);
-		EnterRule(_localctx, 48, RULE_call);
+		EnterRule(_localctx, 42, RULE_call);
 		int _la;
 		try {
 			int _alt;
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 217;
+			State = 199;
 			primary();
-			State = 227;
+			State = 209;
 			ErrorHandler.Sync(this);
-			_alt = Interpreter.AdaptivePredict(TokenStream,22,Context);
+			_alt = Interpreter.AdaptivePredict(TokenStream,20,Context);
 			while ( _alt!=2 && _alt!=global::Antlr4.Runtime.Atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					{
-					State = 225;
+					State = 207;
 					ErrorHandler.Sync(this);
 					switch (TokenStream.LA(1)) {
 					case LPAR:
 						{
 						{
-						State = 218;
+						State = 200;
 						Match(LPAR);
-						State = 220;
+						State = 202;
 						ErrorHandler.Sync(this);
 						_la = TokenStream.LA(1);
 						if (((_la) & ~0x3f) == 0 && ((1L << _la) & 1868311003138L) != 0) {
 							{
-							State = 219;
+							State = 201;
 							funcArguments();
 							}
 						}
 
-						State = 222;
+						State = 204;
 						Match(RPAR);
 						}
 						}
 						break;
 					case DOT:
 						{
-						State = 223;
+						State = 205;
 						Match(DOT);
-						State = 224;
+						State = 206;
 						Match(ID);
 						}
 						break;
@@ -2027,9 +1853,9 @@ public partial class test : Parser {
 					}
 					} 
 				}
-				State = 229;
+				State = 211;
 				ErrorHandler.Sync(this);
-				_alt = Interpreter.AdaptivePredict(TokenStream,22,Context);
+				_alt = Interpreter.AdaptivePredict(TokenStream,20,Context);
 			}
 			}
 		}
@@ -2048,12 +1874,12 @@ public partial class test : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public LiteralContext literal() {
 			return GetRuleContext<LiteralContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ID() { return GetToken(test.ID, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LPAR() { return GetToken(test.LPAR, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ID() { return GetToken(ZephyrParser.ID, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LPAR() { return GetToken(ZephyrParser.LPAR, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public EqualityContext equality() {
 			return GetRuleContext<EqualityContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RPAR() { return GetToken(test.RPAR, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RPAR() { return GetToken(ZephyrParser.RPAR, 0); }
 		public PrimaryContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -2061,17 +1887,17 @@ public partial class test : Parser {
 		public override int RuleIndex { get { return RULE_primary; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.EnterPrimary(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.ExitPrimary(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ItestVisitor<TResult> typedVisitor = visitor as ItestVisitor<TResult>;
+			IZephyrParserVisitor<TResult> typedVisitor = visitor as IZephyrParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitPrimary(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -2080,9 +1906,9 @@ public partial class test : Parser {
 	[RuleVersion(0)]
 	public PrimaryContext primary() {
 		PrimaryContext _localctx = new PrimaryContext(Context, State);
-		EnterRule(_localctx, 50, RULE_primary);
+		EnterRule(_localctx, 44, RULE_primary);
 		try {
-			State = 236;
+			State = 218;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case STRING_LITERAL:
@@ -2092,25 +1918,25 @@ public partial class test : Parser {
 			case FLOAT:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 230;
+				State = 212;
 				literal();
 				}
 				break;
 			case ID:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 231;
+				State = 213;
 				Match(ID);
 				}
 				break;
 			case LPAR:
 				EnterOuterAlt(_localctx, 3);
 				{
-				State = 232;
+				State = 214;
 				Match(LPAR);
-				State = 233;
-				equality();
-				State = 234;
+				State = 215;
+				equality(0);
+				State = 216;
 				Match(RPAR);
 				}
 				break;
@@ -2130,11 +1956,11 @@ public partial class test : Parser {
 	}
 
 	public partial class LiteralContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode STRING_LITERAL() { return GetToken(test.STRING_LITERAL, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode INT() { return GetToken(test.INT, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode FLOAT() { return GetToken(test.FLOAT, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode TRUE() { return GetToken(test.TRUE, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode FALSE() { return GetToken(test.FALSE, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode STRING_LITERAL() { return GetToken(ZephyrParser.STRING_LITERAL, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode INT() { return GetToken(ZephyrParser.INT, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode FLOAT() { return GetToken(ZephyrParser.FLOAT, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode TRUE() { return GetToken(ZephyrParser.TRUE, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode FALSE() { return GetToken(ZephyrParser.FALSE, 0); }
 		public LiteralContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -2142,17 +1968,17 @@ public partial class test : Parser {
 		public override int RuleIndex { get { return RULE_literal; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.EnterLiteral(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.ExitLiteral(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ItestVisitor<TResult> typedVisitor = visitor as ItestVisitor<TResult>;
+			IZephyrParserVisitor<TResult> typedVisitor = visitor as IZephyrParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitLiteral(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -2161,12 +1987,12 @@ public partial class test : Parser {
 	[RuleVersion(0)]
 	public LiteralContext literal() {
 		LiteralContext _localctx = new LiteralContext(Context, State);
-		EnterRule(_localctx, 52, RULE_literal);
+		EnterRule(_localctx, 46, RULE_literal);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 238;
+			State = 220;
 			_la = TokenStream.LA(1);
 			if ( !(((_la) & ~0x3f) == 0 && ((1L << _la) & 1649267539970L) != 0) ) {
 			ErrorHandler.RecoverInline(this);
@@ -2189,7 +2015,7 @@ public partial class test : Parser {
 	}
 
 	public partial class TypeContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ID() { return GetToken(test.ID, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ID() { return GetToken(ZephyrParser.ID, 0); }
 		public TypeContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -2197,17 +2023,17 @@ public partial class test : Parser {
 		public override int RuleIndex { get { return RULE_type; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.EnterType(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			ItestListener typedListener = listener as ItestListener;
+			IZephyrParserListener typedListener = listener as IZephyrParserListener;
 			if (typedListener != null) typedListener.ExitType(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			ItestVisitor<TResult> typedVisitor = visitor as ItestVisitor<TResult>;
+			IZephyrParserVisitor<TResult> typedVisitor = visitor as IZephyrParserVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitType(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -2216,11 +2042,11 @@ public partial class test : Parser {
 	[RuleVersion(0)]
 	public TypeContext type() {
 		TypeContext _localctx = new TypeContext(Context, State);
-		EnterRule(_localctx, 54, RULE_type);
+		EnterRule(_localctx, 48, RULE_type);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 240;
+			State = 222;
 			Match(ID);
 			}
 		}
@@ -2235,84 +2061,95 @@ public partial class test : Parser {
 		return _localctx;
 	}
 
+	public override bool Sempred(RuleContext _localctx, int ruleIndex, int predIndex) {
+		switch (ruleIndex) {
+		case 19: return equality_sempred((EqualityContext)_localctx, predIndex);
+		}
+		return true;
+	}
+	private bool equality_sempred(EqualityContext _localctx, int predIndex) {
+		switch (predIndex) {
+		case 0: return Precpred(Context, 5);
+		case 1: return Precpred(Context, 4);
+		case 2: return Precpred(Context, 3);
+		case 3: return Precpred(Context, 2);
+		}
+		return true;
+	}
+
 	private static int[] _serializedATN = {
-		4,1,41,243,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
+		4,1,41,225,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
 		7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,2,14,7,14,
 		2,15,7,15,2,16,7,16,2,17,7,17,2,18,7,18,2,19,7,19,2,20,7,20,2,21,7,21,
-		2,22,7,22,2,23,7,23,2,24,7,24,2,25,7,25,2,26,7,26,2,27,7,27,1,0,1,0,1,
-		0,1,1,1,1,3,1,62,8,1,5,1,64,8,1,10,1,12,1,67,9,1,1,2,1,2,1,2,1,2,1,2,1,
-		2,1,2,1,2,3,2,77,8,2,1,3,1,3,1,3,3,3,82,8,3,1,4,1,4,1,4,3,4,87,8,4,1,5,
-		1,5,1,5,1,5,1,6,1,6,1,6,1,6,3,6,97,8,6,1,6,1,6,1,6,1,7,5,7,103,8,7,10,
-		7,12,7,106,9,7,1,8,1,8,1,8,1,9,1,9,3,9,113,8,9,1,10,1,10,1,10,1,10,1,11,
-		1,11,1,11,1,11,1,11,3,11,124,8,11,1,12,1,12,1,12,1,12,1,13,1,13,1,13,1,
-		13,1,13,1,13,1,13,1,13,1,14,1,14,1,14,1,14,3,14,142,8,14,1,14,1,14,1,14,
-		3,14,147,8,14,1,14,1,14,1,14,1,15,1,15,1,15,5,15,155,8,15,10,15,12,15,
-		158,9,15,1,16,1,16,1,16,5,16,163,8,16,10,16,12,16,166,9,16,1,17,1,17,1,
-		17,1,17,1,17,1,17,3,17,174,8,17,1,18,1,18,1,18,3,18,179,8,18,1,19,1,19,
-		1,19,5,19,184,8,19,10,19,12,19,187,9,19,1,20,1,20,1,20,5,20,192,8,20,10,
-		20,12,20,195,9,20,1,21,1,21,1,21,5,21,200,8,21,10,21,12,21,203,9,21,1,
-		22,1,22,1,22,5,22,208,8,22,10,22,12,22,211,9,22,1,23,1,23,1,23,3,23,216,
-		8,23,1,24,1,24,1,24,3,24,221,8,24,1,24,1,24,1,24,5,24,226,8,24,10,24,12,
-		24,229,9,24,1,25,1,25,1,25,1,25,1,25,1,25,3,25,237,8,25,1,26,1,26,1,27,
-		1,27,1,27,0,0,28,0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,
-		40,42,44,46,48,50,52,54,0,6,1,0,26,27,1,0,28,31,1,0,32,33,1,0,34,35,2,
-		0,32,33,36,36,3,0,1,1,15,16,39,40,247,0,56,1,0,0,0,2,65,1,0,0,0,4,76,1,
-		0,0,0,6,81,1,0,0,0,8,86,1,0,0,0,10,88,1,0,0,0,12,92,1,0,0,0,14,104,1,0,
-		0,0,16,107,1,0,0,0,18,110,1,0,0,0,20,114,1,0,0,0,22,118,1,0,0,0,24,125,
-		1,0,0,0,26,129,1,0,0,0,28,137,1,0,0,0,30,151,1,0,0,0,32,159,1,0,0,0,34,
-		167,1,0,0,0,36,175,1,0,0,0,38,180,1,0,0,0,40,188,1,0,0,0,42,196,1,0,0,
-		0,44,204,1,0,0,0,46,215,1,0,0,0,48,217,1,0,0,0,50,236,1,0,0,0,52,238,1,
-		0,0,0,54,240,1,0,0,0,56,57,3,2,1,0,57,58,5,0,0,1,58,1,1,0,0,0,59,61,3,
-		4,2,0,60,62,5,19,0,0,61,60,1,0,0,0,61,62,1,0,0,0,62,64,1,0,0,0,63,59,1,
-		0,0,0,64,67,1,0,0,0,65,63,1,0,0,0,65,66,1,0,0,0,66,3,1,0,0,0,67,65,1,0,
-		0,0,68,77,3,6,3,0,69,77,3,16,8,0,70,77,3,18,9,0,71,77,3,20,10,0,72,77,
-		3,22,11,0,73,77,3,24,12,0,74,77,3,26,13,0,75,77,3,36,18,0,76,68,1,0,0,
-		0,76,69,1,0,0,0,76,70,1,0,0,0,76,71,1,0,0,0,76,72,1,0,0,0,76,73,1,0,0,
-		0,76,74,1,0,0,0,76,75,1,0,0,0,77,5,1,0,0,0,78,82,3,12,6,0,79,82,3,28,14,
-		0,80,82,3,34,17,0,81,78,1,0,0,0,81,79,1,0,0,0,81,80,1,0,0,0,82,7,1,0,0,
-		0,83,87,3,28,14,0,84,87,3,10,5,0,85,87,3,12,6,0,86,83,1,0,0,0,86,84,1,
-		0,0,0,86,85,1,0,0,0,87,9,1,0,0,0,88,89,5,17,0,0,89,90,5,20,0,0,90,91,3,
-		54,27,0,91,11,1,0,0,0,92,93,5,3,0,0,93,96,5,17,0,0,94,95,5,31,0,0,95,97,
-		5,17,0,0,96,94,1,0,0,0,96,97,1,0,0,0,97,98,1,0,0,0,98,99,3,14,7,0,99,100,
-		5,4,0,0,100,13,1,0,0,0,101,103,3,8,4,0,102,101,1,0,0,0,103,106,1,0,0,0,
-		104,102,1,0,0,0,104,105,1,0,0,0,105,15,1,0,0,0,106,104,1,0,0,0,107,108,
-		5,5,0,0,108,109,3,36,18,0,109,17,1,0,0,0,110,112,5,6,0,0,111,113,3,36,
-		18,0,112,111,1,0,0,0,112,113,1,0,0,0,113,19,1,0,0,0,114,115,5,23,0,0,115,
-		116,3,2,1,0,116,117,5,24,0,0,117,21,1,0,0,0,118,119,5,7,0,0,119,120,3,
-		36,18,0,120,123,3,4,2,0,121,122,5,8,0,0,122,124,3,4,2,0,123,121,1,0,0,
-		0,123,124,1,0,0,0,124,23,1,0,0,0,125,126,5,9,0,0,126,127,3,36,18,0,127,
-		128,3,4,2,0,128,25,1,0,0,0,129,130,5,10,0,0,130,131,3,34,17,0,131,132,
-		5,21,0,0,132,133,3,38,19,0,133,134,5,21,0,0,134,135,3,36,18,0,135,136,
-		3,4,2,0,136,27,1,0,0,0,137,138,5,13,0,0,138,139,5,17,0,0,139,141,5,37,
-		0,0,140,142,3,30,15,0,141,140,1,0,0,0,141,142,1,0,0,0,142,143,1,0,0,0,
-		143,146,5,38,0,0,144,145,5,18,0,0,145,147,3,54,27,0,146,144,1,0,0,0,146,
-		147,1,0,0,0,147,148,1,0,0,0,148,149,3,2,1,0,149,150,5,4,0,0,150,29,1,0,
-		0,0,151,156,3,10,5,0,152,153,5,21,0,0,153,155,3,10,5,0,154,152,1,0,0,0,
-		155,158,1,0,0,0,156,154,1,0,0,0,156,157,1,0,0,0,157,31,1,0,0,0,158,156,
-		1,0,0,0,159,164,3,38,19,0,160,161,5,21,0,0,161,163,3,38,19,0,162,160,1,
-		0,0,0,163,166,1,0,0,0,164,162,1,0,0,0,164,165,1,0,0,0,165,33,1,0,0,0,166,
-		164,1,0,0,0,167,168,5,14,0,0,168,169,5,17,0,0,169,170,5,20,0,0,170,173,
-		3,54,27,0,171,172,5,25,0,0,172,174,3,36,18,0,173,171,1,0,0,0,173,174,1,
-		0,0,0,174,35,1,0,0,0,175,178,3,38,19,0,176,177,5,25,0,0,177,179,3,36,18,
-		0,178,176,1,0,0,0,178,179,1,0,0,0,179,37,1,0,0,0,180,185,3,40,20,0,181,
-		182,7,0,0,0,182,184,3,40,20,0,183,181,1,0,0,0,184,187,1,0,0,0,185,183,
-		1,0,0,0,185,186,1,0,0,0,186,39,1,0,0,0,187,185,1,0,0,0,188,193,3,42,21,
-		0,189,190,7,1,0,0,190,192,3,42,21,0,191,189,1,0,0,0,192,195,1,0,0,0,193,
-		191,1,0,0,0,193,194,1,0,0,0,194,41,1,0,0,0,195,193,1,0,0,0,196,201,3,44,
-		22,0,197,198,7,2,0,0,198,200,3,44,22,0,199,197,1,0,0,0,200,203,1,0,0,0,
-		201,199,1,0,0,0,201,202,1,0,0,0,202,43,1,0,0,0,203,201,1,0,0,0,204,209,
-		3,46,23,0,205,206,7,3,0,0,206,208,3,46,23,0,207,205,1,0,0,0,208,211,1,
-		0,0,0,209,207,1,0,0,0,209,210,1,0,0,0,210,45,1,0,0,0,211,209,1,0,0,0,212,
-		213,7,4,0,0,213,216,3,46,23,0,214,216,3,48,24,0,215,212,1,0,0,0,215,214,
-		1,0,0,0,216,47,1,0,0,0,217,227,3,50,25,0,218,220,5,37,0,0,219,221,3,32,
-		16,0,220,219,1,0,0,0,220,221,1,0,0,0,221,222,1,0,0,0,222,226,5,38,0,0,
-		223,224,5,22,0,0,224,226,5,17,0,0,225,218,1,0,0,0,225,223,1,0,0,0,226,
-		229,1,0,0,0,227,225,1,0,0,0,227,228,1,0,0,0,228,49,1,0,0,0,229,227,1,0,
-		0,0,230,237,3,52,26,0,231,237,5,17,0,0,232,233,5,37,0,0,233,234,3,38,19,
-		0,234,235,5,38,0,0,235,237,1,0,0,0,236,230,1,0,0,0,236,231,1,0,0,0,236,
-		232,1,0,0,0,237,51,1,0,0,0,238,239,7,5,0,0,239,53,1,0,0,0,240,241,5,17,
-		0,0,241,55,1,0,0,0,24,61,65,76,81,86,96,104,112,123,141,146,156,164,173,
-		178,185,193,201,209,215,220,225,227,236
+		2,22,7,22,2,23,7,23,2,24,7,24,1,0,1,0,1,0,1,1,1,1,3,1,56,8,1,5,1,58,8,
+		1,10,1,12,1,61,9,1,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,3,2,71,8,2,1,3,1,3,
+		1,3,3,3,76,8,3,1,4,1,4,1,4,3,4,81,8,4,1,5,1,5,1,5,1,5,1,6,1,6,1,6,1,6,
+		3,6,91,8,6,1,6,1,6,1,6,1,7,5,7,97,8,7,10,7,12,7,100,9,7,1,8,1,8,1,8,1,
+		9,1,9,3,9,107,8,9,1,10,1,10,1,10,1,10,1,11,1,11,1,11,1,11,1,11,3,11,118,
+		8,11,1,12,1,12,1,12,1,12,1,13,1,13,1,13,1,13,1,13,1,13,1,13,1,13,1,14,
+		1,14,1,14,1,14,3,14,136,8,14,1,14,1,14,1,14,3,14,141,8,14,1,14,1,14,1,
+		14,1,15,1,15,1,15,5,15,149,8,15,10,15,12,15,152,9,15,1,16,1,16,1,16,5,
+		16,157,8,16,10,16,12,16,160,9,16,1,17,1,17,1,17,1,17,1,17,1,17,3,17,168,
+		8,17,1,18,1,18,1,18,3,18,173,8,18,1,19,1,19,1,19,1,19,1,19,1,19,1,19,1,
+		19,1,19,1,19,1,19,1,19,1,19,1,19,1,19,5,19,190,8,19,10,19,12,19,193,9,
+		19,1,20,1,20,1,20,3,20,198,8,20,1,21,1,21,1,21,3,21,203,8,21,1,21,1,21,
+		1,21,5,21,208,8,21,10,21,12,21,211,9,21,1,22,1,22,1,22,1,22,1,22,1,22,
+		3,22,219,8,22,1,23,1,23,1,24,1,24,1,24,0,1,38,25,0,2,4,6,8,10,12,14,16,
+		18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,0,6,1,0,26,27,1,0,28,31,
+		1,0,32,33,1,0,34,35,2,0,32,33,36,36,3,0,1,1,15,16,39,40,232,0,50,1,0,0,
+		0,2,59,1,0,0,0,4,70,1,0,0,0,6,75,1,0,0,0,8,80,1,0,0,0,10,82,1,0,0,0,12,
+		86,1,0,0,0,14,98,1,0,0,0,16,101,1,0,0,0,18,104,1,0,0,0,20,108,1,0,0,0,
+		22,112,1,0,0,0,24,119,1,0,0,0,26,123,1,0,0,0,28,131,1,0,0,0,30,145,1,0,
+		0,0,32,153,1,0,0,0,34,161,1,0,0,0,36,169,1,0,0,0,38,174,1,0,0,0,40,197,
+		1,0,0,0,42,199,1,0,0,0,44,218,1,0,0,0,46,220,1,0,0,0,48,222,1,0,0,0,50,
+		51,3,2,1,0,51,52,5,0,0,1,52,1,1,0,0,0,53,55,3,4,2,0,54,56,5,19,0,0,55,
+		54,1,0,0,0,55,56,1,0,0,0,56,58,1,0,0,0,57,53,1,0,0,0,58,61,1,0,0,0,59,
+		57,1,0,0,0,59,60,1,0,0,0,60,3,1,0,0,0,61,59,1,0,0,0,62,71,3,6,3,0,63,71,
+		3,16,8,0,64,71,3,18,9,0,65,71,3,20,10,0,66,71,3,22,11,0,67,71,3,24,12,
+		0,68,71,3,26,13,0,69,71,3,36,18,0,70,62,1,0,0,0,70,63,1,0,0,0,70,64,1,
+		0,0,0,70,65,1,0,0,0,70,66,1,0,0,0,70,67,1,0,0,0,70,68,1,0,0,0,70,69,1,
+		0,0,0,71,5,1,0,0,0,72,76,3,12,6,0,73,76,3,28,14,0,74,76,3,34,17,0,75,72,
+		1,0,0,0,75,73,1,0,0,0,75,74,1,0,0,0,76,7,1,0,0,0,77,81,3,28,14,0,78,81,
+		3,10,5,0,79,81,3,12,6,0,80,77,1,0,0,0,80,78,1,0,0,0,80,79,1,0,0,0,81,9,
+		1,0,0,0,82,83,5,17,0,0,83,84,5,20,0,0,84,85,3,48,24,0,85,11,1,0,0,0,86,
+		87,5,3,0,0,87,90,5,17,0,0,88,89,5,31,0,0,89,91,5,17,0,0,90,88,1,0,0,0,
+		90,91,1,0,0,0,91,92,1,0,0,0,92,93,3,14,7,0,93,94,5,4,0,0,94,13,1,0,0,0,
+		95,97,3,8,4,0,96,95,1,0,0,0,97,100,1,0,0,0,98,96,1,0,0,0,98,99,1,0,0,0,
+		99,15,1,0,0,0,100,98,1,0,0,0,101,102,5,5,0,0,102,103,3,36,18,0,103,17,
+		1,0,0,0,104,106,5,6,0,0,105,107,3,36,18,0,106,105,1,0,0,0,106,107,1,0,
+		0,0,107,19,1,0,0,0,108,109,5,23,0,0,109,110,3,2,1,0,110,111,5,24,0,0,111,
+		21,1,0,0,0,112,113,5,7,0,0,113,114,3,36,18,0,114,117,3,4,2,0,115,116,5,
+		8,0,0,116,118,3,4,2,0,117,115,1,0,0,0,117,118,1,0,0,0,118,23,1,0,0,0,119,
+		120,5,9,0,0,120,121,3,36,18,0,121,122,3,4,2,0,122,25,1,0,0,0,123,124,5,
+		10,0,0,124,125,3,34,17,0,125,126,5,21,0,0,126,127,3,38,19,0,127,128,5,
+		21,0,0,128,129,3,36,18,0,129,130,3,4,2,0,130,27,1,0,0,0,131,132,5,13,0,
+		0,132,133,5,17,0,0,133,135,5,37,0,0,134,136,3,30,15,0,135,134,1,0,0,0,
+		135,136,1,0,0,0,136,137,1,0,0,0,137,140,5,38,0,0,138,139,5,18,0,0,139,
+		141,3,48,24,0,140,138,1,0,0,0,140,141,1,0,0,0,141,142,1,0,0,0,142,143,
+		3,2,1,0,143,144,5,4,0,0,144,29,1,0,0,0,145,150,3,10,5,0,146,147,5,21,0,
+		0,147,149,3,10,5,0,148,146,1,0,0,0,149,152,1,0,0,0,150,148,1,0,0,0,150,
+		151,1,0,0,0,151,31,1,0,0,0,152,150,1,0,0,0,153,158,3,38,19,0,154,155,5,
+		21,0,0,155,157,3,38,19,0,156,154,1,0,0,0,157,160,1,0,0,0,158,156,1,0,0,
+		0,158,159,1,0,0,0,159,33,1,0,0,0,160,158,1,0,0,0,161,162,5,14,0,0,162,
+		163,5,17,0,0,163,164,5,20,0,0,164,167,3,48,24,0,165,166,5,25,0,0,166,168,
+		3,36,18,0,167,165,1,0,0,0,167,168,1,0,0,0,168,35,1,0,0,0,169,172,3,38,
+		19,0,170,171,5,25,0,0,171,173,3,36,18,0,172,170,1,0,0,0,172,173,1,0,0,
+		0,173,37,1,0,0,0,174,175,6,19,-1,0,175,176,3,40,20,0,176,191,1,0,0,0,177,
+		178,10,5,0,0,178,179,7,0,0,0,179,190,3,38,19,6,180,181,10,4,0,0,181,182,
+		7,1,0,0,182,190,3,38,19,5,183,184,10,3,0,0,184,185,7,2,0,0,185,190,3,38,
+		19,4,186,187,10,2,0,0,187,188,7,3,0,0,188,190,3,38,19,3,189,177,1,0,0,
+		0,189,180,1,0,0,0,189,183,1,0,0,0,189,186,1,0,0,0,190,193,1,0,0,0,191,
+		189,1,0,0,0,191,192,1,0,0,0,192,39,1,0,0,0,193,191,1,0,0,0,194,195,7,4,
+		0,0,195,198,3,40,20,0,196,198,3,42,21,0,197,194,1,0,0,0,197,196,1,0,0,
+		0,198,41,1,0,0,0,199,209,3,44,22,0,200,202,5,37,0,0,201,203,3,32,16,0,
+		202,201,1,0,0,0,202,203,1,0,0,0,203,204,1,0,0,0,204,208,5,38,0,0,205,206,
+		5,22,0,0,206,208,5,17,0,0,207,200,1,0,0,0,207,205,1,0,0,0,208,211,1,0,
+		0,0,209,207,1,0,0,0,209,210,1,0,0,0,210,43,1,0,0,0,211,209,1,0,0,0,212,
+		219,3,46,23,0,213,219,5,17,0,0,214,215,5,37,0,0,215,216,3,38,19,0,216,
+		217,5,38,0,0,217,219,1,0,0,0,218,212,1,0,0,0,218,213,1,0,0,0,218,214,1,
+		0,0,0,219,45,1,0,0,0,220,221,7,5,0,0,221,47,1,0,0,0,222,223,5,17,0,0,223,
+		49,1,0,0,0,22,55,59,70,75,80,90,98,106,117,135,140,150,158,167,172,189,
+		191,197,202,207,209,218
 	};
 
 	public static readonly ATN _ATN =
