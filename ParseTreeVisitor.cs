@@ -37,9 +37,14 @@ namespace Zephyr
         public override Node VisitVarDecl(ZephyrParser.VarDeclContext context)
         {
             var idToken = new Token(TokenType.Id, context.Name.Text, context.Name.Column, context.Name.Line);
-            var typeToken = new Token(TokenType.Id, context.Type.Text, context.Type.Column, context.Type.Line);
+            TypeNode typeNode = null;
+            if(context.Type is not null)
+            {
+                var typeToken = new Token(TokenType.Id, context.Type.Text, context.Type.Column, context.Type.Line);
+                typeNode = new TypeNode(typeToken);
+            }
 
-            Node node = new VarDeclNode(new VarNode(idToken), new TypeNode(typeToken));
+            Node node = new VarDeclNode(new VarNode(idToken), typeNode);
 
             if (context.ASSIGN() is null) 
                 return node;

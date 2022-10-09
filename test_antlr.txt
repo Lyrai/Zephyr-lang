@@ -56,9 +56,9 @@ end
 
 print "fib(10) = " + fib(10)
 
-let b: function = sum()
+let b = sum()
 print b
 printFunc(b)
 
-let c: double = -5 * (2 - 7)
+let c = -5 * (2 - 7)
 print c

@@ -5,7 +5,7 @@ namespace Zephyr.SemanticAnalysis.Symbols
     public abstract class Symbol
     {
         public string Name { get; init; }
-        public TypeSymbol Type { get; init; }
+        public TypeSymbol Type { get; set;  }
 
         protected Symbol(string name, TypeSymbol type = null)
         {

@@ -10,7 +10,7 @@ namespace Zephyr.SyntaxAnalysis.ASTNodes
 
         public VarDeclNode(Node variable, Node type)
         {
-            Variable = (VarNode)variable;
+            Variable = (VarNode) variable;
             Type = (TypeNode) type;
             Token = Variable.Token;
         }

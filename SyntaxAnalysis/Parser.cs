@@ -9,7 +9,7 @@ namespace Zephyr.SyntaxAnalysis
 {
     public class Parser
     {
-        private LinkedListNode<Token> _currentToken;
+        /*private LinkedListNode<Token> _currentToken;
         private int _nestingLevel;
         
         public Parser(LinkedList<Token> tokens)
@@ -501,6 +501,6 @@ namespace Zephyr.SyntaxAnalysis
                 return n.GetChildren();
 
             return new() {n};
-        }
+        }*/
     }
 }

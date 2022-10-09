@@ -26,6 +26,7 @@
             {
                 VarSymbol varSymbol => varSymbol.Type,
                 FuncSymbol funcSymbol => funcSymbol.Type,
+                null => null,
                 _ => (TypeSymbol) symbol
             };
         }

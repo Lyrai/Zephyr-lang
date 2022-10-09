@@ -48,22 +48,24 @@ namespace Zephyr.SemanticAnalysis
         public object VisitVarDeclNode(VarDeclNode n)
         {
             var name = (string)n.Variable.Token.Value;
-            var type = (string)n.Type.Token.Value;
-            var typeSymbol = _table.Find<TypeSymbol>(type);
-            
-            if (typeSymbol == _voidSymbol)
-                throw new SemanticException(n, "Variable cannot be of type void");
+            TypeSymbol typeSymbol = null;
+            if(n.Type is not null)
+            {
+                var type = (string)n.Type.Token.Value;
+                typeSymbol = _table.Find<TypeSymbol>(type);
+
+                if (typeSymbol == _voidSymbol)
+                    throw new SemanticException(n, "Variable cannot be of type void");
+            }
 
             if (_table.Get<VarSymbol>(name) is not null)
                 throw new DuplicateIdentifierException(n.Variable);
             
             var symbol = new VarSymbol(name, typeSymbol);
             _table.Add(name, symbol);
-            if(_currentClassSymbol is not null)
-                _currentClassSymbol.Fields.Add(name, symbol);
-            
-            return symbol;
+            _currentClassSymbol?.Fields.Add(name, symbol);
 
+            return symbol;
         }
 
         public object VisitPropertyDeclNode(PropertyDeclNode n)
@@ -385,6 +387,12 @@ namespace Zephyr.SemanticAnalysis
             var right = TypeSymbol.FromObject(Visit(n.Right));
             if (n.Token.Type == TokenType.Assign)
             {
+                if (n.Left is VarDeclNode declNode && left is null)
+                {
+                    _table.Get<VarSymbol>(declNode.Variable.Name).SetType(right);
+                    return right;
+                }
+                
                 if (n.Left is not VarNode && n.Left is not VarDeclNode && n.Left is not GetNode)
                     throw new SemanticException(n.Left, $"Cannot assign to non-variable {n.Left.Token.Value}");
 
