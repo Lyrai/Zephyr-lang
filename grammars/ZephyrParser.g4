@@ -63,14 +63,15 @@ varDecl: 'let' Name=ID ':' Type=ID (ASSIGN assignExpr)?;
 assignExpr: equality (ASSIGN assignExpr)?;
 
 equality:
-      equality Op=(EQUAL | NOT_EQUAL) equality
-    | equality Op=(GREATER_EQUAL | GREATER | LESS_EQUAL | LESS) equality
-    | equality Op=(PLUS | MINUS) equality
-    | equality Op=(DIVIDE | MULTIPLY) equality
+      '(' Inner=equality ')'
+    | Left=equality Op=(EQUAL | NOT_EQUAL) Right=equality
+    | Left=equality Op=(GREATER_EQUAL | GREATER | LESS_EQUAL | LESS) Right=equality
+    | Left=equality Op=(PLUS | MINUS) Right=equality
+    | Left=equality Op=(DIVIDE | MULTIPLY) Right=equality
     | factor
 ;
 
-factor: (MINUS | PLUS | NOT) factor | call;
+factor: Op=(MINUS | PLUS | NOT) factor | call;
 call: call (('(' funcArguments? ')') | DOT ID) | primary;
-primary: literal | ID | '(' equality ')';
-literal: STRING_LITERAL | INT | FLOAT | 'true' | 'false';
+primary: literal | ID/* | '(' equality ')'*/;
+literal: StringLit=STRING_LITERAL | Int=INT | Float=FLOAT | True='true' | False='false';

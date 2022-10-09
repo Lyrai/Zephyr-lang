@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Antlr4.Runtime.Tree;
 using Zephyr.LexicalAnalysis.Tokens;
 using Zephyr.SyntaxAnalysis.ASTNodes;
@@ -16,56 +17,36 @@ namespace Zephyr
 
         public override Node VisitStatementList(ZephyrParser.StatementListContext context)
         {
-            var nodes = new List<Node>();
-            foreach (var node in context.children)
-            {
-                nodes.Add(Visit(node));
-            }
+            var nodes = context.children.Select(Visit).ToList();
             return new CompoundNode(nodes);
         }
 
         public override Node VisitFuncDecl(ZephyrParser.FuncDeclContext context)
         {
-            
-            var idToken = new Token(TokenType.Id, 
-                context.Name.Text, 
-                context.Name.Column,
-                context.Name.Line);
+            var idToken = new Token(TokenType.Id, context.Name.Text, context.Name.Column, context.Name.Line);
 
             var parameters = new List<Node>();
             if (context.funcParameters() is not null)
                 parameters = GetBody(context.funcParameters());
-            var type = "void";
-            if (context.Type is not null)
-                type = context.Type.Text;
-            return new FuncDeclNode(idToken,
-                GetBody(context.Body),
-                parameters,
-                type);
+            
+            var type = context.Type?.Text ?? "void";
+            
+            return new FuncDeclNode(idToken, GetBody(context.Body), parameters, type);
         }
 
         public override Node VisitVarDecl(ZephyrParser.VarDeclContext context)
         {
-            var idToken = new Token(TokenType.Id, 
-                context.Name.Text, 
-                context.Name.Column,
-                context.Name.Line);
-            var typeToken = new Token(TokenType.Id, 
-                context.Type.Text, 
-                context.Type.Column,
-                context.Type.Line);
+            var idToken = new Token(TokenType.Id, context.Name.Text, context.Name.Column, context.Name.Line);
+            var typeToken = new Token(TokenType.Id, context.Type.Text, context.Type.Column, context.Type.Line);
 
-            Node node = new VarDeclNode(new VarNode(idToken),
-                new TypeNode(typeToken));
-            ITerminalNode assign;
-            if ((assign = context.ASSIGN()) is not null)
-            {
-                node = new BinOpNode(new Token(TokenType.Assign, assign.GetText(),
-                        assign.Symbol.Column, assign.Symbol.Line),
-                    node, Visit(context.assignExpr()));
-            }
+            Node node = new VarDeclNode(new VarNode(idToken), new TypeNode(typeToken));
 
-            return node;
+            if (context.ASSIGN() is null) 
+                return node;
+            
+            var assign = context.ASSIGN().Symbol;
+            var assignToken = new Token(TokenType.Assign, assign.Text, assign.Column, assign.Line);
+            return new BinOpNode(assignToken, node, Visit(context.assignExpr()));
         }
 
         public override Node VisitTypedVarDecl(ZephyrParser.TypedVarDeclContext context)
@@ -86,17 +67,11 @@ namespace Zephyr
 
         public override Node VisitClassDecl(ZephyrParser.ClassDeclContext context)
         {
-            var idToken = new Token(TokenType.Id, 
-                context.ID(0).GetText(), 
-                context.ID(0).Symbol.Column,
-                context.ID(0).Symbol.Line);
+            var idToken = new Token(TokenType.Id, context.Name.Text, context.Name.Column, context.Name.Line);
             VarNode parentNode = null;
-            if(context.ID(1) is not null)
+            if(context.Base is not null)
             {
-                var parentToken = new Token(TokenType.Id,
-                    context.ID(1).GetText(),
-                    context.ID(1).Symbol.Column,
-                    context.ID(1).Symbol.Line);
+                var parentToken = new Token(TokenType.Id, context.Base.Text, context.Base.Column, context.Base.Line);
                 parentNode = new VarNode(parentToken);
             }
 
@@ -106,20 +81,16 @@ namespace Zephyr
 
         public override Node VisitPrintStmt(ZephyrParser.PrintStmtContext context)
         {
-            var token = new Token(TokenType.Print, 
-                context.PRINT().GetText(), 
-                context.PRINT().Symbol.Column,
-                context.PRINT().Symbol.Line);
+            var printToken = context.PRINT().Symbol;
+            var token = new Token(TokenType.Print, printToken.Text, printToken.Column, printToken.Line);
 
             return new UnOpNode(token, Visit(context.assignExpr()));
         }
 
         public override Node VisitReturnStmt(ZephyrParser.ReturnStmtContext context)
         {
-            var token = new Token(TokenType.Return, 
-                context.RETURN().GetText(), 
-                context.RETURN().Symbol.Column,
-                context.RETURN().Symbol.Line);
+            var returnToken = context.RETURN().Symbol;
+            var token = new Token(TokenType.Return, returnToken.Text, returnToken.Column, returnToken.Line);
 
             var expr = context.assignExpr() is not null ? Visit(context.assignExpr()) : null;
             return new ReturnNode(token, expr);
@@ -132,10 +103,8 @@ namespace Zephyr
 
         public override Node VisitIfStmt(ZephyrParser.IfStmtContext context)
         {
-            var token = new Token(TokenType.If, 
-                context.IF().GetText(), 
-                context.IF().Symbol.Column,
-                context.IF().Symbol.Line);
+            var ifToken = context.IF().Symbol;
+            var token = new Token(TokenType.If, ifToken.Text, ifToken.Column, ifToken.Line);
 
             var condition = Visit(context.Condition);
             var thenBlock = Visit(context.ThenBranch);
@@ -145,10 +114,8 @@ namespace Zephyr
 
         public override Node VisitWhileStmt(ZephyrParser.WhileStmtContext context)
         {
-            var token = new Token(TokenType.While, 
-                context.WHILE().GetText(), 
-                context.WHILE().Symbol.Column,
-                context.WHILE().Symbol.Line);
+            var whileToken = context.WHILE().Symbol;
+            var token = new Token(TokenType.While, whileToken.Text, whileToken.Column, whileToken.Line);
 
             var condition = Visit(context.Condition);
             var body = Visit(context.Body);
@@ -158,31 +125,29 @@ namespace Zephyr
 
         public override Node VisitForStmt(ZephyrParser.ForStmtContext context)
         {
-            var token = new Token(TokenType.Print, 
-                context.FOR().GetText(), 
-                context.FOR().Symbol.Column,
-                context.FOR().Symbol.Line);
+            var forToken = context.FOR().Symbol;
+            var token = new Token(TokenType.Print, forToken.Text, forToken.Column, forToken.Line);
 
             Node initializer = new NoOpNode();
-            if (context.varDecl() is not null)
+            if (context.Initializer is not null)
                 initializer = Visit(context.Initializer);
 
             Node condition = null;
-            if (context.equality() is not null)
+            if (context.Condition is not null)
                 condition = Visit(context.Condition);
 
             Node postAction = new NoOpNode();
-            if (context.assignExpr() is not null)
+            if (context.PostAction is not null)
                 postAction = Visit(context.PostAction);
 
             var body = Visit(context.Body);
             if (body is CompoundNode)
                 body.GetChildren().Add(postAction);
             else
-                body = new CompoundNode(new() {body, postAction});
+                body = new CompoundNode(new List<Node> {body, postAction});
             
             var loop = new WhileNode(token, condition, body);
-            var result = new CompoundNode(new() {initializer, loop});
+            var result = new CompoundNode(new List<Node> {initializer, loop});
 
             return result;
         }
@@ -190,21 +155,22 @@ namespace Zephyr
         public override Node VisitAssignExpr(ZephyrParser.AssignExprContext context)
         {
             var left = Visit(context.equality());
-            ITerminalNode assign;
-            if ((assign = context.ASSIGN()) is not null)
-            {
-                var assignToken = new Token(TokenType.Assign, assign.GetText(),
-                    assign.Symbol.Column, assign.Symbol.Line);
-                return new BinOpNode(assignToken, left, Visit(context.assignExpr()));
-            }
+            if (context.ASSIGN() is null) 
+                return left;
 
-            return left;
+            var assign = context.ASSIGN().Symbol;
+            var assignToken = new Token(TokenType.Assign, assign.Text, assign.Column, assign.Line);
+            return new BinOpNode(assignToken, left, Visit(context.assignExpr()));
         }
         
         public override Node VisitEquality(ZephyrParser.EqualityContext context)
         {
             if (context.factor() is not null)
                 return Visit(context.factor());
+            
+            if (context.Inner is not null)
+                return Visit(context.Inner);
+            
             var op = context.Op;
             var token = op.Text switch
             {
@@ -220,30 +186,24 @@ namespace Zephyr
                 "/" => new Token(TokenType.Divide, "/", op.Column, op.Line)
             };
             
-            return new BinOpNode(token, Visit(context.equality(0)), Visit(context.equality(1)));
+            return new BinOpNode(token, Visit(context.Left), Visit(context.Right));
         }
 
         public override Node VisitFactor(ZephyrParser.FactorContext context)
         {
-            Token token = null;
-            if(context.PLUS() is not null)
-                token = new Token(TokenType.Plus, 
-                    context.PLUS().GetText(), 
-                    context.PLUS().Symbol.Column,
-                    context.PLUS().Symbol.Line);
-            else if(context.MINUS() is not null)
-                token = new Token(TokenType.Minus, 
-                    context.MINUS().GetText(), 
-                    context.MINUS().Symbol.Column,
-                    context.MINUS().Symbol.Line);
-            else if(context.NOT() is not null)
-                token = new Token(TokenType.Not, 
-                    context.NOT().GetText(), 
-                    context.NOT().Symbol.Column,
-                    context.NOT().Symbol.Line);
-
-            if (token is not null)
+            if (context.Op is not null)
+            {
+                var op = context.Op;
+                var token = op.Text switch
+                {
+                    "+" => new Token(TokenType.Plus, "+", op.Column, op.Line),
+                    "-" => new Token(TokenType.Minus, "-", op.Column, op.Line),
+                    "!" => new Token(TokenType.Not, "!", op.Column, op.Line),
+                    _ => null
+                };
+                
                 return new UnOpNode(token, Visit(context.factor()));
+            }
 
             return Visit(context.call());
         }
@@ -272,48 +232,36 @@ namespace Zephyr
             {
                 return Visit(context.literal());
             }
-            
-            if (context.ID() is not null)
-            {
-                var token = new Token(TokenType.Id,
-                    context.ID().GetText(),
-                    context.ID().Symbol.Line,
-                    context.ID().Symbol.Line);
 
-                return new VarNode(token);
-            }
+            var id = context.ID().Symbol;
+            var token = new Token(TokenType.Id, id.Text, id.Line, id.Line);
 
-            return Visit(context.equality());
+            return new VarNode(token);
         }
 
         public override Node VisitLiteral(ZephyrParser.LiteralContext context)
         {
             Token token = null;
-            if (context.INT() is not null)
-                token = new Token(TokenType.Integer,
-                    int.Parse(context.INT().GetText()), 
-                    context.INT().Symbol.Column,
-                    context.INT().Symbol.Line);
-            else if (context.STRING_LITERAL() is not null)
-                token = new Token(TokenType.StringLit,
-                    context.STRING_LITERAL().GetText().Trim('"'),
-                    context.STRING_LITERAL().Symbol.Line,
-                    context.STRING_LITERAL().Symbol.Line);
-            else if (context.FLOAT() is not null)
-                token = new Token(TokenType.DoubleLit,
-                    double.Parse(context.FLOAT().GetText(), CultureInfo.InvariantCulture),
-                    context.FLOAT().Symbol.Column,
-                    context.FLOAT().Symbol.Line);
-            else if (context.TRUE() is not null)
-                token = new Token(TokenType.True,
-                    bool.Parse(context.TRUE().GetText()),
-                    context.TRUE().Symbol.Column,
-                    context.TRUE().Symbol.Line);
-            else if (context.FALSE() is not null)
-                token = new Token(TokenType.False,
-                    bool.Parse(context.FALSE().GetText()),
-                    context.FALSE().Symbol.Column,
-                    context.FALSE().Symbol.Line);
+            if (context.Int is not null)
+                token = new Token(TokenType.Integer, int.Parse(context.Int.Text), 
+                    context.Int.Column, context.Int.Line);
+            
+            else if (context.StringLit is not null)
+                token = new Token(TokenType.StringLit, context.StringLit.Text.Trim('"'),
+                    context.StringLit.Line, context.StringLit.Line);
+            
+            else if (context.Float is not null)
+                token = new Token(TokenType.DoubleLit, 
+                    double.Parse(context.Float.Text, CultureInfo.InvariantCulture), 
+                    context.Float.Column, context.Float.Line);
+            
+            else if (context.True is not null)
+                token = new Token(TokenType.True, bool.Parse(context.True.Text),
+                    context.True.Column, context.True.Line);
+            
+            else if (context.False is not null)
+                token = new Token(TokenType.False, bool.Parse(context.False.Text),
+                    context.False.Column, context.False.Line);
 
 
             return new LiteralNode(token, token.Value);
