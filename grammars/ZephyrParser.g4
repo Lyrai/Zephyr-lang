@@ -69,15 +69,8 @@ equality:
     | equality Op=(DIVIDE | MULTIPLY) equality
     | factor
 ;
-//assignExpr: equality (ASSIGN assignExpr)?;
-//equality: comparison ((EQUAL | NOT_EQUAL) comparison)*;
-//comparison: expression (
-//    (GREATER_EQUAL | GREATER | LESS_EQUAL | LESS)
-//    expression)*;
-//expression: term ((PLUS | MINUS) term)*;
-//term: factor ((DIVIDE | MULTIPLY) factor)*;
+
 factor: (MINUS | PLUS | NOT) factor | call;
 call: call (('(' funcArguments? ')') | DOT ID) | primary;
-//call: primary (('(' funcArguments? ')') | DOT ID)*;
 primary: literal | ID | '(' equality ')';
 literal: STRING_LITERAL | INT | FLOAT | 'true' | 'false';

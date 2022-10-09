@@ -223,93 +223,6 @@ namespace Zephyr
             return new BinOpNode(token, Visit(context.equality(0)), Visit(context.equality(1)));
         }
 
-        /*public override Node VisitEquality(ZephyrParser.EqualityContext context)
-        {
-            var node = Visit(context.comparison(0));
-            var children = context.children;
-            for(int i = 0; i < children.Count; i++)
-            {
-                var child = context.GetChild(i);
-                if (child is ITerminalNode terminal)
-                {
-                    var token = terminal.Symbol.Text switch
-                    {
-                        "==" => new Token(TokenType.Equal, "==", terminal.Symbol.Column, terminal.Symbol.Line),
-                        "!=" => new Token(TokenType.NotEqual, "!=", terminal.Symbol.Column, terminal.Symbol.Line)
-                    };
-                    node = new BinOpNode(token, node, Visit(context.GetChild(++i)));
-                }
-            }
-
-            return node;
-        }
-
-        public override Node VisitComparison(ZephyrParser.ComparisonContext context)
-        {
-            var node = Visit(context.expression(0));
-            var children = context.children;
-            for(int i = 0; i < children.Count; i++)
-            {
-                var child = context.GetChild(i);
-                if (child is ITerminalNode terminal)
-                {
-                    var token = terminal.Symbol.Text switch
-                    {
-                        "<" => new Token(TokenType.Less, "<", terminal.Symbol.Column, terminal.Symbol.Line),
-                        "<=" => new Token(TokenType.LessEqual, "!=", terminal.Symbol.Column, terminal.Symbol.Line),
-                        ">" => new Token(TokenType.Greater, ">", terminal.Symbol.Column, terminal.Symbol.Line),
-                        ">=" => new Token(TokenType.GreaterEqual, ">=", terminal.Symbol.Column, terminal.Symbol.Line)
-                    };
-                    node = new BinOpNode(token, node, Visit(context.GetChild(++i)));
-                }
-            }
-
-            return node;
-        }
-
-        public override Node VisitExpression(ZephyrParser.ExpressionContext context)
-        {
-            var node = Visit(context.term(0));
-            var children = context.children;
-            for(int i = 0; i < children.Count; i++)
-            {
-                var child = context.GetChild(i);
-                if (child is ITerminalNode terminal)
-                {
-                    var token = terminal.Symbol.Text switch
-                    {
-                        "+" => new Token(TokenType.Plus, "+", terminal.Symbol.Column, terminal.Symbol.Line),
-                        "-" => new Token(TokenType.Minus, "-", terminal.Symbol.Column, terminal.Symbol.Line)
-                    };
-                    node = new BinOpNode(token, node, Visit(context.GetChild(++i)));
-                }
-            }
-
-            return node;
-        }
-
-        public override Node VisitTerm(ZephyrParser.TermContext context)
-        {
-            var node = Visit(context.factor(0));
-            var children = context.children;
-            for(int i = 0; i < children.Count; i++)
-            {
-                var child = context.GetChild(i);
-                if (child is ITerminalNode terminal)
-                {
-                    var token = terminal.Symbol.Text switch
-                    {
-                        "*" => new Token(TokenType.Multiply, "*", terminal.Symbol.Column, terminal.Symbol.Line),
-                        "/" => new Token(TokenType.Divide, "/", terminal.Symbol.Column, terminal.Symbol.Line)
-                    };
-
-                    node = new BinOpNode(token, node, Visit(child));
-                }
-            }
-
-            return node;
-        }*/
-
         public override Node VisitFactor(ZephyrParser.FactorContext context)
         {
             Token token = null;
@@ -341,7 +254,6 @@ namespace Zephyr
                 return Visit(context.primary());
             
             var node = Visit(context.call());
-            //var children = context.children;
             if (context.DOT() is null)
             {
                 var arguments = context.funcArguments() is not null ? GetBody(context.funcArguments()) : new List<Node>();
@@ -352,33 +264,6 @@ namespace Zephyr
             var token = new Token(TokenType.Id, id.Text, id.Column, id.Line);
             return new GetNode(token, node);
 
-            /*for (int i = 0; i < children.Count; i++)
-            {
-                if (context.GetChild(i) is ITerminalNode terminal)
-                {
-                    if (terminal.Symbol.Text == "(")
-                    {
-                        var args = context.GetChild(++i);
-                        List<Node> arguments = new List<Node>();
-                        if(args is not null)
-                        {
-                            arguments = GetBody(args);
-                        }
-                        node = new FuncCallNode(node, node.Token, arguments);
-                    }
-                    else if (terminal.Symbol.Text == ".")
-                    {
-                        var id = context.GetChild(++i);
-                        if(id is ITerminalNode term)
-                        {
-                            var token = new Token(TokenType.Id, term.GetText(), term.Symbol.Column, term.Symbol.Line);
-                            node = new GetNode(token, node);
-                        }
-                    }
-                }
-            }
-
-            return node;*/
         }
 
         public override Node VisitPrimary(ZephyrParser.PrimaryContext context)
@@ -390,7 +275,7 @@ namespace Zephyr
             
             if (context.ID() is not null)
             {
-                var token = new Token(TokenType.StringLit,
+                var token = new Token(TokenType.Id,
                     context.ID().GetText(),
                     context.ID().Symbol.Line,
                     context.ID().Symbol.Line);
