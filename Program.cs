@@ -9,6 +9,11 @@ using Antlr4.Runtime;
 using Lexer = Zephyr.LexicalAnalysis.Lexer;
 using Parser = Zephyr.SyntaxAnalysis.Parser;
 
+// TODO Uniform function call syntax
+// TODO Get rid of ! in function declaration and call (Hint: call detection in semantic analyzer)
+// TODO Move to bytecode
+// TODO if-else-join construction
+
 namespace Zephyr
 {
     class Zephyr
@@ -45,10 +50,13 @@ namespace Zephyr
                 Console.WriteLine($"Analysis in {sw.ElapsedMilliseconds}ms");
                 
                 sw.Reset();
+
+                if (_hasError) 
+                    return;
+                
                 sw.Start();
                 Interpreter interpreter = new Interpreter(nodeTree);
-                if(_hasError == false)
-                    interpreter.Interpret();
+                interpreter.Interpret();
                 sw.Stop();
                 Console.WriteLine($"Executed in {sw.ElapsedMilliseconds}ms");
             }
