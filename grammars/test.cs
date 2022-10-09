@@ -886,6 +886,9 @@ public partial class test : Parser {
 	}
 
 	public partial class IfStmtContext : ParserRuleContext {
+		public AssignExprContext condition;
+		public StatementContext thenBranch;
+		public StatementContext elseBranch;
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode IF() { return GetToken(test.IF, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public AssignExprContext assignExpr() {
 			return GetRuleContext<AssignExprContext>(0);
@@ -930,9 +933,9 @@ public partial class test : Parser {
 			State = 118;
 			Match(IF);
 			State = 119;
-			assignExpr();
+			_localctx.condition = assignExpr();
 			State = 120;
-			statement();
+			_localctx.thenBranch = statement();
 			State = 123;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,8,Context) ) {
@@ -941,7 +944,7 @@ public partial class test : Parser {
 				State = 121;
 				Match(ELSE);
 				State = 122;
-				statement();
+				_localctx.elseBranch = statement();
 				}
 				break;
 			}
@@ -959,6 +962,8 @@ public partial class test : Parser {
 	}
 
 	public partial class WhileStmtContext : ParserRuleContext {
+		public AssignExprContext condition;
+		public StatementContext body;
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode WHILE() { return GetToken(test.WHILE, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public AssignExprContext assignExpr() {
 			return GetRuleContext<AssignExprContext>(0);
@@ -999,9 +1004,9 @@ public partial class test : Parser {
 			State = 125;
 			Match(WHILE);
 			State = 126;
-			assignExpr();
+			_localctx.condition = assignExpr();
 			State = 127;
-			statement();
+			_localctx.body = statement();
 			}
 		}
 		catch (RecognitionException re) {
@@ -1016,13 +1021,17 @@ public partial class test : Parser {
 	}
 
 	public partial class ForStmtContext : ParserRuleContext {
+		public VarDeclContext initializer;
+		public EqualityContext condition;
+		public AssignExprContext postAction;
+		public StatementContext body;
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode FOR() { return GetToken(test.FOR, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public VarDeclContext varDecl() {
-			return GetRuleContext<VarDeclContext>(0);
-		}
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] COMMA() { return GetTokens(test.COMMA); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode COMMA(int i) {
 			return GetToken(test.COMMA, i);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public VarDeclContext varDecl() {
+			return GetRuleContext<VarDeclContext>(0);
 		}
 		[System.Diagnostics.DebuggerNonUserCode] public EqualityContext equality() {
 			return GetRuleContext<EqualityContext>(0);
@@ -1066,17 +1075,17 @@ public partial class test : Parser {
 			State = 129;
 			Match(FOR);
 			State = 130;
-			varDecl();
+			_localctx.initializer = varDecl();
 			State = 131;
 			Match(COMMA);
 			State = 132;
-			equality();
+			_localctx.condition = equality();
 			State = 133;
 			Match(COMMA);
 			State = 134;
-			assignExpr();
+			_localctx.postAction = assignExpr();
 			State = 135;
-			statement();
+			_localctx.body = statement();
 			}
 		}
 		catch (RecognitionException re) {
@@ -1091,14 +1100,15 @@ public partial class test : Parser {
 	}
 
 	public partial class FuncDeclContext : ParserRuleContext {
+		public StatementListContext body;
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode FN() { return GetToken(test.FN, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ID() { return GetToken(test.ID, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LPAR() { return GetToken(test.LPAR, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RPAR() { return GetToken(test.RPAR, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode END() { return GetToken(test.END, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public StatementListContext statementList() {
 			return GetRuleContext<StatementListContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode END() { return GetToken(test.END, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public FuncParametersContext funcParameters() {
 			return GetRuleContext<FuncParametersContext>(0);
 		}
@@ -1168,7 +1178,7 @@ public partial class test : Parser {
 			}
 
 			State = 148;
-			statementList();
+			_localctx.body = statementList();
 			State = 149;
 			Match(END);
 			}
@@ -1185,6 +1195,9 @@ public partial class test : Parser {
 	}
 
 	public partial class FuncParametersContext : ParserRuleContext {
+		public TypedVarDeclContext _typedVarDecl;
+		public IList<TypedVarDeclContext> _parameters = new List<TypedVarDeclContext>();
+		public IList<TypedVarDeclContext> _paramters = new List<TypedVarDeclContext>();
 		[System.Diagnostics.DebuggerNonUserCode] public TypedVarDeclContext[] typedVarDecl() {
 			return GetRuleContexts<TypedVarDeclContext>();
 		}
@@ -1227,7 +1240,8 @@ public partial class test : Parser {
 			EnterOuterAlt(_localctx, 1);
 			{
 			State = 151;
-			typedVarDecl();
+			_localctx._typedVarDecl = typedVarDecl();
+			_localctx._parameters.Add(_localctx._typedVarDecl);
 			State = 156;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
@@ -1237,7 +1251,8 @@ public partial class test : Parser {
 				State = 152;
 				Match(COMMA);
 				State = 153;
-				typedVarDecl();
+				_localctx._typedVarDecl = typedVarDecl();
+				_localctx._paramters.Add(_localctx._typedVarDecl);
 				}
 				}
 				State = 158;
@@ -1258,6 +1273,8 @@ public partial class test : Parser {
 	}
 
 	public partial class FuncArgumentsContext : ParserRuleContext {
+		public EqualityContext _equality;
+		public IList<EqualityContext> _args = new List<EqualityContext>();
 		[System.Diagnostics.DebuggerNonUserCode] public EqualityContext[] equality() {
 			return GetRuleContexts<EqualityContext>();
 		}
@@ -1300,7 +1317,8 @@ public partial class test : Parser {
 			EnterOuterAlt(_localctx, 1);
 			{
 			State = 159;
-			equality();
+			_localctx._equality = equality();
+			_localctx._args.Add(_localctx._equality);
 			State = 164;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
@@ -1310,7 +1328,8 @@ public partial class test : Parser {
 				State = 160;
 				Match(COMMA);
 				State = 161;
-				equality();
+				_localctx._equality = equality();
+				_localctx._args.Add(_localctx._equality);
 				}
 				}
 				State = 166;

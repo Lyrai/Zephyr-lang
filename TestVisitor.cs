@@ -39,7 +39,7 @@ namespace Zephyr
             if (context.type() is not null)
                 type = context.type().GetText();
             return new FuncDeclNode(idToken,
-                GetBody(context.statementList()), 
+                GetBody(context.body), 
                 parameters,
                 type);
         }
@@ -135,9 +135,9 @@ namespace Zephyr
                 context.IF().Symbol.Column,
                 context.IF().Symbol.Line);
 
-            var condition = Visit(context.assignExpr());
-            var thenBlock = Visit(context.statement(0));
-            var elseBlock = context.ELSE() is not null? Visit(context.statement(1)) : null;
+            var condition = Visit(context.condition);
+            var thenBlock = Visit(context.thenBranch);
+            var elseBlock = context.ELSE() is not null? Visit(context.elseBranch) : null;
             return new IfNode(token, condition, thenBlock, elseBlock);
         }
 
@@ -148,8 +148,8 @@ namespace Zephyr
                 context.WHILE().Symbol.Column,
                 context.WHILE().Symbol.Line);
 
-            var condition = Visit(context.assignExpr());
-            var body = Visit(context.statement());
+            var condition = Visit(context.condition);
+            var body = Visit(context.body);
 
             return new WhileNode(token, condition, body);
         }
@@ -163,17 +163,17 @@ namespace Zephyr
 
             Node initializer = new NoOpNode();
             if (context.varDecl() is not null)
-                initializer = Visit(context.varDecl());
+                initializer = Visit(context.initializer);
 
             Node condition = null;
             if (context.equality() is not null)
-                condition = Visit(context.equality());
+                condition = Visit(context.condition);
 
             Node postAction = new NoOpNode();
             if (context.assignExpr() is not null)
-                postAction = Visit(context.assignExpr());
+                postAction = Visit(context.postAction);
 
-            var body = Visit(context.statement());
+            var body = Visit(context.body);
             if (body is CompoundNode)
                 body.GetChildren().Add(postAction);
             else
@@ -202,14 +202,13 @@ namespace Zephyr
         public override Node VisitEquality(test.EqualityContext context)
         {
             var node = Visit(context.comparison(0));
-            Token token = null;
             var children = context.children;
             for(int i = 0; i < children.Count; i++)
             {
                 var child = context.GetChild(i);
                 if (child is ITerminalNode terminal)
                 {
-                    token = terminal.Symbol.Text switch
+                    var token = terminal.Symbol.Text switch
                     {
                         "==" => new Token(TokenType.Equal, "==", terminal.Symbol.Column, terminal.Symbol.Line),
                         "!=" => new Token(TokenType.NotEqual, "!=", terminal.Symbol.Column, terminal.Symbol.Line)
@@ -224,14 +223,13 @@ namespace Zephyr
         public override Node VisitComparison(test.ComparisonContext context)
         {
             var node = Visit(context.expression(0));
-            Token token = null;
             var children = context.children;
             for(int i = 0; i < children.Count; i++)
             {
                 var child = context.GetChild(i);
                 if (child is ITerminalNode terminal)
                 {
-                    token = terminal.Symbol.Text switch
+                    var token = terminal.Symbol.Text switch
                     {
                         "<" => new Token(TokenType.Less, "<", terminal.Symbol.Column, terminal.Symbol.Line),
                         "<=" => new Token(TokenType.LessEqual, "!=", terminal.Symbol.Column, terminal.Symbol.Line),
@@ -248,14 +246,13 @@ namespace Zephyr
         public override Node VisitExpression(test.ExpressionContext context)
         {
             var node = Visit(context.term(0));
-            Token token = null;
             var children = context.children;
             for(int i = 0; i < children.Count; i++)
             {
                 var child = context.GetChild(i);
                 if (child is ITerminalNode terminal)
                 {
-                    token = terminal.Symbol.Text switch
+                    var token = terminal.Symbol.Text switch
                     {
                         "+" => new Token(TokenType.Plus, "+", terminal.Symbol.Column, terminal.Symbol.Line),
                         "-" => new Token(TokenType.Minus, "-", terminal.Symbol.Column, terminal.Symbol.Line)
@@ -270,14 +267,13 @@ namespace Zephyr
         public override Node VisitTerm(test.TermContext context)
         {
             var node = Visit(context.factor(0));
-            Token token = null;
             var children = context.children;
             for(int i = 0; i < children.Count; i++)
             {
                 var child = context.GetChild(i);
                 if (child is ITerminalNode terminal)
                 {
-                    token = terminal.Symbol.Text switch
+                    var token = terminal.Symbol.Text switch
                     {
                         "*" => new Token(TokenType.Multiply, "*", terminal.Symbol.Column, terminal.Symbol.Line),
                         "/" => new Token(TokenType.Divide, "/", terminal.Symbol.Column, terminal.Symbol.Line)

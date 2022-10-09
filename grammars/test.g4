@@ -40,21 +40,21 @@ returnStmt: 'return' assignExpr?;
 
 compound: '{' statementList '}';
 
-ifStmt: 'if' assignExpr 
-    statement 
+ifStmt: 'if' condition=assignExpr 
+    thenBranch=statement 
     ('else' 
-    statement)?;
+    elseBranch=statement)?;
 
-whileStmt: 'while' assignExpr statement;
+whileStmt: 'while' condition=assignExpr body=statement;
 
-forStmt: 'for' varDecl COMMA equality COMMA assignExpr 
-    statement;
+forStmt: 'for' initializer=varDecl COMMA condition=equality COMMA postAction=assignExpr 
+    body=statement;
 
 funcDecl: 'fn' ID '(' funcParameters? ')' ('->' type)?
-    statementList END;
+    body=statementList END;
 
-funcParameters: typedVarDecl (COMMA typedVarDecl)*;
-funcArguments: equality (',' equality)*;
+funcParameters: parameters+=typedVarDecl (COMMA paramters+=typedVarDecl)*;
+funcArguments: args+=equality (',' args+=equality)*;
 
 varDecl: 'let' ID ':' type (ASSIGN assignExpr)?;
 
