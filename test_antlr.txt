@@ -24,7 +24,7 @@ class DerivedClass < BaseClass
     end
 end
 
-let ss: DerivedClass = DerivedClass()
+let ss = DerivedClass()
 ss.AddString("test string to add")
 ss.name = "test"
 print ss.Name()
@@ -61,4 +61,5 @@ print b
 printFunc(b)
 
 let c = -5 * (2 - 7)
+let d = "string"
 print c
