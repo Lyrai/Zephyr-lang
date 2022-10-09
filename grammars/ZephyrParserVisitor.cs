@@ -175,10 +175,4 @@ public interface IZephyrParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitLiteral([NotNull] ZephyrParser.LiteralContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZephyrParser.type"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitType([NotNull] ZephyrParser.TypeContext context);
 }

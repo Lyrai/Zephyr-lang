@@ -1,6 +1,6 @@
 parser grammar ZephyrParser;
 
-options { tokenVocab = testLexer; }
+options { tokenVocab = ZephyrLexer; }
 
 program: statementList EOF;
 statementList: (statement SEMICOLON?)*;
@@ -29,9 +29,9 @@ classBodyDecl:
     | classDecl
 );
 
-typedVarDecl: ID ':' type;
+typedVarDecl: Name=ID ':' Type=ID;
 
-classDecl: 'class' ID ('<' ID)? classBody 'end';
+classDecl: 'class' Name=ID ('<' Base=ID)? classBody 'end';
 classBody: (classBodyDecl)*;
 
 printStmt: 'print' assignExpr;
@@ -40,33 +40,33 @@ returnStmt: 'return' assignExpr?;
 
 compound: '{' statementList '}';
 
-ifStmt: 'if' condition=assignExpr 
-    thenBranch=statement 
+ifStmt: 'if' Condition=assignExpr 
+    ThenBranch=statement 
     ('else' 
-    elseBranch=statement)?;
+    ElseBranch=statement)?;
 
-whileStmt: 'while' condition=assignExpr body=statement;
+whileStmt: 'while' Condition=assignExpr Body=statement;
 
-forStmt: 'for' initializer=varDecl COMMA condition=equality COMMA postAction=assignExpr 
-    body=statement;
+forStmt: 'for' Initializer=varDecl COMMA Condition=equality COMMA PostAction=assignExpr 
+    Body=statement;
 
-funcDecl: 'fn' ID '(' funcParameters? ')' ('->' type)?
-    body=statementList END;
+funcDecl: 'fn' Name=ID '(' funcParameters? ')' ('->' Type=ID)?
+    Body=statementList END;
 
-funcParameters: parameters+=typedVarDecl (COMMA paramters+=typedVarDecl)*;
-funcArguments: args+=equality (',' args+=equality)*;
+funcParameters: Parameters+=typedVarDecl (COMMA Paramters+=typedVarDecl)*;
+funcArguments: Args+=equality (',' Args+=equality)*;
 
-varDecl: 'let' ID ':' type (ASSIGN assignExpr)?;
+varDecl: 'let' Name=ID ':' Type=ID (ASSIGN assignExpr)?;
 
 //propertyDecl: 'property' typedVarDecl (('get' statementList END) ('set' statementList END)? | ('set' statementList END) ('get' statementList END)?) ;
 
 assignExpr: equality (ASSIGN assignExpr)?;
 
-equality: 
-      equality (EQUAL | NOT_EQUAL) equality
-    | equality (GREATER_EQUAL | GREATER | LESS_EQUAL | LESS) equality
-    | equality (PLUS | MINUS) equality
-    | equality (DIVIDE | MULTIPLY) equality
+equality:
+      equality Op=(EQUAL | NOT_EQUAL) equality
+    | equality Op=(GREATER_EQUAL | GREATER | LESS_EQUAL | LESS) equality
+    | equality Op=(PLUS | MINUS) equality
+    | equality Op=(DIVIDE | MULTIPLY) equality
     | factor
 ;
 //assignExpr: equality (ASSIGN assignExpr)?;
@@ -77,7 +77,7 @@ equality:
 //expression: term ((PLUS | MINUS) term)*;
 //term: factor ((DIVIDE | MULTIPLY) factor)*;
 factor: (MINUS | PLUS | NOT) factor | call;
-call: primary (('(' funcArguments? ')') | DOT ID)*;
+call: call (('(' funcArguments? ')') | DOT ID) | primary;
+//call: primary (('(' funcArguments? ')') | DOT ID)*;
 primary: literal | ID | '(' equality ')';
 literal: STRING_LITERAL | INT | FLOAT | 'true' | 'false';
-type: ID;
