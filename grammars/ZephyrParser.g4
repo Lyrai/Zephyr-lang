@@ -3,7 +3,7 @@ parser grammar ZephyrParser;
 options { tokenVocab = ZephyrLexer; }
 
 program: statementList EOF;
-statementList: (statement SEMICOLON?)*;
+statementList: (statement ';'?)*;
 statement: 
     (decl
     | printStmt 
@@ -49,7 +49,7 @@ whileStmt: 'while' Condition=assignExpr Body=statement;
 forStmt: 'for' Initializer=varDecl COMMA Condition=equality COMMA PostAction=assignExpr 
     Body=statement;
 
-funcDecl: 'fn' Name=ID '(' funcParameters? ')' ('->' Type=ID)?
+funcDecl: 'fn' Name=ID (':' funcParameters | '!') ('->' Type=ID)?
     Body=statementList END;
 
 funcParameters: Parameters+=typedVarDecl (COMMA Paramters+=typedVarDecl)*;
@@ -71,6 +71,6 @@ equality:
 ;
 
 factor: Op=(MINUS | PLUS | NOT) factor | call;
-call: call (('(' funcArguments? ')') | DOT ID) | primary;
+call: call ((':' funcArguments ';'?) | '!' | DOT ID) | primary;
 primary: literal | ID;
 literal: StringLit=STRING_LITERAL | Int=INT | Float=FLOAT | True='true' | False='false';

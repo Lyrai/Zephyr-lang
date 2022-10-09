@@ -1,7 +1,7 @@
 class BaseClass
     name: string
     
-    fn Name() -> string
+    fn Name! -> string
         return this.name
     end
 end
@@ -9,29 +9,29 @@ end
 class DerivedClass < BaseClass
     ff: DerivedClass
     test: string
-    fn Get() -> string
+    fn Get! -> string
         print this
         return this.test
     end
         
-    fn AddString(s: string) -> DerivedClass
+    fn AddString: s: string -> DerivedClass
         this.test = this.test + s
         return this
     end
     
-    fn init()
+    fn init!
         this.test = ""
     end
 end
 
-let ss = DerivedClass()
-ss.AddString("test string to add")
+let ss = DerivedClass!
+ss.AddString: "test string to add"
 ss.name = "test"
-print ss.Name()
+print ss.Name!
 print ss.test
 let s: double
     
-fn fib(n: int) -> int
+fn fib: n: int -> int
     if n <= 1
         return 0
     
@@ -40,25 +40,25 @@ fn fib(n: int) -> int
         
     if n == 3
         return 1
-    return fib(n - 1) + fib(n - 2)
+    return fib: n - 1; + fib: n - 2
 end
     
-fn sum() -> function
-    fn ss(a: int) -> int
+fn sum! -> function
+    fn ss: a: int -> int
         return a + 5
     end
     return ss
 end
 
-fn printFunc(a: function)
-    print a(555)
+fn printFunc: a: function
+    print a: 555
 end
 
-print "fib(10) = " + fib(10)
+print "fib: 10 = " + fib: 10
 
-let b = sum()
+let b = sum!
 print b
-printFunc(b)
+printFunc: b
 
 let c = -5 * (2 - 7)
 let d = "string"
