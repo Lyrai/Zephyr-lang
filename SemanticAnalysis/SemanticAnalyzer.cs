@@ -166,14 +166,38 @@ namespace Zephyr.SemanticAnalysis
                     
                     type = Visit(node.Obj) as TypeSymbol;
                     var sym = _table.Find<ClassSymbol>(type.Name);
-                    var methodSymbol = ResolveMethod(n.Name, sym);
-                    if (methodSymbol is null)
-                        throw new SemanticException(n, $"Class {sym.Name} doesn't contain definition for {n.Name}");
+                    if (sym is not null)
+                    {                    
+                        var methodSymbol = ResolveMethod(n.Name, sym);
+                        if(methodSymbol is not null)
+                        {
+                            n.Callable = methodSymbol;
+                            return n.Callable.ReturnType;
+                        }
+                    }
+                    
+                    arguments.Insert(0, type);
+                    var funcSymbol = _table.FindFunc(n.Name, arguments);
+                    if (funcSymbol is null)
+                    {
+                        var varSymbol = _table.Find<VarSymbol>(n.Name);
+                        if (varSymbol.Type != _table.Find<TypeSymbol>("function"))
+                            throw new SemanticException(n, $"Cannot find function or method {n.Name}");
+                        
+                        n.Callee = new VarNode(n.Callee.Token);
+                        n.Arguments.Insert(0, node.Obj);
+                        return varSymbol.Type;
 
-                    n.Callable = methodSymbol;
+                    }
+                        
+                    n.Callable = funcSymbol;
+                    n.Callee = new VarNode(n.Callee.Token);
+                    n.Arguments.Insert(0, node.Obj);
+                    
+                    
                     return n.Callable.ReturnType;
                 default:
-                throw new SemanticException(n, "Unknown exception");
+                    throw new SemanticException(n, "Unknown exception");
             }
             
             n.Callable = symbol;

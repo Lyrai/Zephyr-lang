@@ -10,7 +10,7 @@ namespace Zephyr.SyntaxAnalysis.ASTNodes
         public List<Node> Arguments { get; }
         public string Name { get; }
         public ICallable Callable { get; set; }
-        public Node Callee { get; }
+        public Node Callee { get; set; }
 
         public FuncCallNode(Node callee, Token token, List<Node> arguments)
         {

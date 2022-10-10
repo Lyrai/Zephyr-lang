@@ -51,15 +51,22 @@ fn sum! -> function
 end
 
 fn printFunc: a: function
-    print a: 555
+    print 555.a!
 end
 
-print "fib: 10 = " + fib: 10
+print "fib: 10 = " + 10.fib!
+
+fn printMany: a: int, b: string, c: double
+    print a
+    print b
+    print c
+end
 
 let b = sum!
 print b
 printFunc: b
 
-let c = -5 * (2 - 7)
+let c = -5 * (2 + 7)
 let d = "string"
-print c
+print c + d 
+printMany: 4, "many", 5.5
