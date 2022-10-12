@@ -2,17 +2,14 @@
 using System.Diagnostics;
 using System.IO;
 using Zephyr.Interpreting;
-using Zephyr.LexicalAnalysis;
 using Zephyr.SemanticAnalysis;
-using Zephyr.SyntaxAnalysis;
 using Antlr4.Runtime;
-using Lexer = Zephyr.LexicalAnalysis.Lexer;
-using Parser = Zephyr.SyntaxAnalysis.Parser;
 
-// TODO Uniform function call syntax
+// TODO imports
 // TODO Get rid of ! in function declaration and call (Hint: call detection in semantic analyzer)
 // TODO Move to bytecode
 // TODO if-else-join construction
+// TODO attributes
 
 namespace Zephyr
 {
