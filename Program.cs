@@ -19,7 +19,8 @@ namespace Zephyr
 
         static void Main(string[] args)
         {
-            Stopwatch sw = new Stopwatch();
+            Compiling.Compiler.Test();
+            /*Stopwatch sw = new Stopwatch();
             try
             {
                 
@@ -39,7 +40,7 @@ namespace Zephyr
                 var tokens = lexer.GetTokens();
 
                 Parser parser = new Parser(tokens);
-                var nodeTree = parser.Parse();*/
+                var nodeTree = parser.Parse();
 
                 SemanticAnalyzer analyzer = new SemanticAnalyzer(nodeTree);
                 analyzer.Analyze();
@@ -61,7 +62,7 @@ namespace Zephyr
             {
                 Console.WriteLine(e.Message);
                 Console.WriteLine(e.StackTrace);
-            }
+            }*/
         }
 
         public static void Error(Exception e)
