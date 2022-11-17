@@ -1,4 +1,6 @@
-﻿namespace Zephyr.SemanticAnalysis.Symbols
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Zephyr.SemanticAnalysis.Symbols
 {
     public class TypeSymbol : Symbol
     {
@@ -20,7 +22,8 @@
             return !(t1 == t2);
         }
 
-        public static TypeSymbol FromObject(object symbol)
+        [return: NotNullIfNotNull("symbol")]
+        public static TypeSymbol? FromObject(object? symbol)
         {
             return symbol switch
             {

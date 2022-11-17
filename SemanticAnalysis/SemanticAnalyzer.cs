@@ -62,6 +62,7 @@ namespace Zephyr.SemanticAnalysis
                 throw new DuplicateIdentifierException(n.Variable);
             
             var symbol = new VarSymbol(name, typeSymbol);
+            n.SetType(typeSymbol);
             _table.Add(name, symbol);
             _currentClassSymbol?.Fields.Add(name, symbol);
 
@@ -201,6 +202,7 @@ namespace Zephyr.SemanticAnalysis
             }
             
             n.Callable = symbol;
+            n.SetType(symbol.ReturnType);
 
             return symbol.ReturnType;
         }
@@ -240,12 +242,18 @@ namespace Zephyr.SemanticAnalysis
             if (type != _boolSymbol)
                 throw new SemanticException(n, $"Cannot cast type {type.Name} to bool");
             
-            Visit(n.ThenBlock);
+            var thenType = TypeSymbol.FromObject(Visit(n.ThenBlock));
             
             if (n.ElseBlock is not null)
-                Visit(n.ElseBlock);
+            {
+                var elseType = TypeSymbol.FromObject(Visit(n.ElseBlock));
+                if (thenType != elseType)
+                    throw new SemanticException(n, "Incompatible branches types");
+            }
+            
+            n.SetType(thenType);
 
-            return null;
+            return thenType;
         }
 
         public object VisitWhileNode(WhileNode n)
@@ -271,9 +279,9 @@ namespace Zephyr.SemanticAnalysis
             if (varSymbol is not null)
             {
                 n.Symbol = varSymbol;
+                n.SetType(varSymbol.Type);
 
                 return varSymbol.Type;
-                
             }
 
             var funcSymbol = _table.Find<FuncSymbol>(name);
@@ -328,17 +336,16 @@ namespace Zephyr.SemanticAnalysis
         {
             var type = TypeSymbol.FromObject(Visit(n.Obj));
             var symbol = _table.Find<ClassSymbol>(type.Name);
-            if (symbol is not null)
-            {
-                var name = (string)n.Token.Value;
-                var fieldType = ResolveName(name, symbol);
-                if (fieldType is not null)
-                    return fieldType;
-
+            if (symbol is null)
+                throw new UnknownIdentifierException(n);
+            
+            var name = (string)n.Token.Value;
+            var fieldType = ResolveName(name, symbol);
+            if (fieldType is null)
                 throw new SemanticException(n, $"{symbol.Name} does not contain definition for {name}");
-            }
-
-            throw new UnknownIdentifierException(n);
+                
+            n.SetType(fieldType);
+            return fieldType;
         }
 
         private TypeSymbol ResolveName(string name, ClassSymbol symbol)
@@ -357,7 +364,7 @@ namespace Zephyr.SemanticAnalysis
             var enclosing = _table;
             _table = new ScopedSymbolTable(enclosing.Type, _table);
             var children = node.GetChildren();
-            for (var i = 0; i < children.Count; i++)
+            for (var i = 0; i < children.Count - 1; i++)
             {
                 try
                 {
@@ -369,9 +376,20 @@ namespace Zephyr.SemanticAnalysis
                 }
             }
 
+            object type = null!;
+            try
+            {
+                type = Visit(children.Last());
+            }
+            catch (Exception e)
+            {
+                Zephyr.Error(e);
+            }
+            
             _table = enclosing;
+            node.SetType(TypeSymbol.FromObject(type));
 
-            return null;
+            return type;
         }
 
         public object VisitReturnNode(ReturnNode n)
@@ -387,22 +405,24 @@ namespace Zephyr.SemanticAnalysis
             {
                 type = _voidSymbol;
             }
-            /*var returnType = _currentScopeSymbols.Peek().Type;
-            if (CanCast(type, returnType) == false)
-                throw new SemanticException(n, $"Cannot cast type {type} to target type {returnType}");*/
+            
+            n.SetType(type);
 
             return type;
         }
 
         public object VisitLiteralNode(LiteralNode n)
         {
-            return n.Value switch
+            var type = n.Value switch
             {
                 int => _intSymbol,
                 double => _doubleSymbol,
                 bool => _boolSymbol,
                 string => _stringSymbol
             };
+
+            n.SetType(type);
+            return type;
         }
 
         public object VisitBinOpNode(BinOpNode n)
@@ -423,6 +443,7 @@ namespace Zephyr.SemanticAnalysis
                 if (CanCast(right, left) == false)
                     throw new SemanticException(n, $"Cannot assign value of type {right} to variable {n.Left.Token.Value} of type {left}");
 
+                n.SetType(left);
                 return left;
             }
 
@@ -430,23 +451,36 @@ namespace Zephyr.SemanticAnalysis
             if (ComparisonOperators.Contains(tokenType))
             {
                 if (CanCast(left, right) || CanCast(right, left))
+                {
+                    n.SetType(_boolSymbol);
                     return _boolSymbol;
+                }
                 
                 throw new SemanticException(n, $"Cannot cast type {left} to target type {right}");
             }
             
             if (left == _doubleSymbol || right == _doubleSymbol)
+            {
+                n.SetType(_doubleSymbol);
                 return _doubleSymbol;
-            if (left == _stringSymbol && right == _stringSymbol)
-                return _stringSymbol;
+            }
             
+            if (left == _stringSymbol && right == _stringSymbol)
+            {
+                n.SetType(_stringSymbol);
+                return _stringSymbol;
+            }
+            
+            n.SetType(_stringSymbol);
             return _intSymbol;
         }
 
         public object VisitUnOpNode(UnOpNode n)
         {
             var op = Visit(n.Operand) as TypeSymbol;
-            return op == _doubleSymbol ? _doubleSymbol : _intSymbol;
+            var type = op == _doubleSymbol ? _doubleSymbol : _intSymbol;
+            n.SetType(type);
+            return type;
         }
 
         public object VisitNoOpNode(NoOpNode n)

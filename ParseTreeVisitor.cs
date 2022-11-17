@@ -30,8 +30,9 @@ namespace Zephyr
                 parameters = GetBody(context.funcParameters());
             
             var type = context.Type?.Text ?? "void";
-            
-            return new FuncDeclNode(idToken, GetBody(context.Body), parameters, type);
+            var body = GetBody(context.Body);
+
+            return new FuncDeclNode(idToken, body, parameters, type);
         }
 
         public override Node VisitVarDecl(ZephyrParser.VarDeclContext context)
@@ -159,7 +160,7 @@ namespace Zephyr
 
         public override Node VisitAssignExpr(ZephyrParser.AssignExprContext context)
         {
-            var left = Visit(context.equality());
+            var left = Visit(context.compound() is null ? context.equality() : context.compound());
             if (context.ASSIGN() is null) 
                 return left;
 

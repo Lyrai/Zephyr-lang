@@ -1,25 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using Zephyr.Compiling.Contexts;
+using Zephyr.LexicalAnalysis.Tokens;
+using Zephyr.SemanticAnalysis.Symbols;
 using Zephyr.SyntaxAnalysis.ASTNodes;
 
 namespace Zephyr.Compiling
 {
     public class Compiler: INodeVisitor<object>
     {
-        private AssemblyBuilder _assemblyBuilder;
         private CompilationContext _context;
-        private Node _tree;
+        private readonly Node _tree;
         private MethodInfo _entryPoint = null!;
 
         public Compiler(Node tree)
         {
-            _assemblyBuilder =
-                AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("Main"), AssemblyBuilderAccess.Run);
-            _context = null!;
+            _context = new AssemblyContext("Main", null);
             _tree = tree;
         }
 
@@ -29,9 +29,9 @@ namespace Zephyr.Compiling
             AssemblyBuilder builder = AssemblyBuilder.DefineDynamicAssembly(name, AssemblyBuilderAccess.Run);
             ModuleBuilder moduleBuilder = builder.DefineDynamicModule(name.Name);
             TypeBuilder typeBuilder = moduleBuilder.DefineType("TestType", TypeAttributes.Public);
-            MethodBuilder methodBuilder = typeBuilder.DefineMethod(
+            MethodBuilder methodBuilder = moduleBuilder.DefineGlobalMethod(
                 "Ttt",
-                MethodAttributes.Static | MethodAttributes.HideBySig | MethodAttributes.Private,
+                MethodAttributes.Static | MethodAttributes.HideBySig | MethodAttributes.Public,
                 typeof(void),
                 null
             );
@@ -52,37 +52,35 @@ namespace Zephyr.Compiling
             //generator.Emit(OpCodes.Pop);
             //generator.Emit(OpCodes.Pop);
             generator.Emit(OpCodes.Ret);
+            moduleBuilder.CreateGlobalFunctions();
+            var g = moduleBuilder.GetMethod("Ttt");
             Type type = typeBuilder.CreateType();
             type.InvokeMember("Ttt", BindingFlags.Static | BindingFlags.InvokeMethod | BindingFlags.NonPublic, null, null, null);
         }
 
         public MethodInfo Compile()
         {
-            _context = new ModuleContext("Main", null, _assemblyBuilder.DefineDynamicModule("Main"));
+            _context = _context.DefineModule("Main") ?? throw new InvalidOperationException("Could not define module \"Main\"");
             Visit(_tree);
+            _context.CompleteFunction();
             return _entryPoint;
         }
         
         public object VisitClassNode(ClassNode n)
         {
-            if (_context is not ModuleContext ctx)
-            {
-                throw new InvalidCastException("Wrong context type: expected module");
-            }
-
-            var mb = ctx.Builder;
-            var classBuilder = mb.DefineType(n.Name, TypeAttributes.Class, ctx.GetType(n.Parent.Name));
-
-            _context = new ClassContext(n.Name, _context, classBuilder);
+            var oldContext = _context;
+            _context = _context.DefineType(n.Name, _context.GetTypeByName(n.Parent.Name)) 
+                       ?? throw new InvalidOperationException($"Could not define class {n.Name}");
+            
             foreach (var node in n.Body)
             {
                 Visit(node);
             }
 
-            var type = classBuilder.CreateType();
-            ctx.AddType(n.Name, type);
+            _context.CreateType();
+            _context = oldContext;
 
-            return type;
+            return null!;
         }
 
         public object VisitGetNode(GetNode n)
@@ -92,22 +90,92 @@ namespace Zephyr.Compiling
 
         public object VisitCompoundNode(CompoundNode n)
         {
-            throw new System.NotImplementedException();
+            var last = n.GetChildren().Last();
+            foreach (var node in n.GetChildren())
+            {
+                Visit(node);
+                if(node is FuncCallNode && node != last)
+                    _context.GetILGenerator().Emit(OpCodes.Pop);
+            }
+
+            return null!;
         }
 
         public object VisitBinOpNode(BinOpNode n)
         {
-            throw new System.NotImplementedException();
+            Visit(n.Left);
+            Visit(n.Right);
+            var generator = _context.GetILGenerator();
+            
+            if (n.Token.Type == TokenType.Assign)
+            {
+                generator.Emit(OpCodes.Stloc, _context.GetVariable((string) n.Left.Token.Value));
+                return null!;
+            }
+            
+            var op = n.Token.Type switch
+            {
+                TokenType.Plus => OpCodes.Add,
+                TokenType.Minus => OpCodes.Sub,
+                TokenType.Multiply => OpCodes.Mul,
+                TokenType.Divide => OpCodes.Div
+            };
+            generator?.Emit(op);
+            return null!;
         }
 
         public object VisitUnOpNode(UnOpNode n)
         {
-            throw new System.NotImplementedException();
+            var generator = _context.GetILGenerator()!;
+            if (n.Token.Type == TokenType.Print)
+            {
+                Type[] wlParams = {typeof(object)};
+                MethodInfo wrln = typeof(Console).GetMethod("WriteLine", wlParams);
+                Visit(n.Operand);
+                generator.Emit(OpCodes.Box, typeof(int));
+                generator.EmitCall(OpCodes.Call, wrln, null);
+            }
+            else if (n.Token.Type == TokenType.Minus)
+            {
+                Visit(n.Operand);
+                generator.Emit(OpCodes.Neg);
+            }
+            else
+            {
+                throw new InvalidOperationException($"Invalid unary operation: {n.Token.Value}");
+            }
+
+            return null!;
         }
 
         public object VisitLiteralNode(LiteralNode n)
         {
-            throw new System.NotImplementedException();
+            var generator = _context.GetILGenerator();
+            if (generator is null)
+            {
+                throw new InvalidOperationException($"Statement in illegal context: {_context}");
+            }
+            
+            switch (n.Token.Type)
+            {
+                case TokenType.Integer:
+                    generator.Emit(OpCodes.Ldc_I4, (int) n.Value);
+                    break;
+                case TokenType.DoubleLit:
+                    generator.Emit(OpCodes.Ldc_R8, (double) n.Value);
+                    break;
+                case TokenType.True:
+                    generator.Emit(OpCodes.Ldc_I4, 1);
+                    break;
+                case TokenType.False:
+                    generator.Emit(OpCodes.Ldc_I4, 0);
+                    break;
+                case TokenType.StringLit:
+                    generator.Emit(OpCodes.Ldstr, (string) n.Value);
+                    break;
+            }
+            
+            return null!;
         }
 
         public object VisitIfNode(IfNode n)
@@ -122,12 +190,16 @@ namespace Zephyr.Compiling
 
         public object VisitVarNode(VarNode n)
         {
-            throw new System.NotImplementedException();
+            _context.GetILGenerator().Emit(OpCodes.Ldloc, _context.GetVariable(n.Name));
+            
+            return null!;
         }
 
         public object VisitVarDeclNode(VarDeclNode n)
         {
-            throw new System.NotImplementedException();
+            _context.DefineVariable(n.Variable.Name, MapType(n.TypeSymbol));
+
+            return null!;
         }
 
         public object VisitPropertyDeclNode(PropertyDeclNode n)
@@ -137,27 +209,74 @@ namespace Zephyr.Compiling
 
         public object VisitFuncCallNode(FuncCallNode n)
         {
-            throw new System.NotImplementedException();
+            var generator = _context.GetILGenerator();
+            var args = n.Arguments.Select(node => node.TypeSymbol).Select(MapType).ToList();
+            var function = _context.GetFunction(n.Name, args);
+            foreach (var node in n.Arguments)
+                Visit(node);
+            
+            generator.EmitCall(OpCodes.Call, function, null);
+            return null!;
         }
 
         public object VisitFuncDeclNode(FuncDeclNode n)
         {
-            throw new System.NotImplementedException();
+            var types = new List<Type>();
+            foreach (var symbol in n.Symbol.Parameters)
+                types.Add(MapType(symbol.Type));
+            
+            
+            var oldContext = _context;
+            _context = _context.DefineFunction(n.Name, types, MapType(n.Symbol.ReturnType)) ?? throw new InvalidOperationException($"Cannot define function in {_context}");
+            foreach (var node in n.Body)
+                Visit(node);
+
+            if (n.ReturnType == "void" && n.Body.Last() is not ReturnNode)
+                _context.GetILGenerator().Emit(OpCodes.Ret);
+
+            _context = oldContext;
+            //if (_context is ModuleContext)
+            //    _context.CompleteFunction();
+            if (_context is ModuleContext && n.Name == "main")
+                _entryPoint = _context.LastFunction()!;
+            
+            return null!;
         }
 
         public object VisitReturnNode(ReturnNode n)
         {
-            throw new System.NotImplementedException();
+            _context.GetILGenerator()?.Emit(OpCodes.Ret);
+            return null!;
         }
 
         public object VisitNoOpNode(NoOpNode n)
         {
-            throw new System.NotImplementedException();
+            return null!;
         }
 
         private object Visit(Node n)
         {
             return n.Accept(this);
+        }
+        
+        private Type? MapType(TypeSymbol symbol)
+        {
+            
+            return MapType(symbol.Name);
+        }
+        
+        private Type? MapType(string name)
+        {
+            return name switch
+            {
+                "int" => typeof(int),
+                "double" => typeof(double),
+                "string" => typeof(string),
+                "void" => typeof(void),
+                "bool" => typeof(bool),
+                "function" => null,
+                _ => _context.GetTypeByName(name)
+            };
         }
     }
 }

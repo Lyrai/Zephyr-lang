@@ -59,14 +59,14 @@ varDecl: 'let' Name=ID (':' Type=ID)? (ASSIGN assignExpr)?;
 
 //propertyDecl: 'property' typedVarDecl (('get' statementList END) ('set' statementList END)? | ('set' statementList END) ('get' statementList END)?) ;
 
-assignExpr: equality (ASSIGN assignExpr)?;
+assignExpr: compound | (equality (ASSIGN assignExpr)?);
 
 equality:
       '(' Inner=equality ')'
-    | Left=equality Op=(EQUAL | NOT_EQUAL) Right=equality
-    | Left=equality Op=(GREATER_EQUAL | GREATER | LESS_EQUAL | LESS) Right=equality
-    | Left=equality Op=(PLUS | MINUS) Right=equality
     | Left=equality Op=(DIVIDE | MULTIPLY) Right=equality
+    | Left=equality Op=(PLUS | MINUS) Right=equality
+    | Left=equality Op=(GREATER_EQUAL | GREATER | LESS_EQUAL | LESS) Right=equality
+    | Left=equality Op=(EQUAL | NOT_EQUAL) Right=equality
     | factor
 ;
 

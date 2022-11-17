@@ -1,11 +1,16 @@
 ﻿using System.Collections.Generic;
+using Zephyr.SemanticAnalysis;
+using Zephyr.SemanticAnalysis.Symbols;
 
 namespace Zephyr.SyntaxAnalysis.ASTNodes
 {
-    public abstract class Node
+    public abstract class Node: ISemanticNode
     {
         public Token Token { get; protected init; }
         public object Value { get; protected set; }
+
+        public TypeSymbol TypeSymbol => _type;
+        private TypeSymbol _type;
 
         public virtual List<Node> GetChildren()
         {
@@ -15,5 +20,10 @@ namespace Zephyr.SyntaxAnalysis.ASTNodes
 
         public virtual void Replace(Node oldItem, Node newItem)
         { }
+        
+        public void SetType(TypeSymbol type)
+        {
+            _type = type;
+        }
     }
 }

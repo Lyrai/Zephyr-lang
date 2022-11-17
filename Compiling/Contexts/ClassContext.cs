@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 
@@ -6,44 +7,32 @@ namespace Zephyr.Compiling.Contexts
 {
     public class ClassContext : CompilationContext
     {
-        public TypeBuilder Builder { get; }
+        private TypeBuilder _builder;
         private MethodInfo? _currentMethod;
         private Dictionary<string, MethodInfo> _methods;
         private Dictionary<string, FieldInfo> _fields;
         
         public ClassContext(string name, CompilationContext parent, TypeBuilder builder): base(name, parent)
         {
-            Builder = builder;
+            _builder = builder;
             _currentMethod = null;
             _methods = new Dictionary<string, MethodInfo>();
             _fields = new Dictionary<string, FieldInfo>();
         }
-        
-        public MethodInfo? CurrentMethod()
+
+        public override Type? CreateType()
         {
-            return _currentMethod;
+            return _builder.CreateType();
         }
 
-        public MethodInfo? GetMethod(string name)
+        public override CompilationContext? DefineFunction(string name, List<Type> parameters, Type returnType)
         {
-            var hasMethod = _methods.TryGetValue(name, out var method);
-            return hasMethod ? method : null;
+            return base.DefineFunction(name, parameters, returnType);
         }
 
-        public FieldInfo? GetField(string name)
+        public override string ToString()
         {
-            var hasField = _fields.TryGetValue(name, out var field);
-            return hasField ? field : null;
-        }
-
-        public void AddMethod(string name, MethodInfo info)
-        {
-            _methods[name] = info;
-        }
-
-        public void AddField(string name, FieldInfo info)
-        {
-            _fields[name] = info;
+            return "class";
         }
     }
 }

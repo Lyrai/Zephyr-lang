@@ -49,7 +49,7 @@ namespace Zephyr.SemanticAnalysis.Symbols
             
             var clockFunction = new NativeFunction("clock", (_, _) => DateTime.Now.ToString(CultureInfo.InvariantCulture))
             {
-                ReturnType = new TypeSymbol("string"),
+                ReturnType = Find<TypeSymbol>("string"),
                 ParameterTypes = new List<TypeSymbol>()
             };
             Add("clock", clockFunction);
@@ -62,8 +62,8 @@ namespace Zephyr.SemanticAnalysis.Symbols
                 return null;
             })
             {
-                ReturnType = new TypeSymbol("void"),
-                ParameterTypes = new List<TypeSymbol> {new ("string")}
+                ReturnType = Find<TypeSymbol>("void"),
+                ParameterTypes = new List<TypeSymbol> {Find<TypeSymbol>("string")}
             };
             
             var writeln = new NativeFunction("write", (_, list) =>
@@ -72,8 +72,8 @@ namespace Zephyr.SemanticAnalysis.Symbols
                 return null;
             })
             {
-                ReturnType = new TypeSymbol("void"),
-                ParameterTypes = new List<TypeSymbol> {new ("string")}
+                ReturnType = Find<TypeSymbol>("void"),
+                ParameterTypes = new List<TypeSymbol> {Find<TypeSymbol>("string")}
             };
             
             Add("write", write);

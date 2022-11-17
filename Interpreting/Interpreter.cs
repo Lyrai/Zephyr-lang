@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Zephyr.LexicalAnalysis.Tokens;
 using Zephyr.SyntaxAnalysis.ASTNodes;
 using static Zephyr.Interpreting.RuntimeValue;
@@ -41,7 +42,7 @@ namespace Zephyr.Interpreting
         public RuntimeValue VisitCompoundNode(CompoundNode n)
         {
             _currentScope = new Scope(_currentScope);
-            
+            var last = n.GetChildren().Last();
             foreach (var child in n.GetChildren())
             {
                 try
@@ -49,6 +50,9 @@ namespace Zephyr.Interpreting
                     if (child is ReturnNode)
                         return Evaluate(child);
 
+                    if (child == last)
+                        return Evaluate(child);
+                    
                     Evaluate(child);
                 }
                 catch (Exception e)
