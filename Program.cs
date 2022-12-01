@@ -51,13 +51,13 @@ namespace Zephyr
                 if (_hasError) 
                     return;
                 
-                //sw.Start();
+                sw.Start();
                 //Interpreter interpreter = new Interpreter(nodeTree);
                 //interpreter.Interpret();
                 //sw.Stop();
                 var compiler = new Compiler(nodeTree);
                 var entry = compiler.Compile();
-                sw.Start();
+                //sw.Start();
                 entry.Invoke(null, null); 
                 sw.Stop();
                 Console.WriteLine($"Executed in {sw.ElapsedMilliseconds}ms");

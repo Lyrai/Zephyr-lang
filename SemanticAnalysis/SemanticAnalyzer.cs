@@ -471,7 +471,7 @@ namespace Zephyr.SemanticAnalysis
                 return _stringSymbol;
             }
             
-            n.SetType(_stringSymbol);
+            n.SetType(_intSymbol);
             return _intSymbol;
         }
 

@@ -62,7 +62,7 @@ namespace Zephyr.Compiling
         {
             _context = _context.DefineModule("Main") ?? throw new InvalidOperationException("Could not define module \"Main\"");
             Visit(_tree);
-            _context.CompleteFunction();
+            //_context.CompleteFunction();
             return _entryPoint;
         }
         
@@ -118,8 +118,14 @@ namespace Zephyr.Compiling
                 TokenType.Plus => OpCodes.Add,
                 TokenType.Minus => OpCodes.Sub,
                 TokenType.Multiply => OpCodes.Mul,
-                TokenType.Divide => OpCodes.Div
+                TokenType.Divide => OpCodes.Div,
+                TokenType.Equal => OpCodes.Ceq,
+                TokenType.NotEqual => OpCodes.Ceq
             };
+            
+            if (n.Token.Type == TokenType.NotEqual)
+                generator.Emit(OpCodes.Ldc_I4_0);
+            
             generator?.Emit(op);
             return null!;
         }
@@ -132,7 +138,7 @@ namespace Zephyr.Compiling
                 Type[] wlParams = {typeof(object)};
                 MethodInfo wrln = typeof(Console).GetMethod("WriteLine", wlParams);
                 Visit(n.Operand);
-                generator.Emit(OpCodes.Box, typeof(int));
+                generator.Emit(OpCodes.Box, MapType(n.Operand.TypeSymbol));
                 generator.EmitCall(OpCodes.Call, wrln, null);
             }
             else if (n.Token.Type == TokenType.Minus)
@@ -180,7 +186,22 @@ namespace Zephyr.Compiling
 
         public object VisitIfNode(IfNode n)
         {
-            throw new System.NotImplementedException();
+            Visit(n.Condition);
+            var generator = _context.GetILGenerator();
+            var elseLabel = generator.DefineLabel();
+            var doneLabel = generator.DefineLabel();
+            generator.Emit(OpCodes.Brfalse, elseLabel);
+            
+            Visit(n.ThenBlock);
+            
+            generator.Emit(OpCodes.Br, doneLabel);
+            generator.MarkLabel(elseLabel);
+            
+            if (n.ElseBlock is not null)
+                Visit(n.ElseBlock);
+
+            generator.MarkLabel(doneLabel);
+            return null!;
         }
 
         public object VisitWhileNode(WhileNode n)
@@ -235,8 +256,8 @@ namespace Zephyr.Compiling
                 _context.GetILGenerator().Emit(OpCodes.Ret);
 
             _context = oldContext;
-            //if (_context is ModuleContext)
-            //    _context.CompleteFunction();
+            if (_context is ModuleContext)
+                _context.CompleteFunction();
             if (_context is ModuleContext && n.Name == "main")
                 _entryPoint = _context.LastFunction()!;
             

@@ -1,0 +1,8 @@
+﻿fn main!
+    if(5 + 5 == 10)
+        print "false"
+    else 
+        print "true"
+    
+    print (5 - 6) * 7
+end
