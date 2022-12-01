@@ -103,16 +103,20 @@ namespace Zephyr.Compiling
 
         public object VisitBinOpNode(BinOpNode n)
         {
-            Visit(n.Left);
-            Visit(n.Right);
             var generator = _context.GetILGenerator();
-            
             if (n.Token.Type == TokenType.Assign)
             {
+                if (n.Left is VarDeclNode)
+                    Visit(n.Left);
+                
+                Visit(n.Right);
                 generator.Emit(OpCodes.Stloc, _context.GetVariable((string) n.Left.Token.Value));
                 return null!;
             }
             
+            Visit(n.Left);
+            Visit(n.Right);
+
             var op = n.Token.Type switch
             {
                 TokenType.Plus => OpCodes.Add,
@@ -120,13 +124,19 @@ namespace Zephyr.Compiling
                 TokenType.Multiply => OpCodes.Mul,
                 TokenType.Divide => OpCodes.Div,
                 TokenType.Equal => OpCodes.Ceq,
-                TokenType.NotEqual => OpCodes.Ceq
+                TokenType.NotEqual => OpCodes.Ceq,
+                TokenType.Greater => OpCodes.Cgt,
+                TokenType.Less => OpCodes.Clt
             };
+
+            generator.Emit(op);
             
             if (n.Token.Type == TokenType.NotEqual)
+            {
                 generator.Emit(OpCodes.Ldc_I4_0);
+                generator.Emit(OpCodes.Ceq);
+            }
             
-            generator?.Emit(op);
             return null!;
         }
 
@@ -206,7 +216,17 @@ namespace Zephyr.Compiling
 
         public object VisitWhileNode(WhileNode n)
         {
-            throw new System.NotImplementedException();
+            var generator = _context.GetILGenerator();
+            var begin = generator.DefineLabel();
+            generator.MarkLabel(begin);
+            Visit(n.Condition);
+            var done = generator.DefineLabel();
+            generator.Emit(OpCodes.Brfalse, done);
+            Visit(n.Body);
+            generator.Emit(OpCodes.Br, begin);
+            generator.MarkLabel(done);
+
+            return null!;
         }
 
         public object VisitVarNode(VarNode n)
@@ -282,7 +302,6 @@ namespace Zephyr.Compiling
         
         private Type? MapType(TypeSymbol symbol)
         {
-            
             return MapType(symbol.Name);
         }
         

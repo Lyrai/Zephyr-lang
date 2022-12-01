@@ -433,7 +433,10 @@ namespace Zephyr.SemanticAnalysis
             {
                 if (n.Left is VarDeclNode declNode && left is null)
                 {
-                    _table.Get<VarSymbol>(declNode.Variable.Name).SetType(right);
+                    var symbol = _table.Get<VarSymbol>(declNode.Variable.Name);
+                    symbol.SetType(right);
+                    n.Left.SetType(symbol.Type);
+                    n.Right.SetType(right);
                     return right;
                 }
                 

@@ -1,8 +1,9 @@
 ﻿fn main!
-    if(5 + 5 == 10)
-        print "false"
-    else 
-        print "true"
+    let a = -1
+    while a > 0 {
+        print a
+        a = a - 1
+    }
     
-    print (5 - 6) * 7
+    print "Done"
 end
