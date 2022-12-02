@@ -1,85 +1,86 @@
 ﻿using System;
+using Zephyr;
 using Zephyr.Compiling.Contexts;
 using Zephyr.SemanticAnalysis.Symbols;
 using Zephyr.SyntaxAnalysis.ASTNodes;
 
-namespace Zephyr.Compiling;
+namespace Zephyr.Compiling {
 
 public abstract class BaseCompiler: INodeVisitor<object>
 {
     protected CompilationContext _context;
     
-    public object VisitClassNode(ClassNode n)
+    public virtual object VisitClassNode(ClassNode n)
     {
         return null!;
     }
 
-    public object VisitGetNode(GetNode n)
+    public virtual object VisitGetNode(GetNode n)
     {
         return null!;
     }
 
-    public object VisitCompoundNode(CompoundNode n)
+    public virtual object VisitCompoundNode(CompoundNode n)
     {
         return null!;
     }
 
-    public object VisitBinOpNode(BinOpNode n)
+    public virtual object VisitBinOpNode(BinOpNode n)
     {
         return null!;
     }
 
-    public object VisitUnOpNode(UnOpNode n)
+    public virtual object VisitUnOpNode(UnOpNode n)
     {
         return null!;
     }
 
-    public object VisitLiteralNode(LiteralNode n)
+    public virtual object VisitLiteralNode(LiteralNode n)
     {
         return null!;
     }
 
-    public object VisitIfNode(IfNode n)
+    public virtual object VisitIfNode(IfNode n)
     {
         return null!;
     }
 
-    public object VisitWhileNode(WhileNode n)
+    public virtual object VisitWhileNode(WhileNode n)
     {
         return null!;
     }
 
-    public object VisitVarNode(VarNode n)
+    public virtual object VisitVarNode(VarNode n)
     {
         return null!;
     }
 
-    public object VisitVarDeclNode(VarDeclNode n)
+    public virtual object VisitVarDeclNode(VarDeclNode n)
     {
         return null!;
     }
 
-    public object VisitPropertyDeclNode(PropertyDeclNode n)
+    public virtual object VisitPropertyDeclNode(PropertyDeclNode n)
     {
         return null!;
     }
 
-    public object VisitFuncCallNode(FuncCallNode n)
+    public virtual object VisitFuncCallNode(FuncCallNode n)
     {
         return null!;
     }
 
-    public object VisitFuncDeclNode(FuncDeclNode n)
+    public virtual object VisitFuncDeclNode(FuncDeclNode n)
     {
         return null!;
     }
 
-    public object VisitReturnNode(ReturnNode n)
+    public virtual object VisitReturnNode(ReturnNode n)
     {
         return null!;
     }
 
-    public object VisitNoOpNode(NoOpNode n)
+    public virtual object VisitNoOpNode(NoOpNode n)
     {
         return null!;
     }
@@ -102,4 +103,4 @@ public abstract class BaseCompiler: INodeVisitor<object>
             _ => _context.GetTypeByName(name)
         };
     }
-}
+}}

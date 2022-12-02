@@ -63,7 +63,7 @@ namespace Zephyr.Compiling
             return _entryPoint;
         }
         
-        public object VisitClassNode(ClassNode n)
+        public override object VisitClassNode(ClassNode n)
         {
             var oldContext = _context;
             _context = _context.DefineType(n.Name, _context.GetTypeByName(n.Parent.Name)) 
@@ -80,12 +80,12 @@ namespace Zephyr.Compiling
             return null!;
         }
 
-        public object VisitGetNode(GetNode n)
+        public override object VisitGetNode(GetNode n)
         {
             throw new System.NotImplementedException();
         }
 
-        public object VisitCompoundNode(CompoundNode n)
+        public override object VisitCompoundNode(CompoundNode n)
         {
             var last = n.GetChildren().Last();
             foreach (var node in n.GetChildren())
@@ -98,7 +98,7 @@ namespace Zephyr.Compiling
             return null!;
         }
 
-        public object VisitBinOpNode(BinOpNode n)
+        public override object VisitBinOpNode(BinOpNode n)
         {
             var generator = _context.GetILGenerator();
             if (n.Token.Type == TokenType.Assign)
@@ -137,7 +137,7 @@ namespace Zephyr.Compiling
             return null!;
         }
 
-        public object VisitUnOpNode(UnOpNode n)
+        public override object VisitUnOpNode(UnOpNode n)
         {
             var generator = _context.GetILGenerator()!;
             if (n.Token.Type == TokenType.Print)
@@ -161,7 +161,7 @@ namespace Zephyr.Compiling
             return null!;
         }
 
-        public object VisitLiteralNode(LiteralNode n)
+        public override object VisitLiteralNode(LiteralNode n)
         {
             var generator = _context.GetILGenerator();
             if (generator is null)
@@ -191,7 +191,7 @@ namespace Zephyr.Compiling
             return null!;
         }
 
-        public object VisitIfNode(IfNode n)
+        public override object VisitIfNode(IfNode n)
         {
             Visit(n.Condition);
             var generator = _context.GetILGenerator();
@@ -211,7 +211,7 @@ namespace Zephyr.Compiling
             return null!;
         }
 
-        public object VisitWhileNode(WhileNode n)
+        public override object VisitWhileNode(WhileNode n)
         {
             var generator = _context.GetILGenerator();
             var begin = generator.DefineLabel();
@@ -226,26 +226,26 @@ namespace Zephyr.Compiling
             return null!;
         }
 
-        public object VisitVarNode(VarNode n)
+        public override object VisitVarNode(VarNode n)
         {
             _context.GetILGenerator().Emit(OpCodes.Ldloc, _context.GetVariable(n.Name));
             
             return null!;
         }
 
-        public object VisitVarDeclNode(VarDeclNode n)
+        public override object VisitVarDeclNode(VarDeclNode n)
         {
             _context.DefineVariable(n.Variable.Name, MapType(n.TypeSymbol));
 
             return null!;
         }
 
-        public object VisitPropertyDeclNode(PropertyDeclNode n)
+        public override object VisitPropertyDeclNode(PropertyDeclNode n)
         {
             throw new System.NotImplementedException();
         }
 
-        public object VisitFuncCallNode(FuncCallNode n)
+        public override object VisitFuncCallNode(FuncCallNode n)
         {
             var generator = _context.GetILGenerator();
             var args = n.Arguments.Select(node => node.TypeSymbol).Select(MapType).ToList();
@@ -257,7 +257,7 @@ namespace Zephyr.Compiling
             return null!;
         }
 
-        public object VisitFuncDeclNode(FuncDeclNode n)
+        public override object VisitFuncDeclNode(FuncDeclNode n)
         {
             var types = new List<Type>();
             foreach (var symbol in n.Symbol.Parameters)
@@ -281,13 +281,13 @@ namespace Zephyr.Compiling
             return null!;
         }
 
-        public object VisitReturnNode(ReturnNode n)
+        public override object VisitReturnNode(ReturnNode n)
         {
             _context.GetILGenerator()?.Emit(OpCodes.Ret);
             return null!;
         }
 
-        public object VisitNoOpNode(NoOpNode n)
+        public override object VisitNoOpNode(NoOpNode n)
         {
             return null!;
         }

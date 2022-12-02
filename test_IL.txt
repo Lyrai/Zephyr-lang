@@ -1,5 +1,5 @@
 ﻿fn main!
-    let a = -1
+    let a = 5
     while a > 0 {
         print a
         a = a - 1
