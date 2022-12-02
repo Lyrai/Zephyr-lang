@@ -1,23 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using Zephyr.Compiling.Contexts;
 using Zephyr.LexicalAnalysis.Tokens;
-using Zephyr.SemanticAnalysis.Symbols;
 using Zephyr.SyntaxAnalysis.ASTNodes;
 
 namespace Zephyr.Compiling
 {
-    public class Compiler: INodeVisitor<object>
+    public class ExpressionsCompiler: BaseCompiler
     {
-        private CompilationContext _context;
         private readonly Node _tree;
         private MethodInfo _entryPoint = null!;
 
-        public Compiler(Node tree)
+        public ExpressionsCompiler(Node tree)
         {
             _context = new AssemblyContext("Main", null);
             _tree = tree;
@@ -277,7 +274,7 @@ namespace Zephyr.Compiling
 
             _context = oldContext;
             if (_context is ModuleContext)
-                _context.CompleteFunction();
+                _context.CompleteFunctions();
             if (_context is ModuleContext && n.Name == "main")
                 _entryPoint = _context.LastFunction()!;
             
@@ -298,25 +295,6 @@ namespace Zephyr.Compiling
         private object Visit(Node n)
         {
             return n.Accept(this);
-        }
-        
-        private Type? MapType(TypeSymbol symbol)
-        {
-            return MapType(symbol.Name);
-        }
-        
-        private Type? MapType(string name)
-        {
-            return name switch
-            {
-                "int" => typeof(int),
-                "double" => typeof(double),
-                "string" => typeof(string),
-                "void" => typeof(void),
-                "bool" => typeof(bool),
-                "function" => null,
-                _ => _context.GetTypeByName(name)
-            };
         }
     }
 }

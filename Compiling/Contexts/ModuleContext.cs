@@ -8,20 +8,17 @@ namespace Zephyr.Compiling.Contexts
     public class ModuleContext : CompilationContext
     {
         private ModuleBuilder _builder;
-        private Stack<TypeBuilder> _incompleteTypes;
         private string? _lastFunction;
 
         public ModuleContext(string? name, CompilationContext? parent, ModuleBuilder builder) : base(name, parent)
         {
             _builder = builder;
-            _incompleteTypes = new Stack<TypeBuilder>();
             _lastFunction = null;
         }
 
         public override CompilationContext DefineType(string name, Type? parent = null)
         {
             var builder = _builder.DefineType(name, TypeAttributes.Class, parent);
-            _incompleteTypes.Push(builder);
             return new ClassContext(name, this, builder);
         }
 
@@ -62,7 +59,7 @@ namespace Zephyr.Compiling.Contexts
             return _builder.GetMethod(_lastFunction);
         }
 
-        public override void CompleteFunction()
+        public override void CompleteFunctions()
         {
             _builder.CreateGlobalFunctions();
         }

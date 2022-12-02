@@ -1,16 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using Zephyr.Interpreting;
 using Zephyr.SemanticAnalysis;
 using Antlr4.Runtime;
 using Zephyr.Compiling;
-
-// TODO imports
-// TODO Get rid of ! in function declaration and call (Hint: call detection in semantic analyzer)
-// TODO Move to bytecode
-// TODO if-else-join construction
-// TODO attributes
 
 namespace Zephyr
 {
@@ -55,7 +50,7 @@ namespace Zephyr
                 //Interpreter interpreter = new Interpreter(nodeTree);
                 //interpreter.Interpret();
                 //sw.Stop();
-                var compiler = new Compiler(nodeTree);
+                var compiler = new ExpressionsCompiler(nodeTree);
                 var entry = compiler.Compile();
                 //sw.Start();
                 entry.Invoke(null, null); 

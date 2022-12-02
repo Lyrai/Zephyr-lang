@@ -9,6 +9,7 @@ namespace Zephyr.Compiling.Contexts
     {
         public CompilationContext? Parent { get; }
         private string? _name;
+        private Dictionary<string, CompilationContext> _children;
 
         protected CompilationContext(string? name, CompilationContext? parent)
         {
@@ -37,6 +38,6 @@ namespace Zephyr.Compiling.Contexts
         public virtual int DefineVariable(string name, Type type) => -1;
         public virtual ILGenerator? GetILGenerator() => null;
         public virtual int GetVariable(string name) => -1;
-        public virtual void CompleteFunction() { }
+        public virtual void CompleteFunctions() { }
     }
 }
