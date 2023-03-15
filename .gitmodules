@@ -1,0 +1,3 @@
+[submodule "roslyn-compilers"]
+	path = roslyn-compilers
+	url = https://github.com/Lyrai/roslyn-compilers
