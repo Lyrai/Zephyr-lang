@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+		<RootNamespace>Zephyr</RootNamespace>
+		<StartupObject>Zephyr.Zephyr</StartupObject>
+      <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+      <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    </PropertyGroup>
+  
+  <ItemGroup Label="Project References">
+    <ProjectReference Include="..\roslyn-compilers\src\Compilers\Core\Portable\Microsoft.CodeAnalysis.csproj" />
+    <ProjectReference Include="..\roslyn-compilers\src\Compilers\CSharp\Portable\Microsoft.CodeAnalysis.CSharp.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.11.1" />
+  </ItemGroup>
+  
+  <Import Project="..\roslyn-compilers\src\Compilers\CSharp\csc\CscCommandLine.projitems" Label="Shared" />
+</Project>
