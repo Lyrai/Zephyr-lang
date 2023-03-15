@@ -171,7 +171,7 @@ namespace Zephyr.Interpreting
             if (((RuntimeValue) callee).IsNone == false)
                 callee = ((RuntimeValue) callee).Value;
             
-            var callable = n.Callable ?? callee as ICallable;
+            var callable = callee as ICallable ?? n.Callable;
 
             if (callable is null)
                 throw new ArgumentException($"Cannot call non-function {n.Name}");
@@ -181,7 +181,6 @@ namespace Zephyr.Interpreting
             {
                 arguments.Add(Evaluate(argument).Value);
             }
-            
 
             return new(callable.Call(this, arguments));
         }

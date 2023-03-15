@@ -147,7 +147,9 @@ namespace Zephyr.SemanticAnalysis
                     symbol = _table.FindFunc((string) n.Callee.Token.Value, arguments);
                     if(symbol is null)
                     {
-                        var s = _table.Find<VarSymbol>(n.Name);
+                        Symbol s = _table.Find<VarSymbol>(n.Name);
+                        if(s is null)
+                            s = _table.Find<FuncSymbol>(n.Name);
                         
                         if (s is not null && s.Type == _table.Find<TypeSymbol>("function"))
                             return _table.Find<TypeSymbol>("function");
@@ -511,7 +513,23 @@ namespace Zephyr.SemanticAnalysis
             if (from == _stringSymbol && to == _stringSymbol)
                 return true;
 
-            return from == to || from == _intSymbol && to == _doubleSymbol;
+            return from == to || from == _intSymbol && to == _doubleSymbol || IsParent(to, from);
+        }
+
+        private bool IsParent(TypeSymbol baseClass, TypeSymbol forType)
+        {
+            var type = _table.Find<ClassSymbol>(forType.Name);
+            if (type is null)
+                return false;
+
+            while (type is not null)
+            {
+                if (type.Name == baseClass.Name)
+                    return true;
+                type = type.Parent;
+            }
+
+            return false;
         }
     }
 }
