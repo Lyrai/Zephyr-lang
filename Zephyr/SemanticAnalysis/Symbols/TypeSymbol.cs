@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using PrimitiveTypeCode = Microsoft.Cci.PrimitiveTypeCode;
 
 namespace Zephyr.SemanticAnalysis.Symbols
 {
@@ -31,6 +32,47 @@ namespace Zephyr.SemanticAnalysis.Symbols
                 FuncSymbol funcSymbol => funcSymbol.Type,
                 null => null,
                 _ => (TypeSymbol) symbol
+            };
+        }
+
+        public string GetNetTypeName()
+        {
+            return GetNetType()?.Name ?? Name;
+        }
+
+        internal PrimitiveTypeCode GetTypeCode()
+        {
+            switch (Name)
+            {
+                case "int":
+                case "string":
+                case "void":
+                    Enum.TryParse(GetNetTypeName(), out PrimitiveTypeCode res);
+                    return res;
+                case "double":
+                    return PrimitiveTypeCode.Float64;
+                case "bool":
+                    return PrimitiveTypeCode.Boolean;
+            }
+
+            throw new InvalidOperationException($"Cannot convert non-primitive type {Name}");
+        }
+
+        public string GetNetFullTypeName()
+        {
+            return GetNetType()?.FullName ?? Name;
+        }
+
+        private Type? GetNetType()
+        {
+            return Name switch
+            {
+                "int" => typeof(int),
+                "double" => typeof(double),
+                "bool" => typeof(bool),
+                "string" => typeof(string),
+                "void" => typeof(void),
+                _ => null
             };
         }
     }

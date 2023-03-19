@@ -8,11 +8,13 @@ namespace Zephyr.SyntaxAnalysis.ASTNodes
     {
         public object Symbol { get; set; }
         public string Name { get; }
+        public bool IsLhs { get; }
         
-        public VarNode(Token token)
+        public VarNode(Token token, bool isLhs)
         {
             Token = token;
             Name = (string)token.Value;
+            IsLhs = isLhs;
         }
 
         public override List<Node> GetChildren()

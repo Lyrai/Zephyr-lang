@@ -15,8 +15,10 @@ using Microsoft.CodeAnalysis.CSharp.Emit;
 using Microsoft.CodeAnalysis.CSharp.Symbols;
 using Microsoft.CodeAnalysis.Emit;
 using Zephyr.Compiling;
+using Zephyr.Compiling.Roslyn;
 using BindingDiagnosticBag = Microsoft.CodeAnalysis.CSharp.BindingDiagnosticBag;
 using MethodBody = Microsoft.CodeAnalysis.CodeGen.MethodBody;
+using MethodCompiler = Microsoft.CodeAnalysis.CSharp.MethodCompiler;
 
 namespace Zephyr
 {
@@ -26,7 +28,7 @@ namespace Zephyr
 
         static void Main(string[] args)
         {
-            var syntax = SyntaxFactory
+            /*var syntax = SyntaxFactory
                 .MethodDeclaration(SyntaxFactory.ParseTypeName("int"), "Main")
                 .WithModifiers(new SyntaxTokenList(SyntaxFactory.Token(SyntaxKind.StaticKeyword)));
             var typedecl1 = SyntaxFactory.ClassDeclaration("TestClass").AddMembers(syntax);
@@ -133,7 +135,7 @@ namespace Zephyr
             var peStreamProvider =
                 new Compilation.SimpleEmitStreamProvider(File.Open(@"E:\Projects\test-zephyr-emit\test.exe",
                     FileMode.Create));
-            var success = g.SerializeToPeStream(
+            /*var success = g.SerializeToPeStream(
                 mb,
                 peStreamProvider,
                 null,
@@ -156,8 +158,8 @@ namespace Zephyr
             if (!success)
             {
                 Console.WriteLine("Failed");
-            }
-            /*Stopwatch sw = new Stopwatch();
+            }*/
+            Stopwatch sw = new Stopwatch();
             try
             {
                 sw.Start();
@@ -171,14 +173,7 @@ namespace Zephyr
                 var visitor = new TestVisitor();
                 var nodeTree = visitor.Visit(tree);
 
-                /*Lexer lexer = new Lexer(code);
-                lexer.Analyze();
-                var tokens = lexer.GetTokens();
-
-                Parser parser = new Parser(tokens);
-                var nodeTree = parser.Parse();*/
-
-                /*SemanticAnalyzer analyzer = new SemanticAnalyzer(nodeTree);
+                SemanticAnalyzer analyzer = new SemanticAnalyzer(nodeTree);
                 analyzer.Analyze();
                 sw.Stop();
                 Console.WriteLine($"Analysis in {sw.ElapsedMilliseconds}ms");
@@ -192,10 +187,28 @@ namespace Zephyr
                 //Interpreter interpreter = new Interpreter(nodeTree);
                 //interpreter.Interpret();
                 //sw.Stop();
-                var compiler1 = new ExpressionsCompiler(nodeTree);
-                var entry = compiler1.Compile();
+                //var compiler1 = new ExpressionsCompiler(nodeTree);
+                //var entry = compiler1.Compile();
                 //sw.Start();
-                entry.Invoke(null, null);
+                //entry.Invoke(null, null);
+                var roslynCompiler = new RoslynDeclarationsCompiler("Test");
+                var functions = roslynCompiler.Compile(nodeTree);
+                var expressionCompiler = new RoslynExpressionCompiler(roslynCompiler);
+                expressionCompiler.Compile(functions);
+                expressionCompiler.CompilationFinished();
+                var diagnostics = DiagnosticBag.GetInstance();
+                var succ = expressionCompiler.Emit("test.dll", diagnostics);
+                if (!succ)
+                {
+                    Console.WriteLine("Failed");
+                }
+                if (diagnostics.HasAnyErrors())
+                {
+                    foreach (var diagnostic in diagnostics.AsEnumerable())
+                    {
+                        Console.WriteLine(diagnostic.GetMessage());
+                    }
+                }
                 sw.Stop();
                 Console.WriteLine($"Executed in {sw.ElapsedMilliseconds}ms");
             }
@@ -203,7 +216,7 @@ namespace Zephyr
             {
                 Console.WriteLine(e.Message);
                 Console.WriteLine(e.StackTrace);
-            }*/
+            }
         }
 
         public static void Error(Exception e)

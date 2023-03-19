@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using Zephyr.Compiling.Contexts;
+using Zephyr.Compiling.Reflection;
 using Zephyr.LexicalAnalysis.Tokens;
 using Zephyr.SyntaxAnalysis.ASTNodes;
 
@@ -18,41 +19,6 @@ namespace Zephyr.Compiling
         {
             _context = new AssemblyContext("Main", null);
             _tree = tree;
-        }
-
-        public static void Test()
-        {
-            AssemblyName name = new AssemblyName("TestAssembly");
-            AssemblyBuilder builder = AssemblyBuilder.DefineDynamicAssembly(name, AssemblyBuilderAccess.Run);
-            ModuleBuilder moduleBuilder = builder.DefineDynamicModule(name.Name);
-            TypeBuilder typeBuilder = moduleBuilder.DefineType("TestType", TypeAttributes.Public);
-            MethodBuilder methodBuilder = moduleBuilder.DefineGlobalMethod(
-                "Ttt",
-                MethodAttributes.Static | MethodAttributes.HideBySig | MethodAttributes.Public,
-                typeof(void),
-                null
-            );
-            ILGenerator generator = methodBuilder.GetILGenerator();
-            generator.DeclareLocal(typeof(int));
-            generator.Emit(OpCodes.Ldc_I4, 5);
-            generator.Emit(OpCodes.Ldc_I4, 6);
-            generator.Emit(OpCodes.Add);
-            generator.Emit(OpCodes.Stloc_0);
-            Type[] wlParams = {typeof(string),
-                typeof(object)};
-            MethodInfo wrln = typeof(Console).GetMethod("WriteLine", wlParams);
-            string str = "Sum is {0}";
-            generator.Emit(OpCodes.Ldstr, str);
-            generator.Emit(OpCodes.Ldloc_0);
-            generator.Emit(OpCodes.Box, typeof(int));
-            generator.EmitCall(OpCodes.Call, wrln, null);
-            //generator.Emit(OpCodes.Pop);
-            //generator.Emit(OpCodes.Pop);
-            generator.Emit(OpCodes.Ret);
-            moduleBuilder.CreateGlobalFunctions();
-            var g = moduleBuilder.GetMethod("Ttt");
-            Type type = typeBuilder.CreateType();
-            type.InvokeMember("Ttt", BindingFlags.Static | BindingFlags.InvokeMethod | BindingFlags.NonPublic, null, null, null);
         }
 
         public MethodInfo Compile()

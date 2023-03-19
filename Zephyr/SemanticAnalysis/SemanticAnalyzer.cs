@@ -187,14 +187,14 @@ namespace Zephyr.SemanticAnalysis
                         if (varSymbol.Type != _table.Find<TypeSymbol>("function"))
                             throw new SemanticException(n, $"Cannot find function or method {n.Name}");
                         
-                        n.Callee = new VarNode(n.Callee.Token);
+                        n.Callee = new VarNode(n.Callee.Token, false);
                         n.Arguments.Insert(0, node.Obj);
                         return varSymbol.Type;
 
                     }
                         
                     n.Callable = funcSymbol;
-                    n.Callee = new VarNode(n.Callee.Token);
+                    n.Callee = new VarNode(n.Callee.Token, false);
                     n.Arguments.Insert(0, node.Obj);
                     
                     

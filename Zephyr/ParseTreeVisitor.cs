@@ -45,7 +45,7 @@ namespace Zephyr
                 typeNode = new TypeNode(typeToken);
             }
 
-            Node node = new VarDeclNode(new VarNode(idToken), typeNode);
+            Node node = new VarDeclNode(new VarNode(idToken, true), typeNode);
 
             if (context.ASSIGN() is null) 
                 return node;
@@ -67,7 +67,7 @@ namespace Zephyr
                 context.Type.Column,
                 context.Type.Line);
             
-            return new VarDeclNode(new VarNode(idToken),
+            return new VarDeclNode(new VarNode(idToken, false),
                 new TypeNode(typeToken));
         }
 
@@ -78,7 +78,7 @@ namespace Zephyr
             if(context.Base is not null)
             {
                 var parentToken = new Token(TokenType.Id, context.Base.Text, context.Base.Column, context.Base.Line);
-                parentNode = new VarNode(parentToken);
+                parentNode = new VarNode(parentToken, false);
             }
 
             var body = GetBody(context.classBody());
@@ -242,7 +242,7 @@ namespace Zephyr
             var id = context.ID().Symbol;
             var token = new Token(TokenType.Id, id.Text, id.Line, id.Line);
 
-            return new VarNode(token);
+            return new VarNode(token, false);
         }
 
         public override Node VisitLiteral(ZephyrParser.LiteralContext context)

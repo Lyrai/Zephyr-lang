@@ -1,10 +1,8 @@
-﻿using System;
-using Zephyr;
-using Zephyr.Compiling.Contexts;
+﻿using Zephyr.Compiling.Contexts;
 using Zephyr.SemanticAnalysis.Symbols;
 using Zephyr.SyntaxAnalysis.ASTNodes;
 
-namespace Zephyr.Compiling {
+namespace Zephyr.Compiling.Reflection {
 
 public abstract class BaseCompiler: INodeVisitor<object>
 {

@@ -20,5 +20,18 @@
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.11.1" />
   </ItemGroup>
   
+  <ItemGroup>
+    <Compile Remove="Compiling\Contexts\**" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Remove="Compiling\Contexts\**" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="grammars\ZephyrLexer.g4" />
+    <Content Include="grammars\ZephyrParser.g4" />
+  </ItemGroup>
+  
   <Import Project="..\roslyn-compilers\src\Compilers\CSharp\csc\CscCommandLine.projitems" Label="Shared" />
 </Project>

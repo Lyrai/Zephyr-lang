@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection.Emit;
 using Zephyr.Compiling;
 using Zephyr.Compiling.Contexts;
+using Zephyr.Compiling.Reflection;
 using Zephyr.SyntaxAnalysis.ASTNodes;
 
 namespace Zephyr.Compiling
