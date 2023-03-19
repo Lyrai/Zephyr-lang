@@ -1,9 +1,6 @@
 ﻿fn main!
-    let a = 5
-    while a > 0 {
-        print a
-        a = a - 1
-    }
-    
-    print "Done"
+    let a: double = 5 + 6
+    let b = "test"
+    print a
+    print b
 end
