@@ -30,5 +30,10 @@ namespace Zephyr.SyntaxAnalysis.ASTNodes
         {
             return visitor.VisitFuncDeclNode(this);
         }
+
+        public bool IsEmpty()
+        {
+            return Parameters.Count == 1 && Parameters[0] is NoOpNode || Parameters.Count == 0;
+        }
     }
 }

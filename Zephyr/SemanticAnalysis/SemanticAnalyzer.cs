@@ -184,13 +184,20 @@ namespace Zephyr.SemanticAnalysis
                     if (funcSymbol is null)
                     {
                         var varSymbol = _table.Find<VarSymbol>(n.Name);
+                        if (varSymbol is null)
+                        {
+                            var netType = GetNetType((n.Callee as GetNode).Obj.TypeSymbol.Name);
+                            if (netType.GetMember(n.Name).Length > 0)
+                            {
+                                return _table.Find<TypeSymbol>("void");
+                            }
+                        }
                         if (varSymbol.Type != _table.Find<TypeSymbol>("function"))
                             throw new SemanticException(n, $"Cannot find function or method {n.Name}");
                         
                         n.Callee = new VarNode(n.Callee.Token, false);
                         n.Arguments.Insert(0, node.Obj);
                         return varSymbol.Type;
-
                     }
                         
                     n.Callable = funcSymbol;
@@ -287,12 +294,17 @@ namespace Zephyr.SemanticAnalysis
             }
 
             var funcSymbol = _table.Find<FuncSymbol>(name);
-            if(funcSymbol is null)
-                throw new UnknownIdentifierException(n);
-            
-            n.Symbol = funcSymbol;
+            if (funcSymbol is not null)
+            {
+                n.Symbol = funcSymbol;
 
-            return funcSymbol.Type;
+                return funcSymbol.Type;
+            }
+
+            if (Type.GetType(n.Name) is not null)
+                return new TypeSymbol(n.Name);
+                
+            throw new UnknownIdentifierException(n);
         }
 
         public object VisitClassNode(ClassNode n)
@@ -336,7 +348,35 @@ namespace Zephyr.SemanticAnalysis
 
         public object VisitGetNode(GetNode n)
         {
-            var type = TypeSymbol.FromObject(Visit(n.Obj));
+            TypeSymbol type;
+            try
+            {
+                type = TypeSymbol.FromObject(Visit(n.Obj));
+            }
+            catch (UnknownIdentifierException)
+            {
+                var typeName = n.Token.Value.ToString();
+                var oldNode = n;
+                while (n.Obj is GetNode node)
+                {
+                    typeName = node.Token.Value + "." + typeName;
+                    n = node;
+                }
+
+                typeName = (n.Obj as VarNode).Name + "." + typeName;
+                n = oldNode;
+                
+                if (GetNetType(typeName) is null)
+                {
+                    throw;
+                }
+                
+                type = new TypeSymbol(typeName);
+                _table.Add(typeName, type);
+                n.SetType(type);
+                return type;
+            }
+            
             var symbol = _table.Find<ClassSymbol>(type.Name);
             if (symbol is null)
                 throw new UnknownIdentifierException(n);
@@ -530,6 +570,15 @@ namespace Zephyr.SemanticAnalysis
             }
 
             return false;
+        }
+
+        private Type GetNetType(string name)
+        {
+            return AppDomain
+                .CurrentDomain
+                .GetAssemblies()
+                .SelectMany(asm => asm.ExportedTypes)
+                .FirstOrDefault(t => t.FullName == name, null);
         }
     }
 }

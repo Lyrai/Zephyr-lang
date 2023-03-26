@@ -1,6 +1,19 @@
-﻿fn main!
-    let a: double = 5 + 6
-    let b = "test"
+﻿fn test: t: string -> string
+    return t + " test"
+end
+
+class Test
+    fn tt! -> string
+        return "Class"
+    end
+end
+
+fn main!
+    let a = {
+        print "Hello from block"
+        "Return value"
+    }
+
+    System.Console.WriteLine: 6
     print a
-    print b
 end

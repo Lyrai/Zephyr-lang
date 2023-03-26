@@ -54,9 +54,9 @@ internal class RoslynExpressionCompiler: BaseRoslynCompiler<object>
             
             var builder = new ILBuilder(_moduleBuilder, new LocalSlotManager(null), OptimizationLevel.Release, true);
             var method = GetSymbol(_moduleBuilder, className, functionName) as MethodSymbol;
-            var compiler = new MethodCompiler(builder, node as FuncDeclNode, _moduleBuilder);
+            var compiler = new MethodCompiler(builder, node as FuncDeclNode, _moduleBuilder, method);
             
-            var methodBody = compiler.Compile(method);
+            var methodBody = compiler.Compile();
             
             _moduleBuilder.SetMethodBody(method, methodBody);
         }

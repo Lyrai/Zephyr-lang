@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.CSharp.Emit;
 using Microsoft.CodeAnalysis.CSharp.Symbols;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Emit;
+using Zephyr.LexicalAnalysis.Tokens;
 using Zephyr.SyntaxAnalysis.ASTNodes;
 
 namespace Zephyr.Compiling.Roslyn;
@@ -130,7 +131,11 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<MemberDeclarationS
         var ctorName = n.Name + QualifiedNameSeparator + ".ctor";
         if (!_functions.ContainsKey(ctorName))
         {
-            _functions.Add(ctorName, new NoOpNode());
+            _functions.Add(ctorName, new FuncDeclNode(
+                new Token(TokenType.Id, ".ctor", 0, 0),
+                new List<Node> {new NoOpNode()},
+                new List<Node>(), n.Name
+                ));
         }
 
         return result;
@@ -139,7 +144,19 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<MemberDeclarationS
     public override MemberDeclarationSyntax VisitFuncDeclNode(FuncDeclNode n)
     {
         var name = _emitContext.Peek() == n.Name ? ".ctor" : n.Name;
-        var methodNode = SyntaxFactory.MethodDeclaration(SyntaxFactory.ParseTypeName(n.ReturnType), name);
+        var parameters = n.Parameters.Select(
+            x => SyntaxFactory
+                .Parameter(
+                    SyntaxFactory.List<AttributeListSyntax>(),
+                    SyntaxFactory.TokenList(),
+                    SyntaxFactory.ParseTypeName(x.TypeSymbol.Name),
+                    SyntaxFactory.ParseToken(x.Token.Value.ToString()),
+                    null));
+        var methodNode = SyntaxFactory
+            .MethodDeclaration(SyntaxFactory.ParseTypeName(n.ReturnType), name)
+            .WithParameterList(SyntaxFactory.ParameterList(SyntaxFactory.SeparatedList(parameters)))
+            .WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword)));
+            
         if (n.Name == "main")
         {
             methodNode = methodNode.WithModifiers(new SyntaxTokenList(SyntaxFactory.Token(SyntaxKind.StaticKeyword)));

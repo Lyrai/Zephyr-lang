@@ -8,7 +8,6 @@ namespace Zephyr.SyntaxAnalysis.ASTNodes
     {
         public object Symbol { get; set; }
         public string Name { get; }
-        public bool IsLhs { get; }
         
         public VarNode(Token token, bool isLhs)
         {

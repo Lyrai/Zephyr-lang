@@ -10,6 +10,9 @@ namespace Zephyr.SyntaxAnalysis.ASTNodes
         public object Value { get; protected set; }
 
         public TypeSymbol TypeSymbol => _type;
+        
+        public bool IsLhs { get; protected set; }
+        
         private TypeSymbol _type;
 
         public virtual List<Node> GetChildren()
@@ -24,6 +27,11 @@ namespace Zephyr.SyntaxAnalysis.ASTNodes
         public void SetType(TypeSymbol type)
         {
             _type = type;
+        }
+
+        public void SetLhs(bool lhs)
+        {
+            IsLhs = lhs;
         }
     }
 }

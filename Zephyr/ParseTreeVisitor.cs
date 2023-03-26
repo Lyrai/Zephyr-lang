@@ -166,6 +166,7 @@ namespace Zephyr
 
             var assign = context.ASSIGN().Symbol;
             var assignToken = new Token(TokenType.Assign, assign.Text, assign.Column, assign.Line);
+            left.SetLhs(true);
             return new BinOpNode(assignToken, left, Visit(context.assignExpr()));
         }
         
