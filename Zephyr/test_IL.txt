@@ -16,6 +16,8 @@ fn main!
     }
 
     let b = Test!
+    b.field = 5
+    print b.field
 
     System.Console.WriteLine: 6
     print a

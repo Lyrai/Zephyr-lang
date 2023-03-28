@@ -33,7 +33,7 @@ namespace Zephyr.SyntaxAnalysis.ASTNodes
 
         public bool IsEmpty()
         {
-            return Parameters.Count == 1 && Parameters[0] is NoOpNode || Parameters.Count == 0;
+            return Body.Count == 1 && Body[0] is NoOpNode || Body.Count == 0;
         }
     }
 }

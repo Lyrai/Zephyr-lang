@@ -127,12 +127,12 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<MemberDeclarationS
                 (current, method) => current.AddMembers(Visit(method))
             );
 
-        /*var fieldsAdded = n
+        var fieldsAdded = n
             .GetChildren()
             .OfType<VarDeclNode>()
             .Aggregate(methodsAdded,
                 (current, field) => current.AddMembers(Visit(field))
-            );*/
+            );
 
         var ctorName = n.Name + QualifiedNameSeparator + ".ctor";
         if (!_functions.ContainsKey(ctorName))
@@ -148,7 +148,7 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<MemberDeclarationS
         
         _emitContext.Pop();
 
-        return methodsAdded;
+        return fieldsAdded;
     }
 
     public override MemberDeclarationSyntax VisitFuncDeclNode(FuncDeclNode n)
@@ -181,9 +181,12 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<MemberDeclarationS
 
     public override MemberDeclarationSyntax VisitVarDeclNode(VarDeclNode n)
     {
-        var syntaxList = SyntaxFactory.SeparatedList<VariableDeclaratorSyntax>();
-        syntaxList = syntaxList.Add(SyntaxFactory.VariableDeclarator(n.Variable.Name));
-        return SyntaxFactory.FieldDeclaration(SyntaxFactory.VariableDeclaration(SyntaxFactory.ParseTypeName(n.TypeSymbol.Name), syntaxList));
+        var syntaxList = SyntaxFactory
+            .SeparatedList<VariableDeclaratorSyntax>()
+            .Add(SyntaxFactory.VariableDeclarator(n.Variable.Name));
+        return SyntaxFactory
+            .FieldDeclaration(SyntaxFactory.VariableDeclaration(SyntaxFactory.ParseTypeName(n.TypeSymbol.Name), syntaxList))
+            .WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword)));
     }
 
     private SyntaxTokenList GetKeywords(params SyntaxKind[] keywords)

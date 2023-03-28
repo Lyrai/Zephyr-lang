@@ -77,6 +77,10 @@ internal class MethodCompiler: INodeVisitor<object>
     public object VisitGetNode(GetNode n)
     {
         Visit(n.Obj);
+        if (!n.IsLhs)
+        {
+            EmitFieldOpCode(ILOpCode.Ldfld, n);
+        }
         return null!;
     }
 
@@ -125,7 +129,7 @@ internal class MethodCompiler: INodeVisitor<object>
 
                 if (n.Left is GetNode)
                 {
-                    StoreField(n.Left);
+                    EmitFieldOpCode(ILOpCode.Stfld, n.Left as GetNode);
                 }
                 else
                 {
@@ -274,6 +278,7 @@ internal class MethodCompiler: INodeVisitor<object>
         if (symbol.IsConstructor())
         {
             _builder.EmitOpCode(ILOpCode.Newobj, GetNewobjStackAdjustment(n.Arguments.Count));
+            EmitToken(GetToken(ResolveMethod(n)));
             return null!;
         }
         
@@ -340,6 +345,15 @@ internal class MethodCompiler: INodeVisitor<object>
             .Assembly
             .GetTypeByMetadataName(qualifiedClassName, true, true, out _) as TypeSymbol;
     }
+    
+    private TypeSymbol ResolveType(string name)
+    {
+        return _moduleBuilder
+            .SourceModule
+            .GlobalNamespace
+            .GetMembers(name)
+            .First() as TypeSymbol;
+    }
 
     private MethodSymbol ResolveNetMethod(string qualifiedClassName, string methodName, params string[] paramsTypes)
     {
@@ -361,6 +375,11 @@ internal class MethodCompiler: INodeVisitor<object>
     }
     
     private ITypeReference GetToken(TypeSymbol type)
+    {
+        return _moduleBuilder.Translate(type, null, DiagnosticBag.GetInstance());
+    }
+    
+    private IFieldReference GetToken(FieldSymbol type)
     {
         return _moduleBuilder.Translate(type, null, DiagnosticBag.GetInstance());
     }
@@ -425,6 +444,12 @@ internal class MethodCompiler: INodeVisitor<object>
         return symbol;
     }
 
+    private FieldSymbol ResolveField(string className, string fieldName)
+    {
+        var type = ResolveType(className);
+        return type.GetMembers(fieldName)[0] as FieldSymbol;
+    }
+
     private void SynthesizeConstructor()
     {
         _builder.EmitOpCode(ILOpCode.Ldarg_0);
@@ -435,13 +460,23 @@ internal class MethodCompiler: INodeVisitor<object>
     private void EmitCall(MethodSymbol symbol, int argCount)
     {
         _builder.EmitOpCode(ILOpCode.Call, GetStackAdjustment(symbol, argCount));
-        _builder.EmitToken(GetToken(symbol), null, DiagnosticBag.GetInstance());
+        EmitToken(GetToken(symbol));
     }
 
     private void EmitCall(string qualifiedClassName, string methodName, params string[] argTypeNames)
     {
         var symbol = ResolveNetMethod(qualifiedClassName, methodName, argTypeNames);
         EmitCall(symbol, argTypeNames.Length);
+    }
+
+    private void EmitToken(IReference token)
+    {
+        _builder.EmitToken(token, null, DiagnosticBag.GetInstance());
+    }
+    
+    private void EmitToken(ISignature token)
+    {
+        _builder.EmitToken(token, null, DiagnosticBag.GetInstance());
     }
 
     private void EmitCall(FuncCallNode n)
@@ -455,13 +490,9 @@ internal class MethodCompiler: INodeVisitor<object>
         _builder.EmitLocalStore(_locals[name]);
     }
 
-    private void StoreField(Node n)
+    private void EmitFieldOpCode(ILOpCode opcode, GetNode n)
     {
-        var node = n as GetNode;
-        _builder.EmitOpCode(ILOpCode.Stfld);
-        var type = _moduleBuilder.SourceModule.GlobalNamespace.GetMembers(node.Obj.TypeSymbol.Name)[0] as NamedTypeSymbol;
-        var field = type.GetMembers(node.Token.Value.ToString())[0] as FieldSymbol;
-        var token = _moduleBuilder.Translate(field, null, DiagnosticBag.GetInstance());
-        _builder.EmitToken(token, null, DiagnosticBag.GetInstance());
+        _builder.EmitOpCode(opcode);
+        EmitToken(GetToken(ResolveField(n.Obj.TypeSymbol.Name, n.Token.Value.ToString())));
     }
 }
