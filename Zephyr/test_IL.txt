@@ -3,6 +3,7 @@
 end
 
 class Test
+    field: int
     fn tt! -> string
         return "Class"
     end
@@ -13,6 +14,8 @@ fn main!
         print "Hello from block"
         "Return value"
     }
+
+    let b = Test!
 
     System.Console.WriteLine: 6
     print a

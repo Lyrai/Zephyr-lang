@@ -120,25 +120,35 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<MemberDeclarationS
         var classNode = SyntaxFactory.ClassDeclaration(n.Name);
         
         _emitContext.Push(n.Name);
-        var result = n
+        var methodsAdded = n
             .GetChildren()
             .OfType<FuncDeclNode>()
             .Aggregate(classNode,
                 (current, method) => current.AddMembers(Visit(method))
             );
-        _emitContext.Pop();
+
+        /*var fieldsAdded = n
+            .GetChildren()
+            .OfType<VarDeclNode>()
+            .Aggregate(methodsAdded,
+                (current, field) => current.AddMembers(Visit(field))
+            );*/
 
         var ctorName = n.Name + QualifiedNameSeparator + ".ctor";
         if (!_functions.ContainsKey(ctorName))
         {
-            _functions.Add(ctorName, new FuncDeclNode(
+            var ctorNode = new FuncDeclNode(
                 new Token(TokenType.Id, ".ctor", 0, 0),
-                new List<Node> {new NoOpNode()},
+                new List<Node> { new NoOpNode() },
                 new List<Node>(), n.Name
-                ));
+            );
+            
+            _functions.Add(ctorName, ctorNode);
         }
+        
+        _emitContext.Pop();
 
-        return result;
+        return methodsAdded;
     }
 
     public override MemberDeclarationSyntax VisitFuncDeclNode(FuncDeclNode n)
@@ -152,6 +162,7 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<MemberDeclarationS
                     SyntaxFactory.ParseTypeName(x.TypeSymbol.Name),
                     SyntaxFactory.ParseToken(x.Token.Value.ToString()),
                     null));
+        
         var methodNode = SyntaxFactory
             .MethodDeclaration(SyntaxFactory.ParseTypeName(n.ReturnType), name)
             .WithParameterList(SyntaxFactory.ParameterList(SyntaxFactory.SeparatedList(parameters)))
@@ -170,7 +181,9 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<MemberDeclarationS
 
     public override MemberDeclarationSyntax VisitVarDeclNode(VarDeclNode n)
     {
-        return SyntaxFactory.FieldDeclaration(SyntaxFactory.VariableDeclaration(SyntaxFactory.ParseTypeName(n.TypeSymbol.Name)));
+        var syntaxList = SyntaxFactory.SeparatedList<VariableDeclaratorSyntax>();
+        syntaxList = syntaxList.Add(SyntaxFactory.VariableDeclarator(n.Variable.Name));
+        return SyntaxFactory.FieldDeclaration(SyntaxFactory.VariableDeclaration(SyntaxFactory.ParseTypeName(n.TypeSymbol.Name), syntaxList));
     }
 
     private SyntaxTokenList GetKeywords(params SyntaxKind[] keywords)

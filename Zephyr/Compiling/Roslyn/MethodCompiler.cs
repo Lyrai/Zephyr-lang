@@ -76,7 +76,8 @@ internal class MethodCompiler: INodeVisitor<object>
 
     public object VisitGetNode(GetNode n)
     {
-        throw new NotImplementedException();
+        Visit(n.Obj);
+        return null!;
     }
 
     public object VisitCompoundNode(CompoundNode n)
@@ -121,8 +122,16 @@ internal class MethodCompiler: INodeVisitor<object>
                     
                     _builder.EmitNumericConversion(right, left, true);
                 }
+
+                if (n.Left is GetNode)
+                {
+                    StoreField(n.Left);
+                }
+                else
+                {
+                    StoreLocal(n.Left.Token.Value.ToString());
+                }
                 
-                _builder.EmitLocalStore(_locals[n.Left.Token.Value.ToString()]);
                 break;
             case "==":
                 _builder.EmitOpCode(ILOpCode.Ceq);
@@ -439,5 +448,20 @@ internal class MethodCompiler: INodeVisitor<object>
     {
         var symbol = ResolveMethod(n);
         EmitCall(symbol, n.Arguments.Count);
+    }
+
+    private void StoreLocal(string name)
+    {
+        _builder.EmitLocalStore(_locals[name]);
+    }
+
+    private void StoreField(Node n)
+    {
+        var node = n as GetNode;
+        _builder.EmitOpCode(ILOpCode.Stfld);
+        var type = _moduleBuilder.SourceModule.GlobalNamespace.GetMembers(node.Obj.TypeSymbol.Name)[0] as NamedTypeSymbol;
+        var field = type.GetMembers(node.Token.Value.ToString())[0] as FieldSymbol;
+        var token = _moduleBuilder.Translate(field, null, DiagnosticBag.GetInstance());
+        _builder.EmitToken(token, null, DiagnosticBag.GetInstance());
     }
 }
