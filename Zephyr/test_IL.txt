@@ -12,7 +12,7 @@ end
 fn main!
     let a = {
         print "Hello from block"
-        "Return value"
+        5
     }
 
     let b = Test!

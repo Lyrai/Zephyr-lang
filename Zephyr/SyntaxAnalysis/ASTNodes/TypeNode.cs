@@ -5,6 +5,8 @@ namespace Zephyr.SyntaxAnalysis.ASTNodes
 {
     public class TypeNode : Node
     {
+        public override bool IsUsed => true;
+
         public TypeNode(Token token)
         {
             Token = token;

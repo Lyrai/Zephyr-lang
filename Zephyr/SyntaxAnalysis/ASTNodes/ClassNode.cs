@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
+using Zephyr.SemanticAnalysis;
 using Zephyr.SemanticAnalysis.Symbols;
 
 namespace Zephyr.SyntaxAnalysis.ASTNodes
 {
-    public class ClassNode : Node
+    public class ClassNode : Node, IDeclaration
     {
         public List<Node> Body { get; }
         public string Name { get; }
         public ClassSymbol Symbol { get; set; }
         public VarNode Parent { get; }
+        public override bool IsUsed => true;
 
         public ClassNode(Token token, VarNode parent, List<Node> body)
         {

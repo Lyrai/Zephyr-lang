@@ -4,6 +4,7 @@
     {
         public Node Condition { get; }
         public Node Body { get; }
+        public override bool IsUsed => true;
 
         public WhileNode(Token token, Node condition, Node body)
         {

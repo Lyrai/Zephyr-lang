@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using Zephyr.SemanticAnalysis;
 using Zephyr.SemanticAnalysis.Symbols;
 
 namespace Zephyr.SyntaxAnalysis.ASTNodes
 {
-    public class FuncDeclNode : Node
+    public class FuncDeclNode : Node, IDeclaration
     {
         public List<Node> Body { get; }
         public List<Node> Parameters { get; }
         public string Name { get; }
         public string ReturnType { get; }
         public FuncSymbol Symbol { get; set; }
+        public override bool IsUsed => true;
 
         public FuncDeclNode(Token token, List<Node> body, List<Node> parameters, string returnType)
         {

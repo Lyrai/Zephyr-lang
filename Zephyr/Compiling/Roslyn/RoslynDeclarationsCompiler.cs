@@ -161,12 +161,13 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<MemberDeclarationS
                     SyntaxFactory.TokenList(),
                     SyntaxFactory.ParseTypeName(x.TypeSymbol.Name),
                     SyntaxFactory.ParseToken(x.Token.Value.ToString()),
-                    null));
+                    null)
+            );
         
         var methodNode = SyntaxFactory
             .MethodDeclaration(SyntaxFactory.ParseTypeName(n.ReturnType), name)
             .WithParameterList(SyntaxFactory.ParameterList(SyntaxFactory.SeparatedList(parameters)))
-            .WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword)));
+            .WithModifiers(GetKeywords(SyntaxKind.PublicKeyword));
             
         if (n.Name == "main")
         {
@@ -184,9 +185,10 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<MemberDeclarationS
         var syntaxList = SyntaxFactory
             .SeparatedList<VariableDeclaratorSyntax>()
             .Add(SyntaxFactory.VariableDeclarator(n.Variable.Name));
+        
         return SyntaxFactory
             .FieldDeclaration(SyntaxFactory.VariableDeclaration(SyntaxFactory.ParseTypeName(n.TypeSymbol.Name), syntaxList))
-            .WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword)));
+            .WithModifiers(GetKeywords(SyntaxKind.PublicKeyword));
     }
 
     private SyntaxTokenList GetKeywords(params SyntaxKind[] keywords)

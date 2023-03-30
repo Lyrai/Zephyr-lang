@@ -71,7 +71,7 @@ internal class MethodCompiler: INodeVisitor<object>
     
     public object VisitClassNode(ClassNode n)
     {
-        throw new NotImplementedException();
+        return null!;
     }
 
     public object VisitGetNode(GetNode n)
@@ -357,10 +357,7 @@ internal class MethodCompiler: INodeVisitor<object>
 
     private MethodSymbol ResolveNetMethod(string qualifiedClassName, string methodName, params string[] paramsTypes)
     {
-        return _moduleBuilder
-            .Compilation
-            .Assembly
-            .GetTypeByMetadataName(qualifiedClassName, true, true, out var _)
+        return ResolveNetType(qualifiedClassName)
             .GetMembers(methodName)
             .First(symbol =>
             {
