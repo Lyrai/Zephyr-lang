@@ -5,7 +5,7 @@ end
 class Test
     field: int
     fn tt! -> string
-	    if this.field != 0 {
+	    if this.field > 0 {
 	        print this.field
 			this.field = this.field - 1
 			this.tt!

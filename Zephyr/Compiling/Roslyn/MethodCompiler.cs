@@ -157,6 +157,22 @@ internal class MethodCompiler: INodeVisitor<object>
                 _builder.EmitIntConstant(0);
                 _builder.EmitOpCode(ILOpCode.Ceq);
                 break;
+            case ">":
+                _builder.EmitOpCode(ILOpCode.Cgt);
+                break;
+            case "<":
+                _builder.EmitOpCode(ILOpCode.Clt);
+                break;
+            case ">=":
+                _builder.EmitOpCode(ILOpCode.Clt);
+                _builder.EmitIntConstant(0);
+                _builder.EmitOpCode(ILOpCode.Ceq);
+                break;
+            case "<=":
+                _builder.EmitOpCode(ILOpCode.Cgt);
+                _builder.EmitIntConstant(0);
+                _builder.EmitOpCode(ILOpCode.Ceq);
+                break;
             default:
                 throw new InvalidOperationException($"Invalid binary operator {n.Value}");
         }
