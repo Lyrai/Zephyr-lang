@@ -81,12 +81,13 @@ internal class RoslynExpressionCompiler: BaseRoslynCompiler<object>
             null,
             CancellationToken.None
         );
-
+        
+#if NET6_0
         if (success)
         {
             GenerateRuntimeConfig(Path.GetFullPath(path));
         }
-
+#endif
         return success;
     }
 
