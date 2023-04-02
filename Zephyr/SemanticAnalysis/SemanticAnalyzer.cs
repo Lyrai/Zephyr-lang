@@ -578,7 +578,7 @@ namespace Zephyr.SemanticAnalysis
                 .CurrentDomain
                 .GetAssemblies()
                 .SelectMany(asm => asm.ExportedTypes)
-                .FirstOrDefault(t => t.FullName == name, null);
+                .FirstOrDefault(t => t.FullName == name);
         }
     }
 }

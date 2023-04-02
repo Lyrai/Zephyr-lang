@@ -23,10 +23,16 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<MemberDeclarationS
 
     public RoslynDeclarationsCompiler(string assemblyName)
     {
+#if NET6_0
         _compilation = CSharpCompilation.Create(assemblyName).WithReferences(
             MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
             MetadataReference.CreateFromFile(Assembly.Load("System.Console").Location)
         );
+#else
+        _compilation = CSharpCompilation.Create(assemblyName).WithReferences(
+            MetadataReference.CreateFromFile(typeof(object).Assembly.Location)
+        );
+#endif
     }
 
     public ImmutableDictionary<string, Node> Compile(Node n)

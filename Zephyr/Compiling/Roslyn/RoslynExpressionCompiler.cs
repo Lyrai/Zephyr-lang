@@ -10,6 +10,9 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Emit;
 using Microsoft.CodeAnalysis.CSharp.Symbols;
 using Microsoft.CodeAnalysis.Emit;
+#if NET472
+using Roslyn.Utilities;
+#endif
 using Zephyr.SyntaxAnalysis.ASTNodes;
 using BindingDiagnosticBag = Microsoft.CodeAnalysis.CSharp.BindingDiagnosticBag;
 
@@ -89,14 +92,14 @@ internal class RoslynExpressionCompiler: BaseRoslynCompiler<object>
 
     private (string className, string functionName) ParseQualifiedName(string qualifiedName)
     {
-        var split = qualifiedName.Split("::");
+        var split = qualifiedName.Split(new [] { "::" }, StringSplitOptions.None);
         Debug.Assert(split.Length == 2);
         return (split[0], split[1]);
     }
 
     private void GenerateRuntimeConfig(string path)
     {
-        var configPath = Path.Join(Directory.GetParent(path).FullName, Path.GetFileNameWithoutExtension(path) + ".runtimeconfig.json");
+        var configPath = Path.Combine(Directory.GetParent(path).FullName, Path.GetFileNameWithoutExtension(path) + ".runtimeconfig.json");
         using var stream = new StreamWriter(configPath);
         var netCoreVersion = "6.0.0";
         stream.WriteLine(

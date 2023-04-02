@@ -164,7 +164,7 @@ namespace Zephyr
             {
                 sw.Start();
                 var c = File.ReadAllLines("../../../../../Zephyr/test_IL.txt");
-                string code = string.Join('\n', c);
+                string code = string.Join("\n", c);
                 ICharStream stream = CharStreams.fromString(code);
                 ITokenSource l = new ZephyrLexer(stream);
                 ITokenStream tokenStream = new CommonTokenStream(l);

@@ -16,12 +16,12 @@ namespace Zephyr.Interpreting
             Class = @class;
             if(Class.Parent is not null)
                 _parent = new Instance(Class.Parent);
-            
-            _fields = new Dictionary<string, RuntimeValue>(@class.Fields.Select(x =>
-                new KeyValuePair<string, RuntimeValue>(x.Key, RuntimeValue.None))) {["this"] = new(this), ["base"] = new(_parent)};
-            
-            _methods = new Dictionary<string, FuncSymbol>(@class.Methods.Select(x =>
-                new KeyValuePair<string, FuncSymbol>(x.Key, x.Value.Bind(this))));
+
+            _fields = @class.Fields.ToDictionary(pair => pair.Key, _ => RuntimeValue.None);
+            _fields.Add("this", new(this));
+            _fields.Add("base", new(_parent));
+
+            _methods = @class.Methods.ToDictionary(pair => pair.Key, pair => pair.Value.Bind(this));
         }
 
         public object Get(string name)

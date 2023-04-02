@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+#if NET472
+using Roslyn.Utilities;
+#endif
 
 namespace Zephyr.Interpreting
 {
