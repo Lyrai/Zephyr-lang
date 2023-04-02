@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Emit;
 using Microsoft.CodeAnalysis.CSharp.Symbols;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Zephyr.LexicalAnalysis.Tokens;
 using Zephyr.SemanticAnalysis;
 using Zephyr.SemanticAnalysis.Symbols;
 using Zephyr.SyntaxAnalysis.ASTNodes;
@@ -116,6 +117,20 @@ internal class MethodCompiler: INodeVisitor<object>
             case "+":
                 if (n.Left.TypeSymbol.Name == "string" && n.Right.TypeSymbol.Name == "string")
                 {
+                    EmitCall("System.String", "Concat", "String", "String");
+                    break;
+                }
+
+                if (n.Left.TypeSymbol.Name == "string")
+                {
+                    var tempName = "tmp" + _locals.Count;
+                    var varNode = new VarNode(new Token(TokenType.Id, tempName, 0, 0), true);
+                    var declNode = new VarDeclNode(varNode, null);
+                    declNode.SetType(n.Right.TypeSymbol);
+                    Visit(declNode);
+                    StoreLocal(tempName);
+                    _builder.EmitLoadAddress(_locals[tempName]);
+                    EmitCall(n.Right.TypeSymbol.GetNetFullTypeName(), "ToString");
                     EmitCall("System.String", "Concat", "String", "String");
                     break;
                 }
@@ -290,11 +305,6 @@ internal class MethodCompiler: INodeVisitor<object>
 
     public object VisitFuncCallNode(FuncCallNode n)
     {
-        foreach (var argument in n.Arguments)
-        {
-            Visit(argument);
-        }
-
         var symbol = ResolveMethod(n);
 
         if (symbol.IsConstructor())
@@ -306,7 +316,24 @@ internal class MethodCompiler: INodeVisitor<object>
         
         if (symbol.RequiresInstanceReceiver)
         {
-            EmitLoadLocal((n.Callee as GetNode).Obj.Token.Value.ToString());
+            var callee = n.Callee as GetNode;
+            var receiver = callee.Obj;
+            var name = receiver.Token.Value.ToString();
+            
+            if (receiver.TypeSymbol.IsValueType())
+            {
+                _builder.EmitLoadAddress(_locals[name]);
+            }
+            else
+            {
+                EmitLoadLocal(name);
+            }
+            
+        }
+        
+        foreach (var argument in n.Arguments)
+        {
+            Visit(argument);
         }
         
         EmitCall(symbol, n.Arguments.Count);
@@ -463,7 +490,7 @@ internal class MethodCompiler: INodeVisitor<object>
         
         if (!foundTypes.Any())
         {
-            return ResolveNetMethod(className, methodName, parameterTypes.ToArray());
+            return ResolveNetMethod((n.Callee as GetNode).Obj.TypeSymbol.GetNetFullTypeName(), methodName, parameterTypes.ToArray());
         }
         
         var symbol = foundTypes

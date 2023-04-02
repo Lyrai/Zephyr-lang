@@ -207,7 +207,7 @@ namespace Zephyr.SemanticAnalysis
                     }
 
                     arguments.RemoveAt(0);
-                    var netType = GetNetType((n.Callee as GetNode).Obj.TypeSymbol.Name);
+                    var netType = GetNetType((n.Callee as GetNode).Obj.TypeSymbol.GetNetFullTypeName());
                     var members = netType.GetMember(n.Name).Cast<MethodInfo>();
                     if (!members.Any())
                     {
@@ -529,6 +529,12 @@ namespace Zephyr.SemanticAnalysis
             }
             
             if (left == _stringSymbol && right == _stringSymbol)
+            {
+                n.SetType(_stringSymbol);
+                return _stringSymbol;
+            }
+
+            if (left == _stringSymbol && tokenType == TokenType.Plus)
             {
                 n.SetType(_stringSymbol);
                 return _stringSymbol;

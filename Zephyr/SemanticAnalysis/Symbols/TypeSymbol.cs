@@ -63,6 +63,11 @@ namespace Zephyr.SemanticAnalysis.Symbols
             return GetNetType()?.FullName ?? Name;
         }
 
+        public bool IsValueType()
+        {
+            return Name is "int" or "double" or "bool";
+        }
+
         private Type? GetNetType()
         {
             return Name switch

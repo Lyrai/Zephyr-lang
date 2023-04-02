@@ -4,11 +4,11 @@ end
 
 class Test
     field: int
-    fn tt! -> string
+    fn tt: asd: string -> string
 	    if this.field > 0 {
 	        print this.field
 			this.field = this.field - 1
-			this.tt!
+			this.tt: asd
 	    }
         return "Class"
     end
@@ -20,11 +20,18 @@ fn main!
 		"This should be dropped"
         5
     }
+	print a.ToString!
+	let g = "asd"
+	print System.String.Concat: "asd", "fgh"
+	let ff = "test"
+	print ff.Contains: "es"
 
     let b = Test!
+	let d = "asd" + 5
+	print d
     b.field = 5
 	print "tt: "
-	b.tt!
+	b.tt: "asd"
 	print "end"
     print b.field
 

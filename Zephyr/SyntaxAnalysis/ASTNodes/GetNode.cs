@@ -6,7 +6,6 @@ namespace Zephyr.SyntaxAnalysis.ASTNodes
     {
         public Node Obj { get; }
         public bool IsStatement { get; private set; } = false;
-
         public bool IsUsed { get; private set; } = true;
 
         public GetNode(Token token, Node obj)
