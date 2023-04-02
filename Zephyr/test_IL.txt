@@ -5,6 +5,11 @@ end
 class Test
     field: int
     fn tt! -> string
+	    if this.field != 0 {
+	        print this.field
+			this.field = this.field - 1
+			this.tt!
+	    }
         return "Class"
     end
 end
@@ -18,6 +23,9 @@ fn main!
 
     let b = Test!
     b.field = 5
+	print "tt: "
+	b.tt!
+	print "end"
     print b.field
 
     System.Console.WriteLine: 6

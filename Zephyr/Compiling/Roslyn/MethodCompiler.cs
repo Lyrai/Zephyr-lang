@@ -210,7 +210,7 @@ internal class MethodCompiler: INodeVisitor<object>
         var falseLabel = new object();
         var exitLabel = new object();
         _builder.EmitBranch(ILOpCode.Brfalse, falseLabel);
-        Visit(n.ThenBlock);
+        VisitWithStackGuard(n.ThenBlock);
         
         if (n.ElseBlock is not null)
         {
@@ -221,7 +221,7 @@ internal class MethodCompiler: INodeVisitor<object>
         
         if (n.ElseBlock is not null)
         {
-            Visit(n.ElseBlock);
+            VisitWithStackGuard(n.ElseBlock);
             _builder.MarkLabel(exitLabel);
         }
         
@@ -238,7 +238,7 @@ internal class MethodCompiler: INodeVisitor<object>
         Visit(n.Condition);
         _builder.EmitBranch(ILOpCode.Brfalse, exitLabel);
 
-        Visit(n.Body);
+        VisitWithStackGuard(n.Body);
         _builder.EmitBranch(ILOpCode.Br, condLabel);
         
         _builder.MarkLabel(exitLabel);
@@ -253,13 +253,7 @@ internal class MethodCompiler: INodeVisitor<object>
             return null!;
         }
 
-        if (_locals.ContainsKey(n.Name))
-        {
-            _builder.EmitLocalLoad(_locals[n.Name]);
-            return null!;
-        }
-
-        _builder.EmitLoadArgumentOpcode(_args[n.Name]);
+        EmitLoadLocal(n.Name);
         
         return null!;
     }
@@ -296,7 +290,7 @@ internal class MethodCompiler: INodeVisitor<object>
         
         if (symbol.RequiresInstanceReceiver)
         {
-            _builder.EmitLocalLoad(_locals[(n.Callee as GetNode).Obj.Token.Value.ToString()]);
+            EmitLoadLocal((n.Callee as GetNode).Obj.Token.Value.ToString());
         }
         
         EmitCall(symbol, n.Arguments.Count);
@@ -305,6 +299,7 @@ internal class MethodCompiler: INodeVisitor<object>
 
     public object VisitFuncDeclNode(FuncDeclNode n)
     {
+        _args.Add("this", 0);
         foreach (var parameter in n.Parameters)
         {
             _args.Add((parameter as VarDeclNode).Variable.Name, _args.Count);
@@ -523,6 +518,18 @@ internal class MethodCompiler: INodeVisitor<object>
         if (expr is { ReturnsValue: true, IsUsed: false })
         {
             _builder.EmitOpCode(ILOpCode.Pop);
+        }
+    }
+
+    private void EmitLoadLocal(string name)
+    {
+        if (_locals.ContainsKey(name))
+        {
+            _builder.EmitLocalLoad(_locals[name]);
+        }
+        else
+        {
+            _builder.EmitLoadArgumentOpcode(_args[name]);
         }
     }
 }

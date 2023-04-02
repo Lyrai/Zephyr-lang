@@ -80,9 +80,15 @@ public class UsageAnalyzer: INodeVisitor<object>
     public object VisitIfNode(IfNode n)
     {
         Visit(n.ThenBlock);
+        /*var expr = n.ThenBlock as IExpression;
+        expr.SetUsed(true);
+        expr.SetIsStatement(true);*/
         if (n.ElseBlock is not null)
         {
             Visit(n.ElseBlock);
+            /*expr = n.ElseBlock as IExpression;
+            expr.SetUsed(true);
+            expr.SetIsStatement(true);*/
         }
 
         return null!;

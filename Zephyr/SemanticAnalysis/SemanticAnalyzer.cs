@@ -178,6 +178,7 @@ namespace Zephyr.SemanticAnalysis
                         if(methodSymbol is not null)
                         {
                             n.Callable = methodSymbol;
+                            n.SetType(methodSymbol.ReturnType);
                             return n.Callable.ReturnType;
                         }
                     }
