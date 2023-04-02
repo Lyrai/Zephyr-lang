@@ -8,8 +8,6 @@ namespace Zephyr.SyntaxAnalysis.ASTNodes
     {
         public VarNode Variable;
         public TypeNode Type;
-        public override bool IsUsed => true;
-
         public VarDeclNode(Node variable, Node type)
         {
             Variable = (VarNode) variable;

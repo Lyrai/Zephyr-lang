@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Emit;
 using Microsoft.CodeAnalysis.CSharp.Symbols;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Zephyr.SemanticAnalysis;
 using Zephyr.SemanticAnalysis.Symbols;
 using Zephyr.SyntaxAnalysis.ASTNodes;
 using PrimitiveTypeCode = Microsoft.Cci.PrimitiveTypeCode;
@@ -88,7 +89,18 @@ internal class MethodCompiler: INodeVisitor<object>
     {
         foreach (var child in n.GetChildren())
         {
-            Visit(child);
+            if (child is not IExpression expr)
+            {
+                Visit(child);
+                continue;
+            }
+            
+            if (expr is { ReturnsValue: true, IsUsed: false, CanBeDropped: true})
+            {
+                continue;
+            }
+
+            VisitWithStackGuard(child);
         }
 
         return null!;
@@ -306,7 +318,18 @@ internal class MethodCompiler: INodeVisitor<object>
         
         foreach (var node in n.Body)
         {
-            Visit(node);
+            if (node is not IExpression expr)
+            {
+                Visit(node);
+                continue;
+            }
+            
+            if (expr is { ReturnsValue: true, IsUsed: false, CanBeDropped: true})
+            {
+                continue;
+            }
+
+            VisitWithStackGuard(node);
         }
 
         if (_needImplicitReturn)
@@ -491,5 +514,15 @@ internal class MethodCompiler: INodeVisitor<object>
     {
         _builder.EmitOpCode(opcode);
         EmitToken(GetToken(ResolveField(n.Obj.TypeSymbol.Name, n.Token.Value.ToString())));
+    }
+
+    private void VisitWithStackGuard(Node node)
+    {
+        var expr = node as IExpression;
+        Visit(node);
+        if (expr is { ReturnsValue: true, IsUsed: false })
+        {
+            _builder.EmitOpCode(ILOpCode.Pop);
+        }
     }
 }

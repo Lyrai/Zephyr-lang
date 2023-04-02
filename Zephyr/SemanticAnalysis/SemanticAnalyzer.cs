@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Zephyr.Interpreting;
 using Zephyr.LexicalAnalysis.Tokens;
 using Zephyr.SemanticAnalysis.Symbols;
@@ -43,6 +44,8 @@ namespace Zephyr.SemanticAnalysis
         public void Analyze()
         {
             Visit(_node);
+            var usageAnalyzer = new UsageAnalyzer();
+            usageAnalyzer.Analyze(_node);
         }
 
         public object VisitVarDeclNode(VarDeclNode n)
@@ -181,17 +184,19 @@ namespace Zephyr.SemanticAnalysis
                     
                     arguments.Insert(0, type);
                     var funcSymbol = _table.FindFunc(n.Name, arguments);
-                    if (funcSymbol is null)
+                    if (funcSymbol is not null)
                     {
-                        var varSymbol = _table.Find<VarSymbol>(n.Name);
-                        if (varSymbol is null)
-                        {
-                            var netType = GetNetType((n.Callee as GetNode).Obj.TypeSymbol.Name);
-                            if (netType.GetMember(n.Name).Length > 0)
-                            {
-                                return _table.Find<TypeSymbol>("void");
-                            }
-                        }
+                        n.Callable = funcSymbol;
+                        n.Callee = new VarNode(n.Callee.Token, false);
+                        n.Arguments.Insert(0, node.Obj);
+
+
+                        return n.Callable.ReturnType;
+                    }
+                    
+                    var varSymbol = _table.Find<VarSymbol>(n.Name);
+                    if (varSymbol is not null)
+                    {
                         if (varSymbol.Type != _table.Find<TypeSymbol>("function"))
                             throw new SemanticException(n, $"Cannot find function or method {n.Name}");
                         
@@ -199,13 +204,25 @@ namespace Zephyr.SemanticAnalysis
                         n.Arguments.Insert(0, node.Obj);
                         return varSymbol.Type;
                     }
-                        
-                    n.Callable = funcSymbol;
-                    n.Callee = new VarNode(n.Callee.Token, false);
-                    n.Arguments.Insert(0, node.Obj);
-                    
-                    
-                    return n.Callable.ReturnType;
+
+                    arguments.RemoveAt(0);
+                    var netType = GetNetType((n.Callee as GetNode).Obj.TypeSymbol.Name);
+                    var members = netType.GetMember(n.Name).Cast<MethodInfo>();
+                    if (!members.Any())
+                    {
+                        throw new SemanticException(n, "Cannot find method");
+                    }
+
+                    var method = members.First(
+                        method => method
+                            .GetParameters()
+                            .Select(param => _table.FindByNetName(param.ParameterType.Name))
+                            .SequenceEqual(arguments)
+                    );
+                    var netMethodType = _table.FindByNetName(method.ReturnParameter.ParameterType.Name);
+                    n.SetType(netMethodType);
+                    return netMethodType;
+
                 default:
                     throw new SemanticException(n, "Unknown exception");
             }

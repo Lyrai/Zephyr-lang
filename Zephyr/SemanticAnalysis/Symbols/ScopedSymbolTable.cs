@@ -81,6 +81,21 @@ namespace Zephyr.SemanticAnalysis.Symbols
             Add("writeln", writeln);
         }
 
+        public TypeSymbol FindByNetName(string name)
+        {
+            var nativeName = name switch
+            {
+                "Void" => "void",
+                "Boolean" => "bool",
+                "Double" => "double",
+                "Int32" => "int",
+                "String" => "string",
+                _ => name
+            };
+
+            return Find<TypeSymbol>(nativeName);
+        }
+
         public void Add(string id, object symbol)
         {
             _table.Add(new KeyValuePair<string, object>(id, symbol));

@@ -12,6 +12,7 @@ end
 fn main!
     let a = {
         print "Hello from block"
+		"This should be dropped"
         5
     }
 

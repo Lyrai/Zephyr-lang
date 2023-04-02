@@ -12,7 +12,6 @@ namespace Zephyr.SyntaxAnalysis.ASTNodes
         public string Name { get; }
         public string ReturnType { get; }
         public FuncSymbol Symbol { get; set; }
-        public override bool IsUsed => true;
 
         public FuncDeclNode(Token token, List<Node> body, List<Node> parameters, string returnType)
         {

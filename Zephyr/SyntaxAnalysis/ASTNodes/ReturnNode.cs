@@ -6,7 +6,6 @@ namespace Zephyr.SyntaxAnalysis.ASTNodes
     public class ReturnNode : Node
     {
         public Node Value { get; }
-        public override bool IsUsed => true;
 
         public ReturnNode(Token token, Node value)
         {

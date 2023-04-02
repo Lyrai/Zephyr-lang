@@ -10,7 +10,6 @@ namespace Zephyr.SyntaxAnalysis.ASTNodes
         public string Name { get; }
         public ClassSymbol Symbol { get; set; }
         public VarNode Parent { get; }
-        public override bool IsUsed => true;
 
         public ClassNode(Token token, VarNode parent, List<Node> body)
         {

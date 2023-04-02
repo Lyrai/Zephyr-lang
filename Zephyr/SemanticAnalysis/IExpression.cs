@@ -4,8 +4,13 @@
 
 namespace Zephyr.SemanticAnalysis;
 
-public interface IStatement
+public interface IExpression
 {
+    bool IsStatement { get; }
     bool IsUsed { get; }
-    void SetUsed(bool used, bool recursive = true);
+    bool ReturnsValue { get; }
+    bool CanBeDropped { get; }
+
+    void SetIsStatement(bool isStatement);
+    void SetUsed(bool used);
 }
