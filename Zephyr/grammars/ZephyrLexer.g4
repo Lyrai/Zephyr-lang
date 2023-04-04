@@ -1,4 +1,4 @@
-﻿lexer grammar ZephyrLexer;
+lexer grammar ZephyrLexer;
 
 tokens { STRING_LITERAL }
 
@@ -42,6 +42,8 @@ RPAR: ')';
 DOUBLE_QUOTE: '"' -> more, mode(StringLiteral);
 INT: [0-9]+;
 FLOAT: [0-9]+ DOT [0-9]+;
+LBRACKET: '[';
+RBRACKET: ']';
 
 mode StringLiteral;
 CLOSING_QUOTE: '"' -> type(STRING_LITERAL), mode(DEFAULT_MODE);

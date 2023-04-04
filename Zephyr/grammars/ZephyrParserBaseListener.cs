@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from ZephyrParser.g4 by ANTLR 4.11.1
+// Generated from grammars/ZephyrParser.g4 by ANTLR 4.11.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -275,6 +275,18 @@ public partial class ZephyrParserBaseListener : IZephyrParserListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitEquality([NotNull] ZephyrParser.EqualityContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ZephyrParser.indexer"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterIndexer([NotNull] ZephyrParser.IndexerContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ZephyrParser.indexer"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitIndexer([NotNull] ZephyrParser.IndexerContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ZephyrParser.factor"/>.
 	/// <para>The default implementation does nothing.</para>
