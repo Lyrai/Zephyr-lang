@@ -557,6 +557,30 @@ namespace Zephyr.SemanticAnalysis
             return null;
         }
 
+        public object VisitArrayInitializerNode(ArrayInitializerNode n)
+        {
+            TypeSymbol arrType = null;
+            foreach (var node in n.GetChildren())
+            {
+                Visit(node);
+                if (arrType is null)
+                {
+                    arrType = node.TypeSymbol;
+                    continue;
+                }
+
+                if (node.TypeSymbol != arrType && !CanCast(node.TypeSymbol, arrType))
+                {
+                    throw new SemanticException(n, $"Cannot put {node.TypeSymbol.Name} into array of {arrType.Name}");
+                }
+                
+            }
+            
+            n.SetType(_table.GetArrayType(arrType));
+
+            return null;
+        }
+
         private object Visit(Node n)
         {
             return n.Accept(this);

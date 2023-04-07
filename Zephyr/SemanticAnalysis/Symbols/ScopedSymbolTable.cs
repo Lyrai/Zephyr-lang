@@ -96,6 +96,21 @@ namespace Zephyr.SemanticAnalysis.Symbols
             return Find<TypeSymbol>(nativeName);
         }
 
+        public TypeSymbol GetArrayType(TypeSymbol elemType)
+        {
+
+            var name = "[" + elemType.Name + "]";
+            var symbol = Find<TypeSymbol>(name);
+            if (symbol is not null)
+            {
+                return symbol;
+            }
+
+            symbol = new TypeSymbol(name);
+            Add(name, symbol);
+            return symbol;
+        }
+
         public void Add(string id, object symbol)
         {
             _table.Add(new KeyValuePair<string, object>(id, symbol));

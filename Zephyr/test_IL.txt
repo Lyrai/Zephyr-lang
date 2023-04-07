@@ -20,6 +20,7 @@ fn main!
 		"This should be dropped"
         5
     }
+	
 	print a.ToString!
 	let g = "asd"
 	print System.String.Concat: "asd", "fgh"

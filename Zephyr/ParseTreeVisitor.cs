@@ -90,7 +90,7 @@ namespace Zephyr
             var printToken = context.PRINT().Symbol;
             var token = new Token(TokenType.Print, printToken.Text, printToken.Column, printToken.Line);
 
-            return new UnOpNode(token, Visit(context.assignExpr()));
+            return new UnOpNode(token, Visit(context.equality()));
         }
 
         public override Node VisitReturnStmt(ZephyrParser.ReturnStmtContext context)
@@ -98,7 +98,7 @@ namespace Zephyr
             var returnToken = context.RETURN().Symbol;
             var token = new Token(TokenType.Return, returnToken.Text, returnToken.Column, returnToken.Line);
 
-            var expr = context.assignExpr() is not null ? Visit(context.assignExpr()) : null;
+            var expr = context.equality() is not null ? Visit(context.equality()) : null;
             return new ReturnNode(token, expr);
         }
 
@@ -160,14 +160,14 @@ namespace Zephyr
 
         public override Node VisitAssignExpr(ZephyrParser.AssignExprContext context)
         {
-            var left = Visit(context.compound() is null ? context.equality() : context.compound());
-            if (context.ASSIGN() is null) 
+            var left = Visit(context.Lhs);
+            if (context.ASSIGN() is null)
                 return left;
 
             var assign = context.ASSIGN().Symbol;
             var assignToken = new Token(TokenType.Assign, assign.Text, assign.Column, assign.Line);
             left.SetLhs(true);
-            return new BinOpNode(assignToken, left, Visit(context.assignExpr()));
+            return new BinOpNode(assignToken, left, Visit(context.Rhs));
         }
         
         public override Node VisitEquality(ZephyrParser.EqualityContext context)

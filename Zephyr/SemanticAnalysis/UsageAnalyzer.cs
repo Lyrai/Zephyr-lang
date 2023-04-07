@@ -155,6 +155,16 @@ public class UsageAnalyzer: INodeVisitor<object>
         return null!;
     }
 
+    public object VisitArrayInitializerNode(ArrayInitializerNode n)
+    {
+        foreach (var node in n.GetChildren())
+        {
+            Visit(node);
+        }
+
+        return null!;
+    }
+
     private object Visit(Node n)
     {
         return n.Accept(this);

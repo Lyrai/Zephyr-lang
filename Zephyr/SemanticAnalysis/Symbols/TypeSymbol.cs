@@ -77,8 +77,14 @@ namespace Zephyr.SemanticAnalysis.Symbols
                 "bool" => typeof(bool),
                 "string" => typeof(string),
                 "void" => typeof(void),
+                ['[', _] => GetArrayType(),
                 _ => null
             };
+        }
+
+        private Type? GetArrayType()
+        {
+            
         }
     }
 }

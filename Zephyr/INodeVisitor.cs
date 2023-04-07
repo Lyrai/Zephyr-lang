@@ -19,5 +19,6 @@ namespace Zephyr
         T VisitFuncDeclNode(FuncDeclNode n);
         T VisitReturnNode(ReturnNode n);
         T VisitNoOpNode(NoOpNode n);
+        T VisitArrayInitializerNode(ArrayInitializerNode n);
     }
 }

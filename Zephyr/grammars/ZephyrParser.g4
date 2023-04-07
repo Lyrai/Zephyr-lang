@@ -33,18 +33,18 @@ typedVarDecl: Name=ID ':' Type=ID;
 classDecl: 'class' Name=ID ('<' Base=ID)? classBody 'end';
 classBody: (classBodyDecl)*;
 
-printStmt: 'print' assignExpr;
+printStmt: 'print' equality;
 
-returnStmt: 'return' assignExpr?;
+returnStmt: 'return' equality?;
 
 compound: '{' statementList '}';
 
-ifStmt: 'if' Condition=assignExpr 
+ifStmt: 'if' Condition=equality 
     ThenBranch=statement 
     ('else' 
     ElseBranch=statement)?;
 
-whileStmt: 'while' Condition=assignExpr Body=statement;
+whileStmt: 'while' Condition=equality Body=statement;
 
 forStmt: 'for' Initializer=varDecl COMMA Condition=equality COMMA PostAction=assignExpr 
     Body=statement;
@@ -55,11 +55,11 @@ funcDecl: 'fn' Name=ID (':' funcParameters | '!') ('->' Type=ID)?
 funcParameters: Parameters+=typedVarDecl (COMMA Paramters+=typedVarDecl)*;
 funcArguments: Args+=equality (',' Args+=equality)*;
 
-varDecl: 'let' Name=ID (':' (Type=ID | ArrayType=ID '[' ']'))? (ASSIGN assignExpr)?;
+varDecl: 'let' Name=ID (':' (Type=ID | ArrayType='[' ID ']'))? (ASSIGN assignExpr)?;
 
 //propertyDecl: 'property' typedVarDecl (('get' statementList END) ('set' statementList END)? | ('set' statementList END) ('get' statementList END)?) ;
 
-assignExpr: compound | (equality (ASSIGN assignExpr)?);
+assignExpr: Lhs=equality (ASSIGN Rhs=equality)?;
 
 equality:
       '(' Inner=equality ')'
@@ -71,8 +71,9 @@ equality:
 ;
 
 indexer: ID LBRACKET equality RBRACKET;
+arrayInitializer: LBRACKET Exprs+=equality (',' Exprs+=equality)* RBRACKET;
 
 factor: Op=(MINUS | PLUS | NOT) factor | call;
 call: call ((':' funcArguments ';'?) | '!' | DOT ID) | primary;
-primary: literal | ID | indexer;
+primary: literal | ID | indexer | compound | ifStmt | arrayInitializer;
 literal: StringLit=STRING_LITERAL | Int=INT | Float=FLOAT | True='true' | False='false';

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from grammars/ZephyrParser.g4 by ANTLR 4.11.1
+// Generated from Zephyr/grammars/ZephyrParser.g4 by ANTLR 4.11.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -157,6 +157,12 @@ public interface IZephyrParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitIndexer([NotNull] ZephyrParser.IndexerContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ZephyrParser.arrayInitializer"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitArrayInitializer([NotNull] ZephyrParser.ArrayInitializerContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZephyrParser.factor"/>.
 	/// </summary>

@@ -203,6 +203,17 @@ namespace Zephyr.Interpreting
             return None;
         }
 
+        public RuntimeValue VisitArrayInitializerNode(ArrayInitializerNode n)
+        {
+            var arr = new object[n.ElementsCount];
+            foreach (var node in n.GetChildren())
+            {
+                Evaluate(node);
+            }
+
+            return new RuntimeValue(arr);
+        }
+
         public void ExecuteBlock(List<Node> body, Scope scope)
         {
             var enclosing = _currentScope;

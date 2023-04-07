@@ -169,6 +169,11 @@ namespace Zephyr.SemanticAnalysis
             return null;
         }
 
+        public object VisitArrayInitializerNode(ArrayInitializerNode n)
+        {
+            return null;
+        }
+
         private void Visit(Node n)
         {
             n.Accept(this);
