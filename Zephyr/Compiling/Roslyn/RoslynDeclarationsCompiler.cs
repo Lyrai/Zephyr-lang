@@ -199,6 +199,6 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<MemberDeclarationS
 
     private SyntaxTokenList GetKeywords(params SyntaxKind[] keywords)
     {
-        return new SyntaxTokenList(keywords.Select(keyword => SyntaxFactory.Token(keyword)));
+        return new SyntaxTokenList(keywords.Select(SyntaxFactory.Token));
     }
 }

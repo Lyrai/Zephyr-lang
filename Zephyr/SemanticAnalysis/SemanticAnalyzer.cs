@@ -155,10 +155,8 @@ namespace Zephyr.SemanticAnalysis
                     symbol = _table.FindFunc((string) n.Callee.Token.Value, arguments);
                     if(symbol is null)
                     {
-                        Symbol s = _table.Find<VarSymbol>(n.Name);
-                        if(s is null)
-                            s = _table.Find<FuncSymbol>(n.Name);
-                        
+                        var s = _table.Find<VarSymbol>(n.Name) ?? (Symbol)_table.Find<FuncSymbol>(n.Name);
+
                         if (s is not null && s.Type == _table.Find<TypeSymbol>("function"))
                             return _table.Find<TypeSymbol>("function");
                         
@@ -196,7 +194,6 @@ namespace Zephyr.SemanticAnalysis
                         n.Callee = new VarNode(n.Callee.Token, false);
                         n.Arguments.Insert(0, node.Obj);
 
-
                         return n.Callable.ReturnType;
                     }
                     
@@ -214,12 +211,14 @@ namespace Zephyr.SemanticAnalysis
                     arguments.RemoveAt(0);
                     var netType = GetNetType((n.Callee as GetNode).Obj.TypeSymbol.GetNetFullName());
                     var members = netType.GetMember(n.Name).Cast<MethodInfo>();
-                    if (!members.Any())
+                    var methodInfos = members as MethodInfo[] ?? members.ToArray();
+                    
+                    if (!methodInfos.Any())
                     {
                         throw new SemanticException(n, "Cannot find method");
                     }
 
-                    var method = members.First(
+                    var method = methodInfos.First(
                         method => method
                             .GetParameters()
                             .Select(param => _table.FindByNetName(param.ParameterType.Name))
@@ -241,9 +240,8 @@ namespace Zephyr.SemanticAnalysis
         
         private void EvaluateConstructor(ClassSymbol classSymbol, List<TypeSymbol> arguments, Node n)
         {
-            if(classSymbol.Methods.ContainsKey("init"))
+            if(classSymbol.Methods.TryGetValue("init", out var symbol))
             {
-                ICallable symbol = classSymbol.Methods["init"];
                 if (symbol.TypesEqual(arguments) == false)
                     throw new SemanticException(n, "Cannot find constructor with given parameters");
                             
@@ -259,8 +257,8 @@ namespace Zephyr.SemanticAnalysis
 
         private FuncSymbol ResolveMethod(string name, ClassSymbol symbol)
         {
-            if (symbol.Methods.ContainsKey(name))
-                return symbol.Methods[name];
+            if (symbol.Methods.TryGetValue(name, out var method))
+                return method;
 
             if (symbol.Parent is null)
                 return null;
@@ -415,8 +413,8 @@ namespace Zephyr.SemanticAnalysis
 
         private TypeSymbol ResolveName(string name, ClassSymbol symbol)
         {
-            if (symbol.Fields.ContainsKey(name))
-                return symbol.Fields[name].Type;
+            if (symbol.Fields.TryGetValue(name, out var field))
+                return field.Type;
 
             if (symbol.Parent is null)
                 return null;
@@ -599,9 +597,9 @@ namespace Zephyr.SemanticAnalysis
 
         private void Visit(List<Node> n)
         {
-            for (var i = 0; i < n.Count; i++)
+            foreach (var node in n)
             {
-                Visit(n[i]);
+                Visit(node);
             }
         }
 

@@ -7,11 +7,8 @@ using System.Reflection.Metadata;
 using Microsoft.Cci;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeGen;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Emit;
 using Microsoft.CodeAnalysis.CSharp.Symbols;
-using Microsoft.CodeAnalysis.CSharp.Symbols.PublicModel;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Zephyr.LexicalAnalysis.Tokens;
 using Zephyr.SemanticAnalysis;
 using Zephyr.SemanticAnalysis.Symbols;
@@ -19,7 +16,6 @@ using Zephyr.SyntaxAnalysis.ASTNodes;
 using ArrayTypeSymbol = Microsoft.CodeAnalysis.CSharp.Symbols.ArrayTypeSymbol;
 using FieldSymbol = Microsoft.CodeAnalysis.CSharp.Symbols.FieldSymbol;
 using MethodSymbol = Microsoft.CodeAnalysis.CSharp.Symbols.MethodSymbol;
-using NamedTypeSymbol = Microsoft.CodeAnalysis.CSharp.Symbols.NamedTypeSymbol;
 using PrimitiveTypeCode = Microsoft.Cci.PrimitiveTypeCode;
 using TypeSymbol = Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbol;
 using ZephyrTypeSymbol = Zephyr.SemanticAnalysis.Symbols.TypeSymbol;
@@ -29,14 +25,14 @@ namespace Zephyr.Compiling.Roslyn;
 
 internal class MethodCompiler: INodeVisitor<object>
 {
-    private ILBuilder _builder;
-    private FuncDeclNode _method;
-    private PEModuleBuilder _moduleBuilder;
-    private MethodSymbol _symbol;
-    private Dictionary<string, LocalDefinition> _locals = new();
-    private Dictionary<string, int> _args = new();
+    private readonly ILBuilder _builder;
+    private readonly FuncDeclNode _method;
+    private readonly PEModuleBuilder _moduleBuilder;
+    private readonly MethodSymbol _symbol;
+    private readonly Dictionary<string, LocalDefinition> _locals = new();
+    private readonly Dictionary<string, int> _args = new();
+    private readonly Dictionary<string, ZephyrTypeSymbol> _predefinedTypes = ScopedSymbolTable.GetPredefinedTypes();
     private bool _needImplicitReturn;
-    private Dictionary<string, ZephyrTypeSymbol> _predefinedTypes = ScopedSymbolTable.GetPredefinedTypes();
 
     public MethodCompiler(ILBuilder builder, FuncDeclNode method, PEModuleBuilder moduleBuilder, MethodSymbol symbol)
     {
@@ -165,9 +161,9 @@ internal class MethodCompiler: INodeVisitor<object>
                     _builder.EmitNumericConversion(right, left, true);
                 }
 
-                if (n.Left is GetNode)
+                if (n.Left is GetNode node)
                 {
-                    EmitFieldOpCode(ILOpCode.Stfld, n.Left as GetNode);
+                    EmitFieldOpCode(ILOpCode.Stfld, node);
                 }
                 else
                 {
@@ -434,7 +430,7 @@ internal class MethodCompiler: INodeVisitor<object>
         {
             _builder.EmitOpCode(ILOpCode.Dup);
             var elements = n.GetChildren();
-            for (int i = 0; i < n.ElementsCount; i++)
+            for (var i = 0; i < n.ElementsCount; i++)
             {
                 _builder.EmitIntConstant(i);
                 Visit(elements[i]);
@@ -606,9 +602,9 @@ internal class MethodCompiler: INodeVisitor<object>
 
     private void EmitLoadLocal(string name)
     {
-        if (_locals.ContainsKey(name))
+        if (_locals.TryGetValue(name, out var local))
         {
-            _builder.EmitLocalLoad(_locals[name]);
+            _builder.EmitLocalLoad(local);
         }
         else
         {

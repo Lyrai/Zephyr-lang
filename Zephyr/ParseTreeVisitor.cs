@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using Antlr4.Runtime.Tree;
 using Zephyr.LexicalAnalysis.Tokens;
 using Zephyr.SyntaxAnalysis.ASTNodes;
@@ -302,19 +299,19 @@ namespace Zephyr
                 token = new Token(TokenType.False, bool.Parse(context.False.Text),
                     context.False.Column, context.False.Line);
 
-
             return new LiteralNode(token, token.Value);
         }
 
         private List<Node> GetBody(IParseTree node)
         {
             var list = new List<Node>(node.ChildCount);
-            for (int i = 0; i < node.ChildCount; i++)
+            for (var i = 0; i < node.ChildCount; i++)
             {
-                if(node.GetChild(i) is ITerminalNode)
+                var child = node.GetChild(i);
+                if(child is ITerminalNode)
                     continue;
                 
-                list.Add(Visit(node.GetChild(i)));
+                list.Add(Visit(child));
             }
 
             return list;

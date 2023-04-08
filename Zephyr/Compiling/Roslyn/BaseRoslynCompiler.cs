@@ -2,15 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Collections.Immutable;
 using System.Diagnostics;
-using System.Reflection;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Emit;
 using Microsoft.CodeAnalysis.CSharp.Symbols;
-using Microsoft.CodeAnalysis.Emit;
-using Roslyn.Utilities;
 using Zephyr.SyntaxAnalysis.ASTNodes;
 
 namespace Zephyr.Compiling.Roslyn;
@@ -23,7 +18,7 @@ internal abstract class BaseRoslynCompiler<T>: INodeVisitor<T>
     protected const string EntryPointName = "main";
     protected const string QualifiedNameSeparator = "::";
     protected const string EntryPointQualifiedName = GlobalClassName + QualifiedNameSeparator + EntryPointName;
-    protected bool _compilationFinished = false;
+    protected bool _compilationFinished;
 
     public virtual void CompilationFinished()
     {

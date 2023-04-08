@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Zephyr.SemanticAnalysis;
+﻿using Zephyr.SemanticAnalysis;
 using Zephyr.SemanticAnalysis.Symbols;
 
 namespace Zephyr.SyntaxAnalysis.ASTNodes
@@ -8,10 +7,9 @@ namespace Zephyr.SyntaxAnalysis.ASTNodes
     {
         public Token Token { get; protected init; }
         public object Value { get; protected set; }
-        public TypeSymbol TypeSymbol => _type;
+        public TypeSymbol TypeSymbol { get; private set; }
+
         public bool IsLhs { get; protected set; }
-        
-        private TypeSymbol _type;
 
         public virtual List<Node> GetChildren()
         {
@@ -24,7 +22,7 @@ namespace Zephyr.SyntaxAnalysis.ASTNodes
         
         public void SetType(TypeSymbol type)
         {
-            _type = type;
+            TypeSymbol = type;
         }
 
         public void SetLhs(bool lhs)

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using PrimitiveTypeCode = Microsoft.Cci.PrimitiveTypeCode;
 
 namespace Zephyr.SemanticAnalysis.Symbols

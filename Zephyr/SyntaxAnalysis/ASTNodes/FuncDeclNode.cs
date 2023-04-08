@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Zephyr.SemanticAnalysis;
+﻿using Zephyr.SemanticAnalysis;
 using Zephyr.SemanticAnalysis.Symbols;
 
 namespace Zephyr.SyntaxAnalysis.ASTNodes
