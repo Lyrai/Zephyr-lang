@@ -24,6 +24,7 @@ fn main!
     print a.ToString!
     let g = "asd"
     let arr: [int] = [1]
+    print System.String.Concat: "asd", "fgh"
     let ff = "test"
     print ff.Contains: "es"
     print test: "asd"
