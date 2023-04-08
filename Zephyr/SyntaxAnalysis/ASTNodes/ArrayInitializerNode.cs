@@ -34,4 +34,9 @@ public class ArrayInitializerNode: Node, IExpression
     {
         IsUsed = used;
     }
+
+    public override List<Node> GetChildren()
+    {
+        return _elements;
+    }
 }

@@ -244,12 +244,12 @@ namespace Zephyr.SemanticAnalysis
                 }
                 catch (SemanticException e)
                 {
-                    Zephyr.Error(e);
+                    Program.Error(e);
                 }
                 catch (Exception e)
                 {
                     #if DEBUG
-                    Zephyr.Error(e);
+                    Program.Error(e);
                     #endif
                 }
             }

@@ -44,6 +44,12 @@ namespace Zephyr
                 var typeToken = new Token(TokenType.Id, context.Type.Text, context.Type.Column, context.Type.Line);
                 typeNode = new TypeNode(typeToken);
             }
+            
+            if(context.ArrayType is not null)
+            {
+                var typeToken = new Token(TokenType.Id, context.ArrayType.GetText(), context.ArrayType.ID().Symbol.Column, context.ArrayType.ID().Symbol.Line);
+                typeNode = new TypeNode(typeToken);
+            }
 
             Node node = new VarDeclNode(new VarNode(idToken, true), typeNode);
 
@@ -233,11 +239,37 @@ namespace Zephyr
 
         }
 
+        public override Node VisitArrayInitializer(ZephyrParser.ArrayInitializerContext context)
+        {
+            var elements = GetBody(context);
+            return new ArrayInitializerNode(elements);
+        }
+
         public override Node VisitPrimary(ZephyrParser.PrimaryContext context)
         {
             if (context.literal() is not null)
             {
                 return Visit(context.literal());
+            }
+
+            if (context.ifStmt() is not null)
+            {
+                return Visit(context.ifStmt());
+            }
+
+            if (context.compound() is not null)
+            {
+                return Visit(context.compound());
+            }
+
+            if (context.arrayInitializer() is not null)
+            {
+                return Visit(context.arrayInitializer());
+            }
+
+            if (context.indexer() is not null)
+            {
+                return Visit(context.indexer());
             }
 
             var id = context.ID().Symbol;

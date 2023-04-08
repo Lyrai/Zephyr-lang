@@ -98,16 +98,21 @@ namespace Zephyr.SemanticAnalysis.Symbols
 
         public TypeSymbol GetArrayType(TypeSymbol elemType)
         {
-
             var name = "[" + elemType.Name + "]";
-            var symbol = Find<TypeSymbol>(name);
+            return GetArrayType(name, elemType.Name);
+        }
+
+        public TypeSymbol GetArrayType(string arrayType, string? elementType = null)
+        {
+            var symbol = Find<TypeSymbol>(arrayType);
             if (symbol is not null)
             {
                 return symbol;
             }
 
-            symbol = new TypeSymbol(name);
-            Add(name, symbol);
+            elementType ??= arrayType.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries)[0];
+            symbol = new ArrayTypeSymbol(arrayType, Find<TypeSymbol>(elementType));
+            Add(arrayType, symbol);
             return symbol;
         }
 

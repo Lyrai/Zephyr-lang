@@ -1,10 +1,13 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using PrimitiveTypeCode = Microsoft.Cci.PrimitiveTypeCode;
 
 namespace Zephyr.SemanticAnalysis.Symbols
 {
     public class TypeSymbol : Symbol
     {
+        public bool IsArray => Name.StartsWith("[");
+
         public TypeSymbol(string name) : base(name)
         { }
 
@@ -68,7 +71,7 @@ namespace Zephyr.SemanticAnalysis.Symbols
             return Name is "int" or "double" or "bool";
         }
 
-        private Type? GetNetType()
+        public virtual Type? GetNetType()
         {
             return Name switch
             {
@@ -77,14 +80,8 @@ namespace Zephyr.SemanticAnalysis.Symbols
                 "bool" => typeof(bool),
                 "string" => typeof(string),
                 "void" => typeof(void),
-                ['[', _] => GetArrayType(),
                 _ => null
             };
-        }
-
-        private Type? GetArrayType()
-        {
-            
         }
     }
 }

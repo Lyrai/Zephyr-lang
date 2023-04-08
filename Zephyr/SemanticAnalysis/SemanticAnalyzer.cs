@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using Zephyr.Interpreting;
 using Zephyr.LexicalAnalysis.Tokens;
 using Zephyr.SemanticAnalysis.Symbols;
@@ -55,10 +52,18 @@ namespace Zephyr.SemanticAnalysis
             if(n.Type is not null)
             {
                 var type = (string)n.Type.Token.Value;
-                typeSymbol = _table.Find<TypeSymbol>(type);
 
-                if (typeSymbol == _voidSymbol)
-                    throw new SemanticException(n, "Variable cannot be of type void");
+                if (IsArrayType(type))
+                {
+                    typeSymbol = _table.GetArrayType(type);
+                }
+                else
+                {
+                    typeSymbol = _table.Find<TypeSymbol>(type);
+
+                    if (typeSymbol == _voidSymbol)
+                        throw new SemanticException(n, "Variable cannot be of type void");
+                }
             }
 
             if (_table.Get<VarSymbol>(name) is not null)
@@ -432,7 +437,7 @@ namespace Zephyr.SemanticAnalysis
                 }
                 catch (Exception e)
                 {
-                    Zephyr.Error(e);
+                    Program.Error(e);
                 }
             }
 
@@ -443,7 +448,7 @@ namespace Zephyr.SemanticAnalysis
             }
             catch (Exception e)
             {
-                Zephyr.Error(e);
+                Program.Error(e);
             }
             
             _table = enclosing;
@@ -575,10 +580,11 @@ namespace Zephyr.SemanticAnalysis
                 }
                 
             }
-            
-            n.SetType(_table.GetArrayType(arrType));
 
-            return null;
+            var type = _table.GetArrayType(arrType);
+            n.SetType(type);
+
+            return type;
         }
 
         private object Visit(Node n)
@@ -627,6 +633,11 @@ namespace Zephyr.SemanticAnalysis
                 .GetAssemblies()
                 .SelectMany(asm => asm.ExportedTypes)
                 .FirstOrDefault(t => t.FullName == name);
+        }
+
+        private bool IsArrayType(string type)
+        {
+            return type.StartsWith("[");
         }
     }
 }

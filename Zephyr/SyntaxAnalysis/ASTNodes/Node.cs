@@ -15,7 +15,7 @@ namespace Zephyr.SyntaxAnalysis.ASTNodes
 
         public virtual List<Node> GetChildren()
         {
-            return new() {this};
+            return null;
         }
         public abstract T Accept<T>(INodeVisitor<T> visitor);
 

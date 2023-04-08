@@ -22,7 +22,7 @@ using MethodCompiler = Microsoft.CodeAnalysis.CSharp.MethodCompiler;
 
 namespace Zephyr
 {
-    class Zephyr
+    class Program
     {
         private static bool _hasError;
 

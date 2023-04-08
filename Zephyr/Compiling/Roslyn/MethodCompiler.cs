@@ -10,11 +10,16 @@ using Microsoft.CodeAnalysis.CodeGen;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Emit;
 using Microsoft.CodeAnalysis.CSharp.Symbols;
+using Microsoft.CodeAnalysis.CSharp.Symbols.PublicModel;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Zephyr.LexicalAnalysis.Tokens;
 using Zephyr.SemanticAnalysis;
 using Zephyr.SemanticAnalysis.Symbols;
 using Zephyr.SyntaxAnalysis.ASTNodes;
+using ArrayTypeSymbol = Microsoft.CodeAnalysis.CSharp.Symbols.ArrayTypeSymbol;
+using FieldSymbol = Microsoft.CodeAnalysis.CSharp.Symbols.FieldSymbol;
+using MethodSymbol = Microsoft.CodeAnalysis.CSharp.Symbols.MethodSymbol;
+using NamedTypeSymbol = Microsoft.CodeAnalysis.CSharp.Symbols.NamedTypeSymbol;
 using PrimitiveTypeCode = Microsoft.Cci.PrimitiveTypeCode;
 using TypeSymbol = Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbol;
 
@@ -291,8 +296,21 @@ internal class MethodCompiler: INodeVisitor<object>
 
     public object VisitVarDeclNode(VarDeclNode n)
     {
-        var token = GetToken(ResolveNetType(n.TypeSymbol.GetNetFullTypeName()));
+        var token = GetToken(ResolveNetType(n));
+        _moduleBuilder.GetFakeSymbolTokenForIL(token, null, DiagnosticBag.GetInstance());
         var definition = _builder.LocalSlotManager.AllocateSlot(token, LocalSlotConstraints.None);
+        /*var definition = _builder.LocalSlotManager.DeclareLocal(
+            token,
+            null,
+            n.Variable.Name,
+            SynthesizedLocalKind.UserDefined,
+            LocalDebugId.None,
+            LocalVariableAttributes.None,
+            LocalSlotConstraints.None,
+            default,
+            default,
+            false
+        );*/
         _locals.Add(n.Variable.Name, definition);
         
         return null!;
@@ -396,12 +414,45 @@ internal class MethodCompiler: INodeVisitor<object>
 
     public object VisitArrayInitializerNode(ArrayInitializerNode n)
     {
-        _builder.EmitArrayCreation();
+        _builder.EmitIntConstant(n.ElementsCount);
+        _builder.EmitOpCode(ILOpCode.Newarr);
+        var arrayTypeSymbol = n.TypeSymbol as Zephyr.SemanticAnalysis.Symbols.ArrayTypeSymbol;
+        var elementType = GetToken(ResolveNetType(arrayTypeSymbol.GetElementTypeFullName()));
+        _builder.EmitToken(elementType, null, DiagnosticBag.GetInstance());
+
+        if (n.ElementsCount > 0)
+        {
+            _builder.EmitOpCode(ILOpCode.Dup);
+            var elements = n.GetChildren();
+            for (int i = 0; i < n.ElementsCount; i++)
+            {
+                _builder.EmitIntConstant(i);
+                Visit(elements[i]);
+                EmitStoreElement(arrayTypeSymbol.ElementType);
+            }
+        }
+
+        return null!;
     }
 
     private object Visit(Node n)
     {
         return n.Accept(this);
+    }
+
+    private TypeSymbol ResolveNetType(Node n)
+    {
+        var type = n.TypeSymbol;
+        if(!type.IsArray)
+        {
+            var typeName = type.GetNetFullTypeName();
+            return ResolveNetType(typeName);
+        }
+
+        var arrayTypeSymbol = n.TypeSymbol as Zephyr.SemanticAnalysis.Symbols.ArrayTypeSymbol;
+        var elementType = ResolveNetType(arrayTypeSymbol.GetElementTypeFullName());
+        var arrayType = TypeWithAnnotations.Create(false, elementType);
+        return ArrayTypeSymbol.CreateCSharpArray(_moduleBuilder.Compilation.Assembly, arrayType);
     }
 
     private TypeSymbol ResolveNetType(string qualifiedClassName)
@@ -414,11 +465,7 @@ internal class MethodCompiler: INodeVisitor<object>
     
     private TypeSymbol ResolveType(string name)
     {
-        return _moduleBuilder
-            .SourceModule
-            .GlobalNamespace
-            .GetMembers(name)
-            .First() as TypeSymbol;
+        return ResolveNetType(name);
     }
 
     private MethodSymbol ResolveNetMethod(string qualifiedClassName, string methodName, params string[] paramsTypes)
@@ -578,6 +625,26 @@ internal class MethodCompiler: INodeVisitor<object>
         else
         {
             _builder.EmitLoadArgumentOpcode(_args[name]);
+        }
+    }
+
+    private void EmitStoreElement(Zephyr.SemanticAnalysis.Symbols.TypeSymbol symbol)
+    {
+        var typeCode = symbol.GetTypeCode();
+        switch (typeCode)
+        {
+            case PrimitiveTypeCode.Boolean:
+                _builder.EmitOpCode(ILOpCode.Stelem_i1);
+                break;
+            case PrimitiveTypeCode.Int32:
+                _builder.EmitOpCode(ILOpCode.Stelem_i4);
+                break;
+            case PrimitiveTypeCode.Float64:
+                _builder.EmitOpCode(ILOpCode.Stelem_r8);
+                break;
+            default:
+                _builder.EmitOpCode(ILOpCode.Stelem_ref);
+                break;
         }
     }
 }

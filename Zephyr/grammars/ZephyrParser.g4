@@ -55,7 +55,7 @@ funcDecl: 'fn' Name=ID (':' funcParameters | '!') ('->' Type=ID)?
 funcParameters: Parameters+=typedVarDecl (COMMA Paramters+=typedVarDecl)*;
 funcArguments: Args+=equality (',' Args+=equality)*;
 
-varDecl: 'let' Name=ID (':' (Type=ID | ArrayType='[' ID ']'))? (ASSIGN assignExpr)?;
+varDecl: 'let' Name=ID (':' (Type=ID | ArrayType=arrayType))? (ASSIGN assignExpr)?;
 
 //propertyDecl: 'property' typedVarDecl (('get' statementList END) ('set' statementList END)? | ('set' statementList END) ('get' statementList END)?) ;
 
@@ -72,6 +72,7 @@ equality:
 
 indexer: ID LBRACKET equality RBRACKET;
 arrayInitializer: LBRACKET Exprs+=equality (',' Exprs+=equality)* RBRACKET;
+arrayType: '[' ID ']';
 
 factor: Op=(MINUS | PLUS | NOT) factor | call;
 call: call ((':' funcArguments ';'?) | '!' | DOT ID) | primary;

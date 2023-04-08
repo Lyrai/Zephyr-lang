@@ -4,7 +4,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
 		<RootNamespace>Zephyr</RootNamespace>
-		<StartupObject>Zephyr.Zephyr</StartupObject>
+		<StartupObject>Zephyr.Program</StartupObject>
       <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
       <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
       <OutputType>Exe</OutputType>
