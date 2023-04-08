@@ -297,7 +297,6 @@ internal class MethodCompiler: INodeVisitor<object>
     public object VisitVarDeclNode(VarDeclNode n)
     {
         var token = GetToken(ResolveNetType(n));
-        _moduleBuilder.GetFakeSymbolTokenForIL(token, null, DiagnosticBag.GetInstance());
         var definition = _builder.LocalSlotManager.AllocateSlot(token, LocalSlotConstraints.None);
         /*var definition = _builder.LocalSlotManager.DeclareLocal(
             token,
