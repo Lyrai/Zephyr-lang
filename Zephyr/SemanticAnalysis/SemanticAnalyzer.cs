@@ -212,7 +212,7 @@ namespace Zephyr.SemanticAnalysis
                     }
 
                     arguments.RemoveAt(0);
-                    var netType = GetNetType((n.Callee as GetNode).Obj.TypeSymbol.GetNetFullTypeName());
+                    var netType = GetNetType((n.Callee as GetNode).Obj.TypeSymbol.GetNetFullName());
                     var members = netType.GetMember(n.Name).Cast<MethodInfo>();
                     if (!members.Any())
                     {
@@ -434,6 +434,11 @@ namespace Zephyr.SemanticAnalysis
                 try
                 {
                     Visit(children[i]);
+                    
+                    if (_currentClassSymbol is null && children[i] is FuncDeclNode decl)
+                    {
+                        decl.SetStatic(true);
+                    }
                 }
                 catch (Exception e)
                 {

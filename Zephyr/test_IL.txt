@@ -26,6 +26,7 @@ fn main!
     let arr: [int] = [1]
     let ff = "test"
     print ff.Contains: "es"
+    print test: "asd"
 
     let b = Test!
     let d = "asd" + 5

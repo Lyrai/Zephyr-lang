@@ -16,6 +16,7 @@ namespace Zephyr.SyntaxAnalysis.ASTNodes
         public bool IsUsed { get; private set; } = true;
         public bool ReturnsValue => TypeSymbol.Name != "void";
         public bool CanBeDropped => false;
+        public TypeSymbol ReturnType => TypeSymbol;
 
         public FuncCallNode(Node callee, Token token, List<Node> arguments)
         {

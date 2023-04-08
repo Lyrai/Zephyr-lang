@@ -22,6 +22,13 @@ namespace Zephyr.SemanticAnalysis.Symbols
         public ScopeType Type { get; }
         private readonly List<KeyValuePair<string, object>> _table;
         private ILookup<string, object> Lookup => _table.ToLookup(k => k.Key, v => v.Value);
+        
+        private static Dictionary<string, TypeSymbol> _predefinedTypes = new()
+        {
+            ["System.Object"] = new TypeSymbol("System.Object"),
+            ["System.Console"] = new TypeSymbol("System.Console"),
+            ["<global class>"] = new TypeSymbol("<global class>"),
+        };
 
         public ScopedSymbolTable(ScopeType type, ScopedSymbolTable parent = null)
         {
@@ -37,6 +44,11 @@ namespace Zephyr.SemanticAnalysis.Symbols
             Add("findFunc", findFunc);
             Parent = parent;
             Type = type;
+        }
+        
+        public static Dictionary<string, TypeSymbol> GetPredefinedTypes()
+        {
+            return _predefinedTypes;
         }
 
         private void Init()

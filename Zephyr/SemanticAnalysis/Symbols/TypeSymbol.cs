@@ -38,7 +38,7 @@ namespace Zephyr.SemanticAnalysis.Symbols
             };
         }
 
-        public string GetNetTypeName()
+        public string GetNetName()
         {
             return GetNetType()?.Name ?? Name;
         }
@@ -50,7 +50,7 @@ namespace Zephyr.SemanticAnalysis.Symbols
                 case "int":
                 case "string":
                 case "void":
-                    Enum.TryParse(GetNetTypeName(), out PrimitiveTypeCode res);
+                    Enum.TryParse(GetNetName(), out PrimitiveTypeCode res);
                     return res;
                 case "double":
                     return PrimitiveTypeCode.Float64;
@@ -61,7 +61,7 @@ namespace Zephyr.SemanticAnalysis.Symbols
             throw new InvalidOperationException($"Cannot convert non-primitive type {Name}");
         }
 
-        public string GetNetFullTypeName()
+        public string GetNetFullName()
         {
             return GetNetType()?.FullName ?? Name;
         }

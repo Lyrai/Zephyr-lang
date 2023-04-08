@@ -22,6 +22,8 @@ using MethodSymbol = Microsoft.CodeAnalysis.CSharp.Symbols.MethodSymbol;
 using NamedTypeSymbol = Microsoft.CodeAnalysis.CSharp.Symbols.NamedTypeSymbol;
 using PrimitiveTypeCode = Microsoft.Cci.PrimitiveTypeCode;
 using TypeSymbol = Microsoft.CodeAnalysis.CSharp.Symbols.TypeSymbol;
+using ZephyrTypeSymbol = Zephyr.SemanticAnalysis.Symbols.TypeSymbol;
+using ZephyrArrayTypeSymbol = Zephyr.SemanticAnalysis.Symbols.ArrayTypeSymbol;
 
 namespace Zephyr.Compiling.Roslyn;
 
@@ -34,6 +36,7 @@ internal class MethodCompiler: INodeVisitor<object>
     private Dictionary<string, LocalDefinition> _locals = new();
     private Dictionary<string, int> _args = new();
     private bool _needImplicitReturn;
+    private Dictionary<string, ZephyrTypeSymbol> _predefinedTypes = ScopedSymbolTable.GetPredefinedTypes();
 
     public MethodCompiler(ILBuilder builder, FuncDeclNode method, PEModuleBuilder moduleBuilder, MethodSymbol symbol)
     {
@@ -120,26 +123,29 @@ internal class MethodCompiler: INodeVisitor<object>
         switch (n.Token.Value)
         {
             case "+":
-                if (n.Left.TypeSymbol.Name == "string" && n.Right.TypeSymbol.Name == "string")
+                if (n.Left.TypeSymbol.Name != "string")
                 {
-                    EmitCall("System.String", "Concat", "String", "String");
+                    _builder.EmitOpCode(ILOpCode.Add);
                     break;
                 }
-
-                if (n.Left.TypeSymbol.Name == "string")
+                
+                if (n.Right.TypeSymbol.Name != "string")
                 {
-                    var tempName = "tmp" + _locals.Count;
-                    var varNode = new VarNode(new Token(TokenType.Id, tempName, 0, 0), true);
-                    var declNode = new VarDeclNode(varNode, null);
-                    declNode.SetType(n.Right.TypeSymbol);
-                    Visit(declNode);
-                    StoreLocal(tempName);
-                    _builder.EmitLoadAddress(_locals[tempName]);
-                    EmitCall(n.Right.TypeSymbol.GetNetFullTypeName(), "ToString");
-                    EmitCall("System.String", "Concat", "String", "String");
-                    break;
+                    if(n.Left is LiteralNode)
+                    {
+                        var tempName = "tmp" + _locals.Count;
+                        var varNode = new VarNode(new Token(TokenType.Id, tempName, 0, 0), true);
+                        var declNode = new VarDeclNode(varNode, null);
+                        declNode.SetType(n.Right.TypeSymbol);
+                        Visit(declNode);
+                        StoreLocal(tempName);
+                        _builder.EmitLoadAddress(_locals[tempName]);
+                    }
+                    
+                    EmitCall(n.Right.TypeSymbol, "ToString");
                 }
-                _builder.EmitOpCode(ILOpCode.Add);
+                
+                EmitCall(n.Left.TypeSymbol, "Concat", "String", "String");
                 break;
             case "-":
                 _builder.EmitOpCode(ILOpCode.Sub);
@@ -207,7 +213,7 @@ internal class MethodCompiler: INodeVisitor<object>
         switch (n.Token.Value.ToString())
         {
             case "print":
-                EmitCall("System.Console", "WriteLine", n.Operand.TypeSymbol.GetNetTypeName());
+                EmitCall(_predefinedTypes["System.Console"], "WriteLine", n.Operand.TypeSymbol.GetNetName());
                 break;
             case "-":
                 _builder.EmitOpCode(ILOpCode.Neg);
@@ -296,7 +302,7 @@ internal class MethodCompiler: INodeVisitor<object>
 
     public object VisitVarDeclNode(VarDeclNode n)
     {
-        var token = GetToken(ResolveNetType(n));
+        var token = GetToken(ResolveType(n));
         var definition = _builder.LocalSlotManager.AllocateSlot(token, LocalSlotConstraints.None);
         /*var definition = _builder.LocalSlotManager.DeclareLocal(
             token,
@@ -359,7 +365,11 @@ internal class MethodCompiler: INodeVisitor<object>
 
     public object VisitFuncDeclNode(FuncDeclNode n)
     {
-        _args.Add("this", 0);
+        if(!n.IsStatic)
+        {
+            _args.Add("this", 0);
+        }
+        
         foreach (var parameter in n.Parameters)
         {
             _args.Add((parameter as VarDeclNode).Variable.Name, _args.Count);
@@ -413,11 +423,12 @@ internal class MethodCompiler: INodeVisitor<object>
 
     public object VisitArrayInitializerNode(ArrayInitializerNode n)
     {
+        var arrayTypeSymbol = n.TypeSymbol as ZephyrArrayTypeSymbol;
+        var elementType = GetToken(ResolveType(arrayTypeSymbol.ElementType));
+        
         _builder.EmitIntConstant(n.ElementsCount);
         _builder.EmitOpCode(ILOpCode.Newarr);
-        var arrayTypeSymbol = n.TypeSymbol as Zephyr.SemanticAnalysis.Symbols.ArrayTypeSymbol;
-        var elementType = GetToken(ResolveNetType(arrayTypeSymbol.GetElementTypeFullName()));
-        _builder.EmitToken(elementType, null, DiagnosticBag.GetInstance());
+        EmitToken(elementType);
 
         if (n.ElementsCount > 0)
         {
@@ -439,42 +450,36 @@ internal class MethodCompiler: INodeVisitor<object>
         return n.Accept(this);
     }
 
-    private TypeSymbol ResolveNetType(Node n)
+    private TypeSymbol ResolveType(Node n)
     {
         var type = n.TypeSymbol;
         if(!type.IsArray)
         {
-            var typeName = type.GetNetFullTypeName();
-            return ResolveNetType(typeName);
+            return ResolveType(type);
         }
 
-        var arrayTypeSymbol = n.TypeSymbol as Zephyr.SemanticAnalysis.Symbols.ArrayTypeSymbol;
-        var elementType = ResolveNetType(arrayTypeSymbol.GetElementTypeFullName());
+        var arrayTypeSymbol = n.TypeSymbol as ZephyrArrayTypeSymbol;
+        var elementType = ResolveType(arrayTypeSymbol.ElementType);
         var arrayType = TypeWithAnnotations.Create(false, elementType);
         return ArrayTypeSymbol.CreateCSharpArray(_moduleBuilder.Compilation.Assembly, arrayType);
     }
 
-    private TypeSymbol ResolveNetType(string qualifiedClassName)
+    private TypeSymbol ResolveType(ZephyrTypeSymbol type)
     {
         return _moduleBuilder
             .Compilation
             .Assembly
-            .GetTypeByMetadataName(qualifiedClassName, true, true, out _) as TypeSymbol;
-    }
-    
-    private TypeSymbol ResolveType(string name)
-    {
-        return ResolveNetType(name);
+            .GetTypeByMetadataName(type.GetNetFullName(), true, true, out _) as TypeSymbol;
     }
 
-    private MethodSymbol ResolveNetMethod(string qualifiedClassName, string methodName, params string[] paramsTypes)
+    private MethodSymbol ResolveMethod(ZephyrTypeSymbol type, string methodName, params string[] paramsTypes)
     {
-        return ResolveNetType(qualifiedClassName)
+        return ResolveType(type)
             .GetMembers(methodName)
             .First(symbol =>
             {
                 var parameters = symbol.GetParameters();
-                return parameters.Length == paramsTypes.Length && parameters.Select(x => x.Type.Name).SequenceEqual(paramsTypes);
+                return parameters.Select(x => x.Type.Name).SequenceEqual(paramsTypes);
             }) as MethodSymbol;
     }
 
@@ -514,55 +519,39 @@ internal class MethodCompiler: INodeVisitor<object>
 
     private MethodSymbol ResolveMethod(FuncCallNode n)
     {
-        string className;
+        ZephyrTypeSymbol type;
         string methodName;
-        if (n.Callable is ClassSymbol classSymbol)
+        if (n.Callable is ClassSymbol)
         {
-            className = classSymbol.Name;
+            type = n.ReturnType;
             methodName = ".ctor";
         }
         else if (n.Callee is GetNode node)
         {
-            className = node.Obj.TypeSymbol.Name;
+            type = node.Obj.TypeSymbol;
             methodName = n.Name;
         }
         else
         {
-            className = "<global class>";
+            type = _predefinedTypes["<global class>"];
             methodName = n.Name;
         }
-        
-        var parameterTypes = n.Arguments.Select(x => x.TypeSymbol.GetNetTypeName());
-        var foundTypes = _moduleBuilder
-            .SourceModule
-            .GlobalNamespace
-            .GetMembers(className)
-            .OfType<NamedTypeSymbol>();
-        
-        if (!foundTypes.Any())
-        {
-            return ResolveNetMethod((n.Callee as GetNode).Obj.TypeSymbol.GetNetFullTypeName(), methodName, parameterTypes.ToArray());
-        }
-        
-        var symbol = foundTypes
-            .First()
-            .GetMembers(methodName)
-            .OfType<MethodSymbol>()
-            .First(x => x.GetParameters().Select(x1 => x1.Type.Name).SequenceEqual(parameterTypes));
 
-        return symbol;
+        var parameterTypes = n.Arguments.Select(x => x.TypeSymbol.GetNetName());
+
+        return ResolveMethod(type, methodName, parameterTypes.ToArray());
     }
 
-    private FieldSymbol ResolveField(string className, string fieldName)
+    private FieldSymbol ResolveField(ZephyrTypeSymbol type, string fieldName)
     {
-        var type = ResolveType(className);
-        return type.GetMembers(fieldName)[0] as FieldSymbol;
+        var netType = ResolveType(type);
+        return netType.GetMembers(fieldName)[0] as FieldSymbol;
     }
 
     private void SynthesizeConstructor()
     {
         _builder.EmitOpCode(ILOpCode.Ldarg_0);
-        EmitCall("System.Object", ".ctor");
+        EmitCall(_predefinedTypes["System.Object"], ".ctor");
         _builder.EmitRet(true);
     }
 
@@ -572,9 +561,9 @@ internal class MethodCompiler: INodeVisitor<object>
         EmitToken(GetToken(symbol));
     }
 
-    private void EmitCall(string qualifiedClassName, string methodName, params string[] argTypeNames)
+    private void EmitCall(ZephyrTypeSymbol type, string methodName, params string[] argTypeNames)
     {
-        var symbol = ResolveNetMethod(qualifiedClassName, methodName, argTypeNames);
+        var symbol = ResolveMethod(type, methodName, argTypeNames);
         EmitCall(symbol, argTypeNames.Length);
     }
 
@@ -602,7 +591,7 @@ internal class MethodCompiler: INodeVisitor<object>
     private void EmitFieldOpCode(ILOpCode opcode, GetNode n)
     {
         _builder.EmitOpCode(opcode);
-        EmitToken(GetToken(ResolveField(n.Obj.TypeSymbol.Name, n.Token.Value.ToString())));
+        EmitToken(GetToken(ResolveField(n.Obj.TypeSymbol, n.Token.Value.ToString())));
     }
 
     private void VisitWithStackGuard(Node node)
@@ -627,7 +616,7 @@ internal class MethodCompiler: INodeVisitor<object>
         }
     }
 
-    private void EmitStoreElement(Zephyr.SemanticAnalysis.Symbols.TypeSymbol symbol)
+    private void EmitStoreElement(ZephyrTypeSymbol symbol)
     {
         var typeCode = symbol.GetTypeCode();
         switch (typeCode)

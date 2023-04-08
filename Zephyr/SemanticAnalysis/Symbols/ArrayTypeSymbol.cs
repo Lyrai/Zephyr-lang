@@ -17,12 +17,12 @@ public class ArrayTypeSymbol: TypeSymbol
     
     public string GetElementTypeFullName()
     {
-        return ElementType.GetNetFullTypeName() ?? ElementType.Name;
+        return ElementType.GetNetFullName() ?? ElementType.Name;
     }
     
     public string GetElementTypeName()
     {
-        return ElementType.GetNetTypeName() ?? ElementType.Name;
+        return ElementType.GetNetName() ?? ElementType.Name;
     }
 
     public override Type? GetNetType()

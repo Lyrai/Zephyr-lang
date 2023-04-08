@@ -12,6 +12,7 @@ namespace Zephyr.SyntaxAnalysis.ASTNodes
         public string Name { get; }
         public string ReturnType { get; }
         public FuncSymbol Symbol { get; set; }
+        public bool IsStatic { get; private set; }
 
         public FuncDeclNode(Token token, List<Node> body, List<Node> parameters, string returnType)
         {
@@ -35,6 +36,11 @@ namespace Zephyr.SyntaxAnalysis.ASTNodes
         public bool IsEmpty()
         {
             return Body.Count == 1 && Body[0] is NoOpNode || Body.Count == 0;
+        }
+
+        public void SetStatic(bool isStatic)
+        {
+            IsStatic = isStatic;
         }
     }
 }
