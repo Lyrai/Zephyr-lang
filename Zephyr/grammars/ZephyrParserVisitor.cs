@@ -152,12 +152,6 @@ public interface IZephyrParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitEquality([NotNull] ZephyrParser.EqualityContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ZephyrParser.indexer"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitIndexer([NotNull] ZephyrParser.IndexerContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZephyrParser.arrayInitializer"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

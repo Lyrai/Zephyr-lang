@@ -20,5 +20,6 @@ namespace Zephyr
         T VisitReturnNode(ReturnNode n);
         T VisitNoOpNode(NoOpNode n);
         T VisitArrayInitializerNode(ArrayInitializerNode n);
+        T VisitIndexNode(IndexNode n);
     }
 }

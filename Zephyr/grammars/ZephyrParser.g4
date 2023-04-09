@@ -67,14 +67,14 @@ equality:
     | Left=equality Op=(PLUS | MINUS) Right=equality
     | Left=equality Op=(GREATER_EQUAL | GREATER | LESS_EQUAL | LESS) Right=equality
     | Left=equality Op=(EQUAL | NOT_EQUAL) Right=equality
+    | Expr=equality LBRACKET Index=equality RBRACKET
     | factor
 ;
 
-indexer: ID LBRACKET equality RBRACKET;
 arrayInitializer: LBRACKET Exprs+=equality (',' Exprs+=equality)* RBRACKET;
 arrayType: '[' ID ']';
 
 factor: Op=(MINUS | PLUS | NOT) factor | call;
 call: call ((':' funcArguments ';'?) | '!' | DOT ID) | primary;
-primary: literal | ID | indexer | compound | ifStmt | arrayInitializer;
+primary: literal | arrayInitializer | ID | compound | ifStmt;
 literal: StringLit=STRING_LITERAL | Int=INT | Float=FLOAT | True='true' | False='false';

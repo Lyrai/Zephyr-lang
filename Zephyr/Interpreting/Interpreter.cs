@@ -214,6 +214,11 @@ namespace Zephyr.Interpreting
             return new RuntimeValue(arr);
         }
 
+        public RuntimeValue VisitIndexNode(IndexNode n)
+        {
+            return None;
+        }
+
         public void ExecuteBlock(List<Node> body, Scope scope)
         {
             var enclosing = _currentScope;

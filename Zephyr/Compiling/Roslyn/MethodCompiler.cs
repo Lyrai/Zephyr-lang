@@ -425,17 +425,33 @@ internal class MethodCompiler: INodeVisitor<object>
         _builder.EmitIntConstant(n.ElementsCount);
         _builder.EmitOpCode(ILOpCode.Newarr);
         EmitToken(elementType);
+        var f = new[] { 1, 2 };
 
-        if (n.ElementsCount > 0)
+        if (n.ElementsCount <= 0)
+        {
+            return null!;
+        }
+
+        var elements = n.GetChildren();
+        for (var i = 0; i < n.ElementsCount; i++)
         {
             _builder.EmitOpCode(ILOpCode.Dup);
-            var elements = n.GetChildren();
-            for (var i = 0; i < n.ElementsCount; i++)
-            {
-                _builder.EmitIntConstant(i);
-                Visit(elements[i]);
-                EmitStoreElement(arrayTypeSymbol.ElementType);
-            }
+            _builder.EmitIntConstant(i);
+            Visit(elements[i]);
+            EmitStoreElement(arrayTypeSymbol.ElementType);
+        }
+
+        return null!;
+    }
+
+    public object VisitIndexNode(IndexNode n)
+    {
+        Visit(n.Expression);
+        Visit(n.Index);
+
+        if (!n.IsLhs)
+        {
+            EmitLoadElement((n.Expression.TypeSymbol as ZephyrArrayTypeSymbol).ElementType);
         }
 
         return null!;
@@ -628,6 +644,26 @@ internal class MethodCompiler: INodeVisitor<object>
                 break;
             default:
                 _builder.EmitOpCode(ILOpCode.Stelem_ref);
+                break;
+        }
+    }
+    
+    private void EmitLoadElement(ZephyrTypeSymbol symbol)
+    {
+        var typeCode = symbol.GetTypeCode();
+        switch (typeCode)
+        {
+            case PrimitiveTypeCode.Boolean:
+                _builder.EmitOpCode(ILOpCode.Ldelem_i1);
+                break;
+            case PrimitiveTypeCode.Int32:
+                _builder.EmitOpCode(ILOpCode.Ldelem_i4);
+                break;
+            case PrimitiveTypeCode.Float64:
+                _builder.EmitOpCode(ILOpCode.Ldelem_r8);
+                break;
+            default:
+                _builder.EmitOpCode(ILOpCode.Ldelem_ref);
                 break;
         }
     }

@@ -165,6 +165,14 @@ public class UsageAnalyzer: INodeVisitor<object>
         return null!;
     }
 
+    public object VisitIndexNode(IndexNode n)
+    {
+        Visit(n.Expression);
+        Visit(n.Index);
+
+        return null!;
+    }
+
     private object Visit(Node n)
     {
         return n.Accept(this);

@@ -231,16 +231,6 @@ public interface IZephyrParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitEquality([NotNull] ZephyrParser.EqualityContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ZephyrParser.indexer"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterIndexer([NotNull] ZephyrParser.IndexerContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="ZephyrParser.indexer"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitIndexer([NotNull] ZephyrParser.IndexerContext context);
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="ZephyrParser.arrayInitializer"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

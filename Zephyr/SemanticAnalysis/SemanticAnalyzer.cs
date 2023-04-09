@@ -590,6 +590,26 @@ namespace Zephyr.SemanticAnalysis
             return type;
         }
 
+        public object VisitIndexNode(IndexNode n)
+        {
+            var arrayType = Visit(n.Expression) as TypeSymbol;
+            if (arrayType is not ArrayTypeSymbol arrayTypeSymbol)
+            {
+                throw new SemanticException(n.Expression, $"Cannot index {arrayType.Name}");
+            }
+
+            var indexType = Visit(n.Index) as TypeSymbol;
+            if (indexType != _intSymbol)
+            {
+                throw new SemanticException(n.Index, $"Cannot index with {indexType.Name}");
+            }
+
+            var elementType = arrayTypeSymbol.ElementType;
+            n.SetType(elementType);
+
+            return elementType;
+        }
+
         private object Visit(Node n)
         {
             return n.Accept(this);

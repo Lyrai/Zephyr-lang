@@ -180,7 +180,15 @@ namespace Zephyr
             
             if (context.Inner is not null)
                 return Visit(context.Inner);
-            
+
+            if (context.Expr is not null)
+            {
+                var expression = Visit(context.Expr);
+                var index = Visit(context.Index);
+
+                return new IndexNode(expression, index);
+            }
+
             var op = context.Op;
             var token = op.Text switch
             {
@@ -262,11 +270,6 @@ namespace Zephyr
             if (context.arrayInitializer() is not null)
             {
                 return Visit(context.arrayInitializer());
-            }
-
-            if (context.indexer() is not null)
-            {
-                return Visit(context.indexer());
             }
 
             var id = context.ID().Symbol;
