@@ -9,7 +9,7 @@ namespace Zephyr.SyntaxAnalysis.ASTNodes
     public class FuncCallNode : Node, IExpression
     {
         public List<Node> Arguments { get; }
-        public string Name { get; }
+        public string Name { get; private set; }
         public ICallable Callable { get; set; }
         public Node Callee { get; set; }
         public bool IsStatement { get; private set; } = false;

@@ -172,8 +172,27 @@ namespace Zephyr.SemanticAnalysis
                 case GetNode node:
                     if (n.Name == "init")
                         throw new SemanticException(n, "Cannot call constructor directly");
+
+                    try
+                    {
+                        type = Visit(node.Obj) as TypeSymbol;
+                    }
+                    catch (UnknownIdentifierException)
+                    {
+                        var netConstructorType = GetNetType(GetQualifiedName(node));
+                        if (netConstructorType is null)
+                        {
+                            throw;
+                        }
+
+                        var typeName = netConstructorType.FullName;
+                        type = new TypeSymbol(typeName);
+                        _table.Add(typeName, netConstructorType);
+                        n.SetType(type);
+                        n.Callable = new ClassSymbol(typeName);
+                        return type;
+                    }
                     
-                    type = Visit(node.Obj) as TypeSymbol;
                     var sym = _table.Find<ClassSymbol>(type.Name);
                     if (sym is not null)
                     {                    
@@ -215,7 +234,7 @@ namespace Zephyr.SemanticAnalysis
                     
                     if (!methodInfos.Any())
                     {
-                        throw new SemanticException(n, "Cannot find method");
+                        throw new SemanticException(n, $"Cannot find method {n.Name}");
                     }
 
                     var method = methodInfos.First(
@@ -376,16 +395,7 @@ namespace Zephyr.SemanticAnalysis
             }
             catch (UnknownIdentifierException)
             {
-                var typeName = n.Token.Value.ToString();
-                var oldNode = n;
-                while (n.Obj is GetNode node)
-                {
-                    typeName = node.Token.Value + "." + typeName;
-                    n = node;
-                }
-
-                typeName = (n.Obj as VarNode).Name + "." + typeName;
-                n = oldNode;
+                var typeName = GetQualifiedName(n);
                 
                 if (GetNetType(typeName) is null)
                 {
@@ -656,6 +666,18 @@ namespace Zephyr.SemanticAnalysis
                 .GetAssemblies()
                 .SelectMany(asm => asm.ExportedTypes)
                 .FirstOrDefault(t => t.FullName == name);
+        }
+
+        private string GetQualifiedName(GetNode n)
+        {
+            var typeName = n.Token.Value.ToString();
+            while (n.Obj is GetNode node)
+            {
+                typeName = node.Token.Value + "." + typeName;
+                n = node;
+            }
+
+            return (n.Obj as VarNode).Name + "." + typeName;
         }
 
         private bool IsArrayType(string type)

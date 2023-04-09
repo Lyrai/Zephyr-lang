@@ -19,21 +19,28 @@ namespace Zephyr.Compiling.Roslyn;
 internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<MemberDeclarationSyntax>
 {
     private readonly Dictionary<string, Node> _functions = new();
-    private readonly Stack<string> _emitContext = new();
 
     public RoslynDeclarationsCompiler(string assemblyName)
     {
 #if NET6_0
         _compilation = CSharpCompilation.Create(assemblyName).WithReferences(
             MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-            MetadataReference.CreateFromFile(Assembly.Load("System.Console").Location)
+            MetadataReference.CreateFromFile(Assembly.Load("System.Console").Location),
+            MetadataReference.CreateFromFile(Assembly.Load("System.Runtime").Location)
         );
 #else
         _compilation = CSharpCompilation.Create(assemblyName).WithReferences(
-            MetadataReference.CreateFromFile(typeof(object).Assembly.Location)
+            MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+            MetadataReference.CreateFromFile(GetAssembly("System").Location)
         );
 #endif
+        _compilation = _compilation.WithOptions(new CSharpCompilationOptions(
+            outputKind: OutputKind.ConsoleApplication,
+            optimizationLevel: OptimizationLevel.Release,
+            metadataImportOptions: MetadataImportOptions.All));
     }
+
+    private readonly Stack<string> _emitContext = new();
 
     public ImmutableDictionary<string, Node> Compile(Node n)
     {
@@ -201,4 +208,14 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<MemberDeclarationS
     {
         return new SyntaxTokenList(keywords.Select(SyntaxFactory.Token));
     }
+    
+#if NET472
+    private Assembly GetAssembly(string name)
+    {
+        return AppDomain
+            .CurrentDomain
+            .GetAssemblies()
+            .FirstOrDefault(asm => asm.GetName().Name == name);
+    }
+#endif
 }

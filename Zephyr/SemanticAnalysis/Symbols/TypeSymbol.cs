@@ -51,6 +51,8 @@ namespace Zephyr.SemanticAnalysis.Symbols
                 case "void":
                     Enum.TryParse(GetNetName(), out PrimitiveTypeCode res);
                     return res;
+                case "long":
+                    return PrimitiveTypeCode.Int64;
                 case "double":
                     return PrimitiveTypeCode.Float64;
                 case "bool":
@@ -67,7 +69,7 @@ namespace Zephyr.SemanticAnalysis.Symbols
 
         public bool IsValueType()
         {
-            return Name is "int" or "double" or "bool";
+            return Name is "int" or "double" or "bool" or "long";
         }
 
         public virtual Type? GetNetType()
@@ -79,6 +81,7 @@ namespace Zephyr.SemanticAnalysis.Symbols
                 "bool" => typeof(bool),
                 "string" => typeof(string),
                 "void" => typeof(void),
+                "long" => typeof(long),
                 _ => null
             };
         }

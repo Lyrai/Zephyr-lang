@@ -59,6 +59,7 @@ namespace Zephyr.SemanticAnalysis.Symbols
             Add("string", new BuiltInSymbol("string"));
             Add("void", new BuiltInSymbol("void"));
             Add("function", new BuiltInSymbol("function"));
+            Add("long", new BuiltInSymbol("long"));
             
             var clockFunction = new NativeFunction("clock", (_, _) => DateTime.Now.ToString(CultureInfo.InvariantCulture))
             {
@@ -101,6 +102,7 @@ namespace Zephyr.SemanticAnalysis.Symbols
                 "Boolean" => "bool",
                 "Double" => "double",
                 "Int32" => "int",
+                "Int64" => "long",
                 "String" => "string",
                 _ => name
             };

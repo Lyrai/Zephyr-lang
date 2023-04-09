@@ -15,6 +15,8 @@ class Test
 end
 
 fn main!
+    let sw = System.Diagnostics.Stopwatch!
+    sw.Start!
     let a = {
         print "Hello from block"
         "This should be dropped"
@@ -41,4 +43,6 @@ fn main!
 
     System.Console.WriteLine: 6
     print a
+    sw.Stop!
+    print "Elapsed: " + sw.get_ElapsedMilliseconds!
 end

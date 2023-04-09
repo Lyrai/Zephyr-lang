@@ -569,7 +569,8 @@ internal class MethodCompiler: INodeVisitor<object>
 
     private void EmitCall(MethodSymbol symbol, int argCount)
     {
-        _builder.EmitOpCode(ILOpCode.Call, GetStackAdjustment(symbol, argCount));
+        var opcode = symbol.IsVirtual || symbol.IsOverride || symbol.IsAbstract ? ILOpCode.Callvirt : ILOpCode.Call;
+        _builder.EmitOpCode(opcode, GetStackAdjustment(symbol, argCount));
         EmitToken(GetToken(symbol));
     }
 
