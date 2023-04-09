@@ -60,6 +60,7 @@ namespace Zephyr.SemanticAnalysis.Symbols
             Add("void", new BuiltInSymbol("void"));
             Add("function", new BuiltInSymbol("function"));
             Add("long", new BuiltInSymbol("long"));
+            Add("object", new BuiltInSymbol("object"));
             
             var clockFunction = new NativeFunction("clock", (_, _) => DateTime.Now.ToString(CultureInfo.InvariantCulture))
             {
@@ -104,21 +105,22 @@ namespace Zephyr.SemanticAnalysis.Symbols
                 "Int32" => "int",
                 "Int64" => "long",
                 "String" => "string",
+                "Object" => "object",
                 _ => name
             };
 
-            return Find<TypeSymbol>(nativeName);
+            return Find<TypeSymbol>(nativeName)/* ?? () => {}*/;
         }
 
-        public TypeSymbol GetArrayType(TypeSymbol elemType)
+        public ArrayTypeSymbol GetArrayType(TypeSymbol elemType)
         {
             var name = "[" + elemType.Name + "]";
             return GetArrayType(name, elemType.Name);
         }
 
-        public TypeSymbol GetArrayType(string arrayType, string? elementType = null)
+        public ArrayTypeSymbol GetArrayType(string arrayType, string? elementType = null)
         {
-            var symbol = Find<TypeSymbol>(arrayType);
+            var symbol = Find<ArrayTypeSymbol>(arrayType);
             if (symbol is not null)
             {
                 return symbol;

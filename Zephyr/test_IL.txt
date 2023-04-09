@@ -14,6 +14,10 @@ class Test
     end
 end
 
+fn at: arr: [int], idx: int -> int
+    return arr[idx]
+end
+
 fn main!
     let sw = System.Diagnostics.Stopwatch!
     sw.Start!
@@ -22,15 +26,21 @@ fn main!
         "This should be dropped"
         5
     }
+    let nonGeneric = System.Collections.ArrayList!
+    nonGeneric.Add: 5555
+    print nonGeneric.get_Item: 0
+    
 	
     print a.ToString!
     let g = "asd"
     let arr: [int] = [1, 2]
-    print arr[1]
+    print arr.at: 1
+    arr[1] = 4
+    print arr.at: 1
     print System.String.Concat: "asd", "fgh"
     let ff = "test"
     print ff.Contains: "es"
-    print test: "asd"
+    print "asd".test!
 
     let b = Test!
     let d = "asd" + 5

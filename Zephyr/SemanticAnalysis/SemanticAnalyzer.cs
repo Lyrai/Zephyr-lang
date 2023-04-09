@@ -212,6 +212,7 @@ namespace Zephyr.SemanticAnalysis
                         n.Callable = funcSymbol;
                         n.Callee = new VarNode(n.Callee.Token, false);
                         n.Arguments.Insert(0, node.Obj);
+                        n.SetType(n.Callable.ReturnType);
 
                         return n.Callable.ReturnType;
                     }
@@ -241,7 +242,8 @@ namespace Zephyr.SemanticAnalysis
                         method => method
                             .GetParameters()
                             .Select(param => _table.FindByNetName(param.ParameterType.Name))
-                            .SequenceEqual(arguments)
+                            .Zip(arguments, (param, arg) => (param, arg))
+                            .All(pair => CanCast(pair.arg, pair.param))
                     );
                     var netMethodType = _table.FindByNetName(method.ReturnParameter.ParameterType.Name);
                     n.SetType(netMethodType);
@@ -518,7 +520,7 @@ namespace Zephyr.SemanticAnalysis
                     return right;
                 }
                 
-                if (n.Left is not VarNode && n.Left is not VarDeclNode && n.Left is not GetNode)
+                if (n.Left is not VarNode && n.Left is not VarDeclNode && n.Left is not GetNode && n.Left is not IndexNode)
                     throw new SemanticException(n.Left, $"Cannot assign to non-variable {n.Left.Token.Value}");
 
                 if (CanCast(right, left) == false)
@@ -605,7 +607,14 @@ namespace Zephyr.SemanticAnalysis
             var arrayType = Visit(n.Expression) as TypeSymbol;
             if (arrayType is not ArrayTypeSymbol arrayTypeSymbol)
             {
-                throw new SemanticException(n.Expression, $"Cannot index {arrayType.Name}");
+                if(GetNetType(arrayType.GetNetFullName()).GetMember("Item")[0] is not PropertyInfo info)
+                {
+                    throw new SemanticException(n.Expression, $"Cannot index {arrayType.Name}");
+                }
+
+                var elemType = _table.FindByNetName(info.GetMethod.ReturnType.Name);
+                n.Expression.SetType(elemType);
+                arrayTypeSymbol = _table.GetArrayType(elemType);
             }
 
             var indexType = Visit(n.Index) as TypeSymbol;
@@ -638,6 +647,8 @@ namespace Zephyr.SemanticAnalysis
             if (from == _voidSymbol || to == _voidSymbol)
                 return false;
             if (from == _stringSymbol && to == _stringSymbol)
+                return true;
+            if (to == _table.Find<TypeSymbol>("object"))
                 return true;
 
             return from == to || from == _intSymbol && to == _doubleSymbol || IsParent(to, from);

@@ -300,6 +300,18 @@ public partial class ZephyrParserBaseListener : IZephyrParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitArrayType([NotNull] ZephyrParser.ArrayTypeContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="ZephyrParser.type"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterType([NotNull] ZephyrParser.TypeContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ZephyrParser.type"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitType([NotNull] ZephyrParser.TypeContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="ZephyrParser.factor"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>

@@ -57,9 +57,9 @@ namespace Zephyr.SemanticAnalysis.Symbols
                     return PrimitiveTypeCode.Float64;
                 case "bool":
                     return PrimitiveTypeCode.Boolean;
+                default:
+                    return PrimitiveTypeCode.NotPrimitive;
             }
-
-            throw new InvalidOperationException($"Cannot convert non-primitive type {Name}");
         }
 
         public string GetNetFullName()
@@ -82,6 +82,7 @@ namespace Zephyr.SemanticAnalysis.Symbols
                 "string" => typeof(string),
                 "void" => typeof(void),
                 "long" => typeof(long),
+                "object" => typeof(object),
                 _ => null
             };
         }

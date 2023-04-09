@@ -26,7 +26,7 @@ namespace Zephyr
             if (context.funcParameters() is not null)
                 parameters = GetBody(context.funcParameters());
             
-            var type = context.Type?.Text ?? "void";
+            var type = context.Type?.GetText() ?? "void";
             var body = GetBody(context.Body);
 
             return new FuncDeclNode(idToken, body, parameters, type);
@@ -38,13 +38,13 @@ namespace Zephyr
             TypeNode typeNode = null;
             if(context.Type is not null)
             {
-                var typeToken = new Token(TokenType.Id, context.Type.Text, context.Type.Column, context.Type.Line);
-                typeNode = new TypeNode(typeToken);
-            }
-            
-            if(context.ArrayType is not null)
-            {
-                var typeToken = new Token(TokenType.Id, context.ArrayType.GetText(), context.ArrayType.ID().Symbol.Column, context.ArrayType.ID().Symbol.Line);
+                var token = context.Type.ID()?.Symbol ?? context.Type.arrayType().ID().Symbol;
+                var typeToken = new Token(
+                    TokenType.Id, 
+                    context.Type.GetText(), 
+                    token.Column, 
+                    token.Column
+                    );
                 typeNode = new TypeNode(typeToken);
             }
 
@@ -60,15 +60,18 @@ namespace Zephyr
 
         public override Node VisitTypedVarDecl(ZephyrParser.TypedVarDeclContext context)
         {
-            var idToken = new Token(TokenType.Id, 
+            var idToken = new Token(
+                TokenType.Id, 
                 context.Name.Text, 
                 context.Name.Column,
                 context.Name.Line);
-            
-            var typeToken = new Token(TokenType.Id, 
-                context.Type.Text, 
-                context.Type.Column,
-                context.Type.Line);
+
+            var token = context.Type.ID()?.Symbol ?? context.Type.arrayType().ID().Symbol;
+            var typeToken = new Token(
+                TokenType.Id, 
+                context.Type.GetText(), 
+                token.Column,
+                token.Column);
             
             return new VarDeclNode(new VarNode(idToken, false),
                 new TypeNode(typeToken));
