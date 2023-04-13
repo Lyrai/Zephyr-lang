@@ -120,6 +120,12 @@ namespace Zephyr
                 Environment.Exit(1);
             }
 
+            if (!File.Exists(options["input"]))
+            {
+                Console.WriteLine($"Cannot access {options["input"]}");
+                Environment.Exit(1);
+            }
+
             if (!options.ContainsKey("output"))
             {
                 options["output"] = Path.ChangeExtension(options["input"], "exe");
