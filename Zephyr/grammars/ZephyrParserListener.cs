@@ -91,6 +91,36 @@ public interface IZephyrParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitTypedVarDecl([NotNull] ZephyrParser.TypedVarDeclContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="ZephyrParser.optionallyTypedVarDecl"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterOptionallyTypedVarDecl([NotNull] ZephyrParser.OptionallyTypedVarDeclContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ZephyrParser.optionallyTypedVarDecl"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitOptionallyTypedVarDecl([NotNull] ZephyrParser.OptionallyTypedVarDeclContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ZephyrParser.useStmt"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterUseStmt([NotNull] ZephyrParser.UseStmtContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ZephyrParser.useStmt"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitUseStmt([NotNull] ZephyrParser.UseStmtContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ZephyrParser.namespace"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterNamespace([NotNull] ZephyrParser.NamespaceContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ZephyrParser.namespace"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitNamespace([NotNull] ZephyrParser.NamespaceContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="ZephyrParser.classDecl"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -250,6 +280,16 @@ public interface IZephyrParserListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitArrayType([NotNull] ZephyrParser.ArrayTypeContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ZephyrParser.lambda"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterLambda([NotNull] ZephyrParser.LambdaContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ZephyrParser.lambda"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitLambda([NotNull] ZephyrParser.LambdaContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ZephyrParser.type"/>.
 	/// </summary>

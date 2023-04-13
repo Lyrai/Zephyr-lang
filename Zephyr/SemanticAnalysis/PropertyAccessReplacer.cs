@@ -179,6 +179,11 @@ namespace Zephyr.SemanticAnalysis
             return null;
         }
 
+        public object VisitUseNode(UseNode n)
+        {
+            return null!;
+        }
+
         private void Visit(Node n)
         {
             n.Accept(this);

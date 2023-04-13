@@ -53,7 +53,7 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<MemberDeclarationS
         ClassDeclarationSyntax globalClass = null;
         var compilationUnit = SyntaxFactory.CompilationUnit();
         
-        foreach (var child in node.GetChildren())
+        foreach (var child in node.GetChildren().Where(node => node is not UseNode))
         {
             if (child is ClassNode)
             {
@@ -204,6 +204,11 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<MemberDeclarationS
         return SyntaxFactory
             .FieldDeclaration(SyntaxFactory.VariableDeclaration(SyntaxFactory.ParseTypeName(n.TypeSymbol.Name), syntaxList))
             .WithModifiers(GetKeywords(SyntaxKind.PublicKeyword));
+    }
+
+    public override MemberDeclarationSyntax VisitUseNode(UseNode n)
+    {
+        return null;
     }
 
     private SyntaxTokenList GetKeywords(params SyntaxKind[] keywords)

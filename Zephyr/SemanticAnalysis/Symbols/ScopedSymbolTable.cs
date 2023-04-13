@@ -30,6 +30,8 @@ namespace Zephyr.SemanticAnalysis.Symbols
             ["<global class>"] = new TypeSymbol("<global class>"),
         };
 
+        private List<string> _uses = new();
+
         public ScopedSymbolTable(ScopeType type, ScopedSymbolTable parent = null)
         {
             _table = new();
@@ -99,17 +101,34 @@ namespace Zephyr.SemanticAnalysis.Symbols
         {
             var nativeName = name switch
             {
-                "Void" => "void",
-                "Boolean" => "bool",
-                "Double" => "double",
-                "Int32" => "int",
-                "Int64" => "long",
-                "String" => "string",
-                "Object" => "object",
-                _ => name
+                "Void" or "System.Void" => "void",
+                "Boolean" or "System.Boolean" => "bool",
+                "Double" or "System.Double" => "double",
+                "Int32" or "System.Int32" => "int",
+                "Int64" or "System.Int64" => "long",
+                "String" or "System.String" => "string",
+                "Object" or "System.Object" => "object",
+                _ => null
             };
 
-            return Find<TypeSymbol>(nativeName)/* ?? () => {}*/;
+            if (nativeName is null)
+            {
+                var netType = GetNetType(name);
+                if (netType is not null)
+                {
+                    return AddNetType(netType);
+                }
+                foreach (var use in _uses)
+                {
+                    netType = GetNetType(use + "." + name);
+                    if (netType is not null)
+                    {
+                        return AddNetType(netType);
+                    }
+                }
+            }
+
+            return Find<TypeSymbol>(nativeName) ?? Find<TypeSymbol>(name) ?? Parent?.FindByNetName(name);
         }
 
         public ArrayTypeSymbol GetArrayType(TypeSymbol elemType)
@@ -131,10 +150,24 @@ namespace Zephyr.SemanticAnalysis.Symbols
             Add(arrayType, symbol);
             return symbol;
         }
+        
+        public Type GetNetType(string name)
+        {
+            return AppDomain
+                .CurrentDomain
+                .GetAssemblies()
+                .SelectMany(asm => asm.ExportedTypes)
+                .FirstOrDefault(t => t.FullName == name);
+        }
 
         public void Add(string id, object symbol)
         {
             _table.Add(new KeyValuePair<string, object>(id, symbol));
+        }
+
+        public void AddUse(string @namespace)
+        {
+            _uses.Add(@namespace);
         }
 
         public ICallable FindFunc(string id, List<TypeSymbol> parameters)
@@ -254,6 +287,14 @@ namespace Zephyr.SemanticAnalysis.Symbols
         public void Dispose()
         {
             _position = -1;
+        }
+
+        private TypeSymbol AddNetType(Type netType)
+        {
+            var symbol = new TypeSymbol(netType.FullName);
+            Add(netType.FullName, symbol);
+            Add(netType.Name, new ClassSymbol(netType.Name));
+            return symbol;
         }
     }
 }

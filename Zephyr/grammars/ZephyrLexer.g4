@@ -17,6 +17,7 @@ FN: 'fn';
 LET: 'let';
 TRUE: 'true';
 FALSE: 'false';
+USE: 'use';
 ID: [a-zA-Z_][1-9a-zA-Z_]*;
 ARROW: '->';
 SEMICOLON: ';';
@@ -44,6 +45,7 @@ INT: [0-9]+;
 FLOAT: [0-9]+ DOT [0-9]+;
 LBRACKET: '[';
 RBRACKET: ']';
+PIPE: '|';
 
 mode StringLiteral;
 CLOSING_QUOTE: '"' -> type(STRING_LITERAL), mode(DEFAULT_MODE);

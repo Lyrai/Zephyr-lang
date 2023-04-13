@@ -68,6 +68,24 @@ public interface IZephyrParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitTypedVarDecl([NotNull] ZephyrParser.TypedVarDeclContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="ZephyrParser.optionallyTypedVarDecl"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitOptionallyTypedVarDecl([NotNull] ZephyrParser.OptionallyTypedVarDeclContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ZephyrParser.useStmt"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitUseStmt([NotNull] ZephyrParser.UseStmtContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ZephyrParser.namespace"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitNamespace([NotNull] ZephyrParser.NamespaceContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZephyrParser.classDecl"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -163,6 +181,12 @@ public interface IZephyrParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitArrayType([NotNull] ZephyrParser.ArrayTypeContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ZephyrParser.lambda"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitLambda([NotNull] ZephyrParser.LambdaContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="ZephyrParser.type"/>.
 	/// </summary>

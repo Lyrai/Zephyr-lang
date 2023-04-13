@@ -13,6 +13,7 @@ statement:
     | whileStmt
     | forStmt
     | assignExpr
+    | useStmt
 );
 
 decl: 
@@ -28,7 +29,10 @@ classBodyDecl:
     | classDecl
 );
 
-typedVarDecl: Name=ID ':' Type=type;
+typedVarDecl: Name=ID /*':'*/ Type=type;
+optionallyTypedVarDecl: Name=ID (Type=type)?;
+useStmt: USE Namespace=namespace;
+namespace: ID ('.' ID)*;
 
 classDecl: 'class' Name=ID ('<' Base=ID)? classBody 'end';
 classBody: (classBodyDecl)*;
@@ -55,7 +59,7 @@ funcDecl: 'fn' Name=ID (':' funcParameters | '!') ('->' Type=type)?
 funcParameters: Parameters+=typedVarDecl (COMMA Paramters+=typedVarDecl)*;
 funcArguments: Args+=equality (',' Args+=equality)*;
 
-varDecl: 'let' Name=ID (':' Type=type)? (ASSIGN assignExpr)?;
+varDecl: 'let' /*Name=ID (':' Type=type)?*/ optionallyTypedVarDecl (ASSIGN assignExpr)?;
 
 //propertyDecl: 'property' typedVarDecl (('get' statementList END) ('set' statementList END)? | ('set' statementList END) ('get' statementList END)?) ;
 
@@ -73,10 +77,11 @@ equality:
 
 arrayInitializer: LBRACKET Exprs+=equality (',' Exprs+=equality)* RBRACKET;
 arrayType: '[' ID ']';
+lambda: '[' Params+=optionallyTypedVarDecl (',' Params+=optionallyTypedVarDecl)* '|' statement ']';
 
 type: ID | arrayType;
 
 factor: Op=(MINUS | PLUS | NOT) factor | call;
 call: call ((':' funcArguments ';'?) | '!' | DOT ID) | primary;
-primary: literal | arrayInitializer | ID | compound | ifStmt;
+primary: literal | arrayInitializer | ID | compound | ifStmt | lambda;
 literal: StringLit=STRING_LITERAL | Int=INT | Float=FLOAT | True='true' | False='false';

@@ -59,7 +59,7 @@ namespace Zephyr.SemanticAnalysis
                 }
                 else
                 {
-                    typeSymbol = _table.Find<TypeSymbol>(type);
+                    typeSymbol = _table.Find<TypeSymbol>(type) ?? _table.FindByNetName(type);
 
                     if (typeSymbol == _voidSymbol)
                         throw new SemanticException(n, "Variable cannot be of type void");
@@ -142,14 +142,23 @@ namespace Zephyr.SemanticAnalysis
             ICallable symbol;
             switch (n.Callee)
             {
-                case VarNode:
-                    var classSymbol = _table.Find<ClassSymbol>((string) n.Callee.Token.Value);
+                case VarNode varNode:
+                    var classSymbol = _table.Find<ClassSymbol>((string) varNode.Token.Value);
                     if (classSymbol is not null)
                     {
                         EvaluateConstructor(classSymbol, arguments, n);
 
                         n.Callable = classSymbol;
-                        return _table.Find<TypeSymbol>((string) n.Callee.Token.Value);
+                        return _table.FindByNetName(classSymbol.ReturnType.GetNetName());
+                    }
+
+                    var netClass = _table.FindByNetName(varNode.Name);
+                    if (netClass is not null)
+                    {
+                        classSymbol = _table.Find<ClassSymbol>(varNode.Name);
+                        n.SetType(netClass);
+                        n.Callable = classSymbol;
+                        return netClass;
                     }
 
                     symbol = _table.FindFunc((string) n.Callee.Token.Value, arguments);
@@ -159,7 +168,7 @@ namespace Zephyr.SemanticAnalysis
 
                         if (s is not null && s.Type == _table.Find<TypeSymbol>("function"))
                             return _table.Find<TypeSymbol>("function");
-                        
+
                         throw new SemanticException(n, $"Cannot call non-function {n.Name}");
                     }
                     break;
@@ -179,7 +188,7 @@ namespace Zephyr.SemanticAnalysis
                     }
                     catch (UnknownIdentifierException)
                     {
-                        var netConstructorType = GetNetType(GetQualifiedName(node));
+                        var netConstructorType = _table.GetNetType(GetQualifiedName(node));
                         if (netConstructorType is null)
                         {
                             throw;
@@ -229,7 +238,21 @@ namespace Zephyr.SemanticAnalysis
                     }
 
                     arguments.RemoveAt(0);
-                    var netType = GetNetType((n.Callee as GetNode).Obj.TypeSymbol.GetNetFullName());
+                    Type netType = null;
+                    if(node.Obj is VarNode vs && _table.Find<VarSymbol>(vs.Name) is not null)
+                    {
+                        netType = _table.GetNetType(node.Obj.TypeSymbol.GetNetFullName());
+                    }
+                    else
+                    {
+                        netType = _table.GetNetType(GetQualifiedName(node.Obj));
+                    }
+
+                    if (netType is null)
+                    {
+                        throw new SemanticException(n, $"Cannot find method {n.Name}");
+                    }
+                    
                     var members = netType.GetMember(n.Name).Cast<MethodInfo>();
                     var methodInfos = members as MethodInfo[] ?? members.ToArray();
                     
@@ -345,6 +368,13 @@ namespace Zephyr.SemanticAnalysis
 
             if (Type.GetType(n.Name) is not null)
                 return new TypeSymbol(n.Name);
+
+            var netType = _table.FindByNetName(name);
+            if (netType is not null)
+            {
+                n.SetType(netType);
+                return netType;
+            }
                 
             throw new UnknownIdentifierException(n);
         }
@@ -399,7 +429,7 @@ namespace Zephyr.SemanticAnalysis
             {
                 var typeName = GetQualifiedName(n);
                 
-                if (GetNetType(typeName) is null)
+                if (_table.GetNetType(typeName) is null)
                 {
                     throw;
                 }
@@ -607,7 +637,7 @@ namespace Zephyr.SemanticAnalysis
             var arrayType = Visit(n.Expression) as TypeSymbol;
             if (arrayType is not ArrayTypeSymbol arrayTypeSymbol)
             {
-                if(GetNetType(arrayType.GetNetFullName()).GetMember("Item")[0] is not PropertyInfo info)
+                if(_table.GetNetType(arrayType.GetNetFullName()).GetMember("Item")[0] is not PropertyInfo info)
                 {
                     throw new SemanticException(n.Expression, $"Cannot index {arrayType.Name}");
                 }
@@ -627,6 +657,12 @@ namespace Zephyr.SemanticAnalysis
             n.SetType(elementType);
 
             return elementType;
+        }
+
+        public object VisitUseNode(UseNode n)
+        {
+            _table.AddUse(n.Namespace);
+            return null;
         }
 
         private object Visit(Node n)
@@ -670,25 +706,25 @@ namespace Zephyr.SemanticAnalysis
             return false;
         }
 
-        private Type GetNetType(string name)
+        private string GetQualifiedName(Node n)
         {
-            return AppDomain
-                .CurrentDomain
-                .GetAssemblies()
-                .SelectMany(asm => asm.ExportedTypes)
-                .FirstOrDefault(t => t.FullName == name);
-        }
-
-        private string GetQualifiedName(GetNode n)
-        {
-            var typeName = n.Token.Value.ToString();
-            while (n.Obj is GetNode node)
+            if(n is GetNode getNode)
             {
-                typeName = node.Token.Value + "." + typeName;
-                n = node;
+                var typeName = n.Token.Value.ToString();
+                while (getNode.Obj is GetNode node)
+                {
+                    typeName = node.Token.Value + "." + typeName;
+                    n = node;
+                }
+
+                return (getNode.Obj as VarNode).Name + "." + typeName;
+            }
+            else if (n is VarNode varNode)
+            {
+                return _table.FindByNetName(varNode.Name).GetNetFullName();
             }
 
-            return (n.Obj as VarNode).Name + "." + typeName;
+            return null;
         }
 
         private bool IsArrayType(string type)

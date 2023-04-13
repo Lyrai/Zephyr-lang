@@ -34,14 +34,15 @@ namespace Zephyr
 
         public override Node VisitVarDecl(ZephyrParser.VarDeclContext context)
         {
-            var idToken = new Token(TokenType.Id, context.Name.Text, context.Name.Column, context.Name.Line);
+            var decl = context.optionallyTypedVarDecl();
+            var idToken = new Token(TokenType.Id, decl.Name.Text, decl.Name.Column, decl.Name.Line);
             TypeNode typeNode = null;
-            if(context.Type is not null)
+            if(decl.Type is not null)
             {
-                var token = context.Type.ID()?.Symbol ?? context.Type.arrayType().ID().Symbol;
+                var token = decl.Type.ID()?.Symbol ?? decl.Type.arrayType().ID().Symbol;
                 var typeToken = new Token(
                     TokenType.Id, 
-                    context.Type.GetText(), 
+                    decl.Type.GetText(), 
                     token.Column, 
                     token.Column
                     );
@@ -89,6 +90,31 @@ namespace Zephyr
 
             var body = GetBody(context.classBody());
             return new ClassNode(idToken, parentNode, body);
+        }
+
+        public override Node VisitOptionallyTypedVarDecl(ZephyrParser.OptionallyTypedVarDeclContext context)
+        {
+            var varToken = new Token(TokenType.Id, context.Name.Text, context.Name.Column, context.Name.Line);
+            TypeNode typeNode = null;
+            if (context.Type is null)
+            {
+                return new VarDeclNode(new VarNode(varToken, true), typeNode);
+            }
+
+            var token = context.Type.ID()?.Symbol ?? context.Type.arrayType().ID().Symbol;
+            var typeToken = new Token(
+                TokenType.Id,
+                context.Type.GetText(),
+                token.Column,
+                token.Column);
+            typeNode = new TypeNode(typeToken);
+
+            return new VarDeclNode(new VarNode(varToken, true), typeNode);
+        }
+
+        public override Node VisitUseStmt(ZephyrParser.UseStmtContext context)
+        {
+            return new UseNode(context.@namespace().GetText());
         }
 
         public override Node VisitPrintStmt(ZephyrParser.PrintStmtContext context)

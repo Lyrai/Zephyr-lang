@@ -108,6 +108,42 @@ public partial class ZephyrParserBaseListener : IZephyrParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitTypedVarDecl([NotNull] ZephyrParser.TypedVarDeclContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="ZephyrParser.optionallyTypedVarDecl"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterOptionallyTypedVarDecl([NotNull] ZephyrParser.OptionallyTypedVarDeclContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ZephyrParser.optionallyTypedVarDecl"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitOptionallyTypedVarDecl([NotNull] ZephyrParser.OptionallyTypedVarDeclContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ZephyrParser.useStmt"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterUseStmt([NotNull] ZephyrParser.UseStmtContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ZephyrParser.useStmt"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitUseStmt([NotNull] ZephyrParser.UseStmtContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ZephyrParser.namespace"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterNamespace([NotNull] ZephyrParser.NamespaceContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ZephyrParser.namespace"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitNamespace([NotNull] ZephyrParser.NamespaceContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="ZephyrParser.classDecl"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -299,6 +335,18 @@ public partial class ZephyrParserBaseListener : IZephyrParserListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitArrayType([NotNull] ZephyrParser.ArrayTypeContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ZephyrParser.lambda"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterLambda([NotNull] ZephyrParser.LambdaContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ZephyrParser.lambda"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitLambda([NotNull] ZephyrParser.LambdaContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ZephyrParser.type"/>.
 	/// <para>The default implementation does nothing.</para>

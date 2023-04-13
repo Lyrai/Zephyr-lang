@@ -466,6 +466,11 @@ internal class MethodCompiler: INodeVisitor<object>
         return null!;
     }
 
+    public object VisitUseNode(UseNode n)
+    {
+        return null!;
+    }
+
     private object Visit(Node n)
     {
         return n.Accept(this);
