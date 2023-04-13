@@ -7,7 +7,7 @@ namespace Zephyr.SyntaxAnalysis.ASTNodes
     {
         public Token Token { get; protected init; }
         public object Value { get; protected set; }
-        public TypeSymbol TypeSymbol { get; private set; }
+        public virtual TypeSymbol TypeSymbol { get; private set; }
 
         public bool IsLhs { get; protected set; }
 

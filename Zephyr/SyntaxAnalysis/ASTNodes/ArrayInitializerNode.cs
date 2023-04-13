@@ -24,7 +24,18 @@ public class ArrayInitializerNode: Node, IExpression
     {
         return visitor.VisitArrayInitializerNode(this);
     }
-    
+
+    public override void Replace(Node oldItem, Node newItem)
+    {
+        for (var i = 0; i < _elements.Count; i++)
+        {
+            if (_elements[i] == oldItem)
+            {
+                _elements[i] = newItem;
+            }
+        }
+    }
+
     public void SetIsStatement(bool isStatement)
     {
         IsStatement = isStatement;

@@ -266,7 +266,7 @@ namespace Zephyr.SemanticAnalysis
                             .GetParameters()
                             .Select(param => _table.FindByNetName(param.ParameterType.Name))
                             .Zip(arguments, (param, arg) => (param, arg))
-                            .All(pair => CanCast(pair.arg, pair.param))
+                            .All(pair => CanCast(pair.arg, pair.param, out _))
                     );
                     var netMethodType = _table.FindByNetName(method.ReturnParameter.ParameterType.Name);
                     n.SetType(netMethodType);
@@ -553,8 +553,13 @@ namespace Zephyr.SemanticAnalysis
                 if (n.Left is not VarNode && n.Left is not VarDeclNode && n.Left is not GetNode && n.Left is not IndexNode)
                     throw new SemanticException(n.Left, $"Cannot assign to non-variable {n.Left.Token.Value}");
 
-                if (CanCast(right, left) == false)
+                if (CanCast(right, left, out var conversionTo) == false)
                     throw new SemanticException(n, $"Cannot assign value of type {right} to variable {n.Left.Token.Value} of type {left}");
+                
+                if(conversionTo is not null)
+                {
+                    n.Replace(n.Right, new ConversionNode(right, conversionTo, n.Right));
+                }
 
                 n.SetType(left);
                 return left;
@@ -563,35 +568,43 @@ namespace Zephyr.SemanticAnalysis
             var tokenType = n.Token.Type;
             if (ComparisonOperators.Contains(tokenType))
             {
-                if (CanCast(left, right) || CanCast(right, left))
+                if (!left.IsNumericType() || !right.IsNumericType())
                 {
-                    n.SetType(_boolSymbol);
-                    return _boolSymbol;
+                    throw new SemanticException(n, "Comaprison operands must be numeric");
                 }
                 
-                throw new SemanticException(n, $"Cannot cast type {left} to target type {right}");
+                n.SetType(_boolSymbol);
+                return _boolSymbol;
+                
             }
-            
-            if (left == _doubleSymbol || right == _doubleSymbol)
+
+            if (left == right)
             {
-                n.SetType(_doubleSymbol);
-                return _doubleSymbol;
+                n.SetType(left);
+                return left;
             }
-            
-            if (left == _stringSymbol && right == _stringSymbol)
+
+            if (left == _stringSymbol && n.Token.Type == TokenType.Plus)
             {
                 n.SetType(_stringSymbol);
                 return _stringSymbol;
             }
 
-            if (left == _stringSymbol && tokenType == TokenType.Plus)
+            if (CanCast(left, right, out var conversionTypeLR))
             {
-                n.SetType(_stringSymbol);
-                return _stringSymbol;
+                n.Replace(n.Left, new ConversionNode(left, conversionTypeLR, n.Left));
+                n.SetType(conversionTypeLR);
+                return n.TypeSymbol;
             }
-            
-            n.SetType(_intSymbol);
-            return _intSymbol;
+
+            if (CanCast(right, left, out var conversionTypeRL))
+            {
+                n.Replace(n.Right, new ConversionNode(right, conversionTypeRL, n.Right));
+                n.SetType(conversionTypeRL);
+                return n.TypeSymbol;
+            }
+
+            throw new SemanticException(n, $"Cannot cast type {left} to target type {right}");
         }
 
         public object VisitUnOpNode(UnOpNode n)
@@ -619,11 +632,16 @@ namespace Zephyr.SemanticAnalysis
                     continue;
                 }
 
-                if (node.TypeSymbol != arrType && !CanCast(node.TypeSymbol, arrType))
+                TypeSymbol conversionTo = null;
+                if (node.TypeSymbol != arrType && !CanCast(node.TypeSymbol, arrType, out conversionTo))
                 {
                     throw new SemanticException(n, $"Cannot put {node.TypeSymbol.Name} into array of {arrType.Name}");
                 }
-                
+
+                if (conversionTo is not null)
+                {
+                    n.Replace(node, new ConversionNode(node.TypeSymbol, conversionTo, n));
+                }
             }
 
             var type = _table.GetArrayType(arrType);
@@ -665,6 +683,16 @@ namespace Zephyr.SemanticAnalysis
             return null;
         }
 
+        public object VisitConversionNode(ConversionNode n)
+        {
+            if (CanCast(n.From, n.To, out _))
+            {
+                return n.To;
+            }
+            
+            throw new SemanticException(n, $"Cannot cast type {n.From} to target type {n.To}");
+        }
+
         private object Visit(Node n)
         {
             return n.Accept(this);
@@ -678,16 +706,47 @@ namespace Zephyr.SemanticAnalysis
             }
         }
 
-        private bool CanCast(TypeSymbol from, TypeSymbol to)
+        private bool CanCast(TypeSymbol from, TypeSymbol to, out TypeSymbol needsConversionTo)
         {
+            needsConversionTo = null;
+            if (from == to)
+            {
+                return true;
+            }
+            
             if (from == _voidSymbol || to == _voidSymbol)
+            {
                 return false;
+            }
+            
             if (from == _stringSymbol && to == _stringSymbol)
+            {
                 return true;
-            if (to == _table.Find<TypeSymbol>("object"))
-                return true;
+            }
 
-            return from == to || from == _intSymbol && to == _doubleSymbol || IsParent(to, from);
+            var objectSymbol = _table.Find<TypeSymbol>("object");
+            if (to == objectSymbol)
+            {
+                if (from != objectSymbol)
+                {
+                    needsConversionTo = objectSymbol;
+                }
+                return true;
+            }
+            
+            if (from.IsNumericType() && to.IsNumericType())
+            {
+                var wider = from.GetWider(to);
+                if (wider == from)
+                {
+                    return false;
+                }
+
+                needsConversionTo = wider;
+                return true;
+            }
+
+            return IsParent(to, from);
         }
 
         private bool IsParent(TypeSymbol baseClass, TypeSymbol forType)

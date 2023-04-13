@@ -121,6 +121,11 @@ internal abstract class BaseRoslynCompiler<T>: INodeVisitor<T>
         throw new NotImplementedException();
     }
 
+    public T VisitConversionNode(ConversionNode n)
+    {
+        throw new NotImplementedException();
+    }
+
     protected T Visit(Node n)
     {
         return n.Accept(this);

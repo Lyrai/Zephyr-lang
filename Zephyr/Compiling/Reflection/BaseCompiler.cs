@@ -98,6 +98,11 @@ public abstract class BaseCompiler: INodeVisitor<object>
         return null!;
     }
 
+    public object VisitConversionNode(ConversionNode n)
+    {
+        return null!;
+    }
+
     protected Type? MapType(TypeSymbol symbol)
     {
         return MapType(symbol.Name);

@@ -471,6 +471,27 @@ internal class MethodCompiler: INodeVisitor<object>
         return null!;
     }
 
+    public object VisitConversionNode(ConversionNode n)
+    {
+        Visit(n.Operand);
+        var from = n.From.GetTypeCode();
+        var to = n.To.GetTypeCode();
+        if(n.From.IsNumericType() && n.To.IsNumericType())
+        {
+            _builder.EmitNumericConversion(from, to, true);
+            return null!;
+        }
+
+        if (n.From.IsValueType() && n.To == _predefinedTypes["System.Object"])
+        {
+            _builder.EmitOpCode(ILOpCode.Box);
+            EmitToken(GetToken(ResolveType(n.To)));
+            return null!;
+        }
+
+        throw new NotSupportedException($"Conversion from {n.From} to {n.To} is not supported");
+    }
+
     private object Visit(Node n)
     {
         return n.Accept(this);

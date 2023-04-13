@@ -72,6 +72,26 @@ namespace Zephyr.SemanticAnalysis.Symbols
             return Name is "int" or "double" or "bool" or "long";
         }
 
+        public bool IsNumericType()
+        {
+            return Name is "int" or "double" or "long";
+        }
+
+        public TypeSymbol GetWider(TypeSymbol other)
+        {
+            if (other.Name == "double")
+            {
+                return other;
+            }
+
+            if (other.Name == "long" && Name == "int")
+            {
+                return other;
+            }
+
+            return this;
+        }
+
         public virtual Type? GetNetType()
         {
             return Name switch

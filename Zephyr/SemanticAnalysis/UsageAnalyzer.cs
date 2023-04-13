@@ -178,6 +178,11 @@ public class UsageAnalyzer: INodeVisitor<object>
         return null!;
     }
 
+    public object VisitConversionNode(ConversionNode n)
+    {
+        return null!;
+    }
+
     private object Visit(Node n)
     {
         return n.Accept(this);
