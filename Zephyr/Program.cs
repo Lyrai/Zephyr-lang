@@ -81,7 +81,9 @@ namespace Zephyr
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+#if DEBUG
                 Console.WriteLine(e.StackTrace);
+#endif
             }
         }
 
@@ -110,6 +112,17 @@ namespace Zephyr
                         options["input"] = args[i];
                         break;
                 }
+            }
+
+            if (!options.ContainsKey("input"))
+            {
+                Console.WriteLine("No input specified");
+                Environment.Exit(1);
+            }
+
+            if (!options.ContainsKey("output"))
+            {
+                options["output"] = Path.ChangeExtension(options["input"], "exe");
             }
 
             return options;
