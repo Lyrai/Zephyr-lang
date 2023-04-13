@@ -8,11 +8,10 @@ namespace Zephyr.SyntaxAnalysis.ASTNodes
     {
         public bool IsStatement { get; private set; }
         public bool IsUsed => Token.Value.ToString() == "=" || _isUsed;
-        public bool ReturnsValue => true;
-        public bool CanBeDropped => Left is IExpression leftExpr &&
-                                    Right is IExpression rightExpr &&
-                                    leftExpr.CanBeDropped &&
-                                    rightExpr.CanBeDropped;
+        public bool ReturnsValue => Token.Value.ToString() != "=";
+        public bool CanBeDropped => Left is IExpression { CanBeDropped: true } &&
+                                    Right is IExpression { CanBeDropped: true };
+        
         public Node Left { get; private set; }
         public Node Right { get; private set; }
 
