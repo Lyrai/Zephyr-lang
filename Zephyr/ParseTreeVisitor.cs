@@ -5,7 +5,7 @@ using Zephyr.SyntaxAnalysis.ASTNodes;
 
 namespace Zephyr
 {
-    public class TestVisitor : ZephyrParserBaseVisitor<Node>
+    public class ParseTreeVisitor : ZephyrParserBaseVisitor<Node>
     {
         public override Node VisitProgram(ZephyrParser.ProgramContext context)
         {
