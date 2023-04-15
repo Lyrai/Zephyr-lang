@@ -266,7 +266,7 @@ namespace Zephyr.SemanticAnalysis
                             .GetParameters()
                             .Select(param => _table.FindByNetName(param.ParameterType.Name))
                             .Zip(arguments, (param, arg) => (param, arg))
-                            .All(pair => CanCast(pair.arg, pair.param, out _))
+                            .All(pair => CanCast(pair.arg, pair.param))
                     );
                     var netMethodType = _table.FindByNetName(method.ReturnParameter.ParameterType.Name);
                     n.SetType(netMethodType);
@@ -314,20 +314,36 @@ namespace Zephyr.SemanticAnalysis
         {
             var type = Visit(n.Condition) as TypeSymbol;
             if (type != _boolSymbol)
-                throw new SemanticException(n, $"Cannot cast type {type.Name} to bool");
-            
-            var thenType = TypeSymbol.FromObject(Visit(n.ThenBlock));
-            
-            if (n.ElseBlock is not null)
             {
-                var elseType = TypeSymbol.FromObject(Visit(n.ElseBlock));
-                if (thenType != elseType)
-                    throw new SemanticException(n, "Incompatible branches types");
+                throw new SemanticException(n, $"Cannot cast type {type.Name} to bool");
             }
             
+            var thenType = TypeSymbol.FromObject(Visit(n.ThenBlock));
             n.SetType(thenType);
+            
+            if (n.ElseBlock is null)
+            {
+                return thenType;
+            }
+            
+            var elseType = TypeSymbol.FromObject(Visit(n.ElseBlock));
+            if (thenType == elseType)
+            {
+                return thenType;
+            }
 
-            return thenType;
+            if (CanCast(thenType, elseType))
+            {
+                n.SetType(elseType);
+                n.Replace(n.ThenBlock, new ConversionNode(thenType, elseType, n.ThenBlock));
+            }
+            
+            if (CanCast(elseType, thenType))
+            {
+                n.Replace(n.ElseBlock, new ConversionNode(elseType, thenType, n.ElseBlock));
+            }
+            
+            throw new SemanticException(n, "If expression branches must agree on return type");
         }
 
         public object VisitWhileNode(WhileNode n)
@@ -553,13 +569,14 @@ namespace Zephyr.SemanticAnalysis
                 if (n.Left is not VarNode && n.Left is not VarDeclNode && n.Left is not GetNode && n.Left is not IndexNode)
                     throw new SemanticException(n.Left, $"Cannot assign to non-variable {n.Left.Token.Value}");
 
-                if (CanCast(right, left, out var conversionTo) == false)
+                if (CanCast(right, left) == false)
                     throw new SemanticException(n, $"Cannot assign value of type {right} to variable {n.Left.Token.Value} of type {left}");
                 
-                if(conversionTo is not null)
+                if(left != right)
                 {
-                    n.Replace(n.Right, new ConversionNode(right, conversionTo, n.Right));
+                    n.Replace(n.Right, new ConversionNode(right, left, n.Right));
                 }
+                
 
                 n.SetType(left);
                 return left;
@@ -590,17 +607,17 @@ namespace Zephyr.SemanticAnalysis
                 return _stringSymbol;
             }
 
-            if (CanCast(left, right, out var conversionTypeLR))
+            if (CanCast(left, right))
             {
-                n.Replace(n.Left, new ConversionNode(left, conversionTypeLR, n.Left));
-                n.SetType(conversionTypeLR);
+                n.Replace(n.Left, new ConversionNode(left, right, n.Left));
+                n.SetType(right);
                 return n.TypeSymbol;
             }
 
-            if (CanCast(right, left, out var conversionTypeRL))
+            if (CanCast(right, left))
             {
-                n.Replace(n.Right, new ConversionNode(right, conversionTypeRL, n.Right));
-                n.SetType(conversionTypeRL);
+                n.Replace(n.Right, new ConversionNode(right, left, n.Right));
+                n.SetType(left);
                 return n.TypeSymbol;
             }
 
@@ -623,6 +640,7 @@ namespace Zephyr.SemanticAnalysis
         public object VisitArrayInitializerNode(ArrayInitializerNode n)
         {
             TypeSymbol arrType = null;
+            var itemsToConvert = new List<Node>();
             foreach (var node in n.GetChildren())
             {
                 Visit(node);
@@ -633,15 +651,22 @@ namespace Zephyr.SemanticAnalysis
                 }
 
                 TypeSymbol conversionTo = null;
-                if (node.TypeSymbol != arrType && !CanCast(node.TypeSymbol, arrType, out conversionTo))
+                if (node.TypeSymbol == arrType)
+                {
+                    continue;
+                }
+                
+                if (node.TypeSymbol != arrType && !CanCast(node.TypeSymbol, arrType))
                 {
                     throw new SemanticException(n, $"Cannot put {node.TypeSymbol.Name} into array of {arrType.Name}");
                 }
 
-                if (conversionTo is not null)
-                {
-                    n.Replace(node, new ConversionNode(node.TypeSymbol, conversionTo, n));
-                }
+                itemsToConvert.Add(node);
+            }
+
+            foreach (var item in itemsToConvert)
+            {
+                n.Replace(item, new ConversionNode(item.TypeSymbol, arrType, item));
             }
 
             var type = _table.GetArrayType(arrType);
@@ -685,7 +710,7 @@ namespace Zephyr.SemanticAnalysis
 
         public object VisitConversionNode(ConversionNode n)
         {
-            if (CanCast(n.From, n.To, out _))
+            if (CanCast(n.From, n.To))
             {
                 return n.To;
             }
@@ -706,9 +731,8 @@ namespace Zephyr.SemanticAnalysis
             }
         }
 
-        private bool CanCast(TypeSymbol from, TypeSymbol to, out TypeSymbol needsConversionTo)
+        private bool CanCast(TypeSymbol from, TypeSymbol to)
         {
-            needsConversionTo = null;
             if (from == to)
             {
                 return true;
@@ -727,26 +751,17 @@ namespace Zephyr.SemanticAnalysis
             var objectSymbol = _table.Find<TypeSymbol>("object");
             if (to == objectSymbol)
             {
-                if (from != objectSymbol)
-                {
-                    needsConversionTo = objectSymbol;
-                }
                 return true;
             }
-            
-            if (from.IsNumericType() && to.IsNumericType())
+
+            if (!from.IsNumericType() || !to.IsNumericType())
             {
-                var wider = from.GetWider(to);
-                if (wider == from)
-                {
-                    return false;
-                }
-
-                needsConversionTo = wider;
-                return true;
+                return IsParent(to, from);
             }
 
-            return IsParent(to, from);
+            var wider = from.GetWider(to);
+            return wider != from;
+
         }
 
         private bool IsParent(TypeSymbol baseClass, TypeSymbol forType)

@@ -245,16 +245,22 @@ internal class MethodCompiler: INodeVisitor<object>
     }
 
     public object VisitIfNode(IfNode n)
-    {
+    { 
         Visit(n.Condition);
         var falseLabel = new object();
         var exitLabel = new object();
         _builder.EmitBranch(ILOpCode.Brfalse, falseLabel);
+        
         VisitWithStackGuard(n.ThenBlock);
         
         if (n.ElseBlock is not null)
         {
             _builder.EmitBranch(ILOpCode.Br, exitLabel);
+        }
+        
+        if (n.ThenBlock is IExpression { ReturnsValue: true, IsUsed: true })
+        {
+            _builder.AdjustStack(-1);
         }
         
         _builder.MarkLabel(falseLabel);
@@ -278,7 +284,7 @@ internal class MethodCompiler: INodeVisitor<object>
         Visit(n.Condition);
         _builder.EmitBranch(ILOpCode.Brfalse, exitLabel);
 
-        VisitWithStackGuard(n.Body);
+        Visit(n.Body);
         _builder.EmitBranch(ILOpCode.Br, condLabel);
         
         _builder.MarkLabel(exitLabel);

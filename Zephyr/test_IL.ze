@@ -30,6 +30,7 @@ fn main!
         "This should be dropped"
         5
     }
+    let hh = if a == 5 { "true" } else { "false" }
     let nonGeneric = ArrayList!
     nonGeneric.Add: 5555
     print nonGeneric.at: 0
