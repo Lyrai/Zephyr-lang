@@ -1,4 +1,5 @@
-﻿using Zephyr.SemanticAnalysis;
+﻿using System.Text;
+using Zephyr.SemanticAnalysis;
 
 namespace Zephyr.SyntaxAnalysis.ASTNodes
 {
@@ -27,6 +28,20 @@ namespace Zephyr.SyntaxAnalysis.ASTNodes
         public void SetUsed(bool used)
         {
             IsUsed = used;
+        }
+
+        public override string ToString()
+        {
+            var result = new StringBuilder();
+            var curr = this;
+            while (curr is GetNode)
+            {
+                result.Append(curr.Token.Value);
+                result.Append(' ');
+                curr = curr.Obj as GetNode;
+            }
+
+            return result.ToString().TrimEnd();
         }
     }
 }

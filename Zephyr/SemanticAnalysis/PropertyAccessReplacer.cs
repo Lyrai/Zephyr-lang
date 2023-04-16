@@ -152,7 +152,7 @@ namespace Zephyr.SemanticAnalysis
 
         public object VisitFuncDeclNode(FuncDeclNode n)
         {
-            VisitNodesList(n.Body);
+            Visit(n.Body);
 
             return null;
         }

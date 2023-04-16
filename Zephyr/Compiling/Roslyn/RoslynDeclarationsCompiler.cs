@@ -154,7 +154,7 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<MemberDeclarationS
         {
             var ctorNode = new FuncDeclNode(
                 new Token(TokenType.Id, ".ctor", 0, 0),
-                new List<Node> { new NoOpNode() },
+                new NoOpNode(),
                 new List<Node>(), n.Name
             );
             

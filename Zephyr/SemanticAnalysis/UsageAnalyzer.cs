@@ -33,13 +33,15 @@ public class UsageAnalyzer: INodeVisitor<object>
     {
         foreach (var child in n.GetChildren())
         {
+            Visit(child);
+            
             if(child is IExpression expr)
             {
                 expr.SetIsStatement(true);
                 expr.SetUsed(expr == n.GetChildren().Last());
             }
             
-            Visit(child);
+            
         }
         
         n.SetIsStatement(true);
@@ -132,7 +134,16 @@ public class UsageAnalyzer: INodeVisitor<object>
 
     public object VisitFuncDeclNode(FuncDeclNode n)
     {
-        foreach (var child in n.Body)
+        Visit(n.Body);
+        if (n.Body is not IExpression expr)
+        {
+            return null!;
+        }
+
+        expr.SetIsStatement(true);
+        expr.SetUsed(n.ReturnType != "void");
+
+        /*foreach (var child in n.Body)
         {
             Visit(child);
             if(child is IExpression expr)
@@ -140,7 +151,7 @@ public class UsageAnalyzer: INodeVisitor<object>
                 expr.SetIsStatement(true);
                 expr.SetUsed(false);
             }
-        }
+        }*/
 
         return null!;
     }

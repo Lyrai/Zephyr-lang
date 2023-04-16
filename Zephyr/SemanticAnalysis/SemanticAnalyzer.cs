@@ -123,11 +123,24 @@ namespace Zephyr.SemanticAnalysis
             
             _table.Parent.Add(name, symbol);
             _currentClassSymbol?.Methods.Add(name, symbol);
-            Visit(n.Body);
-            _table = _table.Parent;
-            n.Symbol = symbol;
-            
+            var bodyType = TypeSymbol.FromObject(Visit(n.Body));
+            var returnType = symbol.ReturnType;
+            if(bodyType == returnType)
+            {
+                _table = _table.Parent;
+                n.Symbol = symbol;
+
+                return null;
+            }
+
+            if (!CanCast(bodyType, returnType))
+            {
+                throw new SemanticException(n, $"Function must return {returnType}, but returns {bodyType}");
+            }
+
+            n.Replace(n.Body, new ConversionNode(bodyType, returnType, n.Body));
             return null;
+
         }
 
         public object VisitFuncCallNode(FuncCallNode n)
@@ -458,7 +471,7 @@ namespace Zephyr.SemanticAnalysis
             
             var symbol = _table.Find<ClassSymbol>(type.Name);
             if (symbol is null)
-                throw new UnknownIdentifierException(n);
+                throw new SemanticException(n, $"`{n}` of type `{type}` does not contain definition for `{n.Token.Value}`");
             
             var name = (string)n.Token.Value;
             var fieldType = ResolveName(name, symbol);
@@ -502,7 +515,7 @@ namespace Zephyr.SemanticAnalysis
                 }
             }
 
-            object type = null!;
+            object type = null;
             try
             {
                 type = Visit(children.Last());
@@ -626,10 +639,9 @@ namespace Zephyr.SemanticAnalysis
 
         public object VisitUnOpNode(UnOpNode n)
         {
-            var op = Visit(n.Operand) as TypeSymbol;
-            var type = op == _doubleSymbol ? _doubleSymbol : _intSymbol;
-            n.SetType(type);
-            return type;
+            Visit(n.Operand);
+            n.SetType(_voidSymbol);
+            return _voidSymbol;
         }
 
         public object VisitNoOpNode(NoOpNode n)
@@ -788,12 +800,13 @@ namespace Zephyr.SemanticAnalysis
                 while (getNode.Obj is GetNode node)
                 {
                     typeName = node.Token.Value + "." + typeName;
-                    n = node;
+                    getNode = node;
                 }
 
                 return (getNode.Obj as VarNode).Name + "." + typeName;
             }
-            else if (n is VarNode varNode)
+            
+            if (n is VarNode varNode)
             {
                 return _table.FindByNetName(varNode.Name).GetNetFullName();
             }

@@ -9,7 +9,7 @@ namespace Zephyr.SemanticAnalysis.Symbols
     public class FuncSymbol : Symbol, ICallable
     {
         public List<VarSymbol> Parameters { get; init; }
-        public List<Node> Body { get; init; }
+        public Node Body { get; init; }
         public TypeSymbol ReturnType { get; init; }
         public Scope Closure { get; set; }
 
@@ -49,7 +49,7 @@ namespace Zephyr.SemanticAnalysis.Symbols
 
             try
             {
-                interpreter.ExecuteBlock(Body, scope);
+                interpreter.ExecuteBlock(new List<Node> {Body}, scope);
             }
             catch (ReturnException e)
             {

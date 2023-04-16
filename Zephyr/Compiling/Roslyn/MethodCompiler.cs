@@ -42,7 +42,7 @@ internal class MethodCompiler: INodeVisitor<object>
         _method = method;
         _moduleBuilder = moduleBuilder;
         _symbol = symbol;
-        _needImplicitReturn = method.ReturnType == "void" && method.Body.Last() is not ReturnNode;
+        _needImplicitReturn = method.ReturnType == "void";
     }
 
     public MethodBody Compile()
@@ -392,26 +392,13 @@ internal class MethodCompiler: INodeVisitor<object>
             return null!;
         }
         
-        foreach (var node in n.Body)
-        {
-            if (node is not IExpression expr)
-            {
-                Visit(node);
-                continue;
-            }
-            
-            if (expr is { ReturnsValue: true, IsUsed: false, CanBeDropped: true})
-            {
-                continue;
-            }
+        VisitWithStackGuard(n.Body);
+        _builder.EmitRet(n.ReturnType == "void");
 
-            VisitWithStackGuard(node);
-        }
-
-        if (_needImplicitReturn)
+        /*if (_needImplicitReturn)
         {
             _builder.EmitRet(true);
-        }
+        }*/
 
         return null!;
     }

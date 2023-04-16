@@ -27,9 +27,9 @@ namespace Zephyr
                 parameters = GetBody(context.funcParameters());
             
             var type = context.Type?.GetText() ?? "void";
-            var body = GetBody(context.Body);
+            var body = context.Body;
 
-            return new FuncDeclNode(idToken, body, parameters, type);
+            return new FuncDeclNode(idToken, Visit(body), parameters, type);
         }
 
         public override Node VisitVarDecl(ZephyrParser.VarDeclContext context)
@@ -261,7 +261,7 @@ namespace Zephyr
                 return Visit(context.primary());
             
             var node = Visit(context.call());
-            if (context.DOT() is null)
+            if (context.ID() is null)
             {
                 var arguments = context.funcArguments() is not null ? GetBody(context.funcArguments()) : new List<Node>();
                 return new FuncCallNode(node, node.Token, arguments);
@@ -301,10 +301,21 @@ namespace Zephyr
                 return Visit(context.arrayInitializer());
             }
 
+            if (context.@namespace() is not null)
+            {
+                return Visit(context.@namespace());
+            }
+
             var id = context.ID().Symbol;
             var token = new Token(TokenType.Id, id.Text, id.Line, id.Line);
 
             return new VarNode(token, false);
+        }
+
+        public override Node VisitNamespace(ZephyrParser.NamespaceContext context)
+        {
+            var names = context.GetText();
+            return new VarNode(new Token(TokenType.Id, names, context.Start.Column, context.Start.Line), false);
         }
 
         public override Node VisitLiteral(ZephyrParser.LiteralContext context)
