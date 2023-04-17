@@ -67,21 +67,23 @@ assignExpr: Lhs=equality (ASSIGN Rhs=equality)?;
 
 equality:
       '(' Inner=equality ')'
+    | Expr=equality LBRACKET Index=equality RBRACKET
+    | Caller=equality Callee=callee
     | Left=equality Op=(DIVIDE | MULTIPLY) Right=equality
     | Left=equality Op=(PLUS | MINUS) Right=equality
     | Left=equality Op=(GREATER_EQUAL | GREATER | LESS_EQUAL | LESS) Right=equality
     | Left=equality Op=(EQUAL | NOT_EQUAL) Right=equality
-    | Expr=equality LBRACKET Index=equality RBRACKET
     | factor
 ;
 
 arrayInitializer: LBRACKET Exprs+=equality (',' Exprs+=equality)* RBRACKET;
 arrayType: '[' ID ']';
 lambda: '[' Params+=optionallyTypedVarDecl (',' Params+=optionallyTypedVarDecl)* '|' statement ']';
+callee: ((':' funcArguments) | '!' | ID);
 
 type: ID | arrayType;
 
 factor: Op=(MINUS | PLUS | NOT) factor | call;
-call: call ((':' funcArguments ';'?) | '!' | ID) | primary;
+call: primary;
 primary: literal | arrayInitializer | ID | compound | ifStmt | lambda | namespace;
 literal: StringLit=STRING_LITERAL | Int=INT | Float=FLOAT | True='true' | False='false';
