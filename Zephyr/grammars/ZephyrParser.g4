@@ -57,7 +57,7 @@ funcDecl: 'fn' Name=ID (':' funcParameters | '!') ('->' Type=type)?
     Body=statement;
 
 funcParameters: Parameters+=typedVarDecl (COMMA Paramters+=typedVarDecl)*;
-funcArguments: Args+=equality (',' Args+=equality)*;
+funcArguments: Args+=factor (',' Args+=factor)*;
 
 varDecl: 'let' optionallyTypedVarDecl (ASSIGN assignExpr)?;
 
@@ -65,25 +65,24 @@ varDecl: 'let' optionallyTypedVarDecl (ASSIGN assignExpr)?;
 
 assignExpr: Lhs=equality (ASSIGN Rhs=equality)?;
 
-equality:
-      '(' Inner=equality ')'
-    | Expr=equality LBRACKET Index=equality RBRACKET
-    | Caller=equality Callee=callee
+equality: 
+    Expr=equality LBRACKET Index=equality RBRACKET
     | Left=equality Op=(DIVIDE | MULTIPLY) Right=equality
     | Left=equality Op=(PLUS | MINUS) Right=equality
     | Left=equality Op=(GREATER_EQUAL | GREATER | LESS_EQUAL | LESS) Right=equality
     | Left=equality Op=(EQUAL | NOT_EQUAL) Right=equality
     | factor
+    | Caller=equality Callee=ID Call=call?
+    | Callee=ID Call=call?
 ;
 
 arrayInitializer: LBRACKET Exprs+=equality (',' Exprs+=equality)* RBRACKET;
 arrayType: '[' ID ']';
 lambda: '[' Params+=optionallyTypedVarDecl (',' Params+=optionallyTypedVarDecl)* '|' statement ']';
-callee: ((':' funcArguments) | '!' | ID);
 
 type: ID | arrayType;
 
-factor: Op=(MINUS | PLUS | NOT) factor | call;
-call: primary;
-primary: literal | arrayInitializer | ID | compound | ifStmt | lambda | namespace;
+factor: Op=(MINUS | PLUS | NOT) factor | primary;
+call: (':' funcArguments ';'? ) | '!';
+primary: literal | arrayInitializer | ID | compound | ifStmt | lambda | namespace | '(' Inner=equality ')';
 literal: StringLit=STRING_LITERAL | Int=INT | Float=FLOAT | True='true' | False='false';
