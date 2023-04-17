@@ -39,7 +39,7 @@ fn main! {
     print a ToString!
     let g = "asd"
     let arr [int] = [1, 2]
-    print arr[1]
+    print arr[1];
     arr[1] = 4
     print String Concat: "asd", "fgh"
     let ff = "test"

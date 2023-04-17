@@ -1681,19 +1681,19 @@ public partial class ZephyrParser : Parser {
 
 	public partial class EqualityContext : ParserRuleContext {
 		public EqualityContext Expr;
-		public EqualityContext Left;
 		public EqualityContext Caller;
+		public EqualityContext Left;
 		public IToken Callee;
 		public CallContext Call;
 		public IToken Op;
 		public EqualityContext Right;
 		public EqualityContext Index;
-		[System.Diagnostics.DebuggerNonUserCode] public FactorContext factor() {
-			return GetRuleContext<FactorContext>(0);
-		}
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ID() { return GetToken(ZephyrParser.ID, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public CallContext call() {
 			return GetRuleContext<CallContext>(0);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public FactorContext factor() {
+			return GetRuleContext<FactorContext>(0);
 		}
 		[System.Diagnostics.DebuggerNonUserCode] public EqualityContext[] equality() {
 			return GetRuleContexts<EqualityContext>();
@@ -1759,23 +1759,23 @@ public partial class ZephyrParser : Parser {
 			case 1:
 				{
 				State = 199;
-				factor();
-				}
-				break;
-			case 2:
-				{
-				State = 200;
 				_localctx.Callee = Match(ID);
-				State = 202;
+				State = 201;
 				ErrorHandler.Sync(this);
 				switch ( Interpreter.AdaptivePredict(TokenStream,17,Context) ) {
 				case 1:
 					{
-					State = 201;
+					State = 200;
 					_localctx.Call = call();
 					}
 					break;
 				}
+				}
+				break;
+			case 2:
+				{
+				State = 203;
+				factor();
 				}
 				break;
 			}
@@ -1798,7 +1798,7 @@ public partial class ZephyrParser : Parser {
 						_localctx.Left = _prevctx;
 						PushNewRecursionContext(_localctx, _startState, RULE_equality);
 						State = 206;
-						if (!(Precpred(Context, 7))) throw new FailedPredicateException(this, "Precpred(Context, 7)");
+						if (!(Precpred(Context, 5))) throw new FailedPredicateException(this, "Precpred(Context, 5)");
 						State = 207;
 						_localctx.Op = TokenStream.LT(1);
 						_la = TokenStream.LA(1);
@@ -1810,7 +1810,7 @@ public partial class ZephyrParser : Parser {
 						    Consume();
 						}
 						State = 208;
-						_localctx.Right = equality(8);
+						_localctx.Right = equality(6);
 						}
 						break;
 					case 2:
@@ -1819,7 +1819,7 @@ public partial class ZephyrParser : Parser {
 						_localctx.Left = _prevctx;
 						PushNewRecursionContext(_localctx, _startState, RULE_equality);
 						State = 209;
-						if (!(Precpred(Context, 6))) throw new FailedPredicateException(this, "Precpred(Context, 6)");
+						if (!(Precpred(Context, 4))) throw new FailedPredicateException(this, "Precpred(Context, 4)");
 						State = 210;
 						_localctx.Op = TokenStream.LT(1);
 						_la = TokenStream.LA(1);
@@ -1831,7 +1831,7 @@ public partial class ZephyrParser : Parser {
 						    Consume();
 						}
 						State = 211;
-						_localctx.Right = equality(7);
+						_localctx.Right = equality(5);
 						}
 						break;
 					case 3:
@@ -1840,7 +1840,7 @@ public partial class ZephyrParser : Parser {
 						_localctx.Left = _prevctx;
 						PushNewRecursionContext(_localctx, _startState, RULE_equality);
 						State = 212;
-						if (!(Precpred(Context, 5))) throw new FailedPredicateException(this, "Precpred(Context, 5)");
+						if (!(Precpred(Context, 3))) throw new FailedPredicateException(this, "Precpred(Context, 3)");
 						State = 213;
 						_localctx.Op = TokenStream.LT(1);
 						_la = TokenStream.LA(1);
@@ -1852,7 +1852,7 @@ public partial class ZephyrParser : Parser {
 						    Consume();
 						}
 						State = 214;
-						_localctx.Right = equality(6);
+						_localctx.Right = equality(4);
 						}
 						break;
 					case 4:
@@ -1861,7 +1861,7 @@ public partial class ZephyrParser : Parser {
 						_localctx.Left = _prevctx;
 						PushNewRecursionContext(_localctx, _startState, RULE_equality);
 						State = 215;
-						if (!(Precpred(Context, 4))) throw new FailedPredicateException(this, "Precpred(Context, 4)");
+						if (!(Precpred(Context, 2))) throw new FailedPredicateException(this, "Precpred(Context, 2)");
 						State = 216;
 						_localctx.Op = TokenStream.LT(1);
 						_la = TokenStream.LA(1);
@@ -1873,7 +1873,7 @@ public partial class ZephyrParser : Parser {
 						    Consume();
 						}
 						State = 217;
-						_localctx.Right = equality(5);
+						_localctx.Right = equality(3);
 						}
 						break;
 					case 5:
@@ -1897,7 +1897,7 @@ public partial class ZephyrParser : Parser {
 						_localctx.Caller = _prevctx;
 						PushNewRecursionContext(_localctx, _startState, RULE_equality);
 						State = 223;
-						if (!(Precpred(Context, 2))) throw new FailedPredicateException(this, "Precpred(Context, 2)");
+						if (!(Precpred(Context, 7))) throw new FailedPredicateException(this, "Precpred(Context, 7)");
 						State = 224;
 						_localctx.Callee = Match(ID);
 						State = 226;
@@ -2628,12 +2628,12 @@ public partial class ZephyrParser : Parser {
 	}
 	private bool equality_sempred(EqualityContext _localctx, int predIndex) {
 		switch (predIndex) {
-		case 0: return Precpred(Context, 7);
-		case 1: return Precpred(Context, 6);
-		case 2: return Precpred(Context, 5);
-		case 3: return Precpred(Context, 4);
+		case 0: return Precpred(Context, 5);
+		case 1: return Precpred(Context, 4);
+		case 2: return Precpred(Context, 3);
+		case 3: return Precpred(Context, 2);
 		case 4: return Precpred(Context, 8);
-		case 5: return Precpred(Context, 2);
+		case 5: return Precpred(Context, 7);
 		}
 		return true;
 	}
@@ -2653,7 +2653,7 @@ public partial class ZephyrParser : Parser {
 		1,17,1,17,1,17,1,17,1,17,3,17,164,8,17,1,17,1,17,3,17,168,8,17,1,17,1,
 		17,1,18,1,18,1,18,5,18,175,8,18,10,18,12,18,178,9,18,1,19,1,19,1,19,5,
 		19,183,8,19,10,19,12,19,186,9,19,1,20,1,20,1,20,1,20,3,20,192,8,20,1,21,
-		1,21,1,21,3,21,197,8,21,1,22,1,22,1,22,1,22,3,22,203,8,22,3,22,205,8,22,
+		1,21,1,21,3,21,197,8,21,1,22,1,22,1,22,3,22,202,8,22,1,22,3,22,205,8,22,
 		1,22,1,22,1,22,1,22,1,22,1,22,1,22,1,22,1,22,1,22,1,22,1,22,1,22,1,22,
 		1,22,1,22,1,22,1,22,1,22,1,22,3,22,227,8,22,5,22,229,8,22,10,22,12,22,
 		232,9,22,1,23,1,23,1,23,1,23,5,23,238,8,23,10,23,12,23,241,9,23,1,23,1,
@@ -2706,37 +2706,37 @@ public partial class ZephyrParser : Parser {
 		188,5,14,0,0,188,191,3,12,6,0,189,190,5,26,0,0,190,192,3,42,21,0,191,189,
 		1,0,0,0,191,192,1,0,0,0,192,41,1,0,0,0,193,196,3,44,22,0,194,195,5,26,
 		0,0,195,197,3,44,22,0,196,194,1,0,0,0,196,197,1,0,0,0,197,43,1,0,0,0,198,
-		199,6,22,-1,0,199,205,3,54,27,0,200,202,5,18,0,0,201,203,3,56,28,0,202,
-		201,1,0,0,0,202,203,1,0,0,0,203,205,1,0,0,0,204,198,1,0,0,0,204,200,1,
-		0,0,0,205,230,1,0,0,0,206,207,10,7,0,0,207,208,7,0,0,0,208,229,3,44,22,
-		8,209,210,10,6,0,0,210,211,7,1,0,0,211,229,3,44,22,7,212,213,10,5,0,0,
-		213,214,7,2,0,0,214,229,3,44,22,6,215,216,10,4,0,0,216,217,7,3,0,0,217,
-		229,3,44,22,5,218,219,10,8,0,0,219,220,5,42,0,0,220,221,3,44,22,0,221,
-		222,5,43,0,0,222,229,1,0,0,0,223,224,10,2,0,0,224,226,5,18,0,0,225,227,
-		3,56,28,0,226,225,1,0,0,0,226,227,1,0,0,0,227,229,1,0,0,0,228,206,1,0,
-		0,0,228,209,1,0,0,0,228,212,1,0,0,0,228,215,1,0,0,0,228,218,1,0,0,0,228,
-		223,1,0,0,0,229,232,1,0,0,0,230,228,1,0,0,0,230,231,1,0,0,0,231,45,1,0,
-		0,0,232,230,1,0,0,0,233,234,5,42,0,0,234,239,3,44,22,0,235,236,5,22,0,
-		0,236,238,3,44,22,0,237,235,1,0,0,0,238,241,1,0,0,0,239,237,1,0,0,0,239,
-		240,1,0,0,0,240,242,1,0,0,0,241,239,1,0,0,0,242,243,5,43,0,0,243,47,1,
-		0,0,0,244,245,5,42,0,0,245,246,5,18,0,0,246,247,5,43,0,0,247,49,1,0,0,
-		0,248,249,5,42,0,0,249,254,3,12,6,0,250,251,5,22,0,0,251,253,3,12,6,0,
-		252,250,1,0,0,0,253,256,1,0,0,0,254,252,1,0,0,0,254,255,1,0,0,0,255,257,
-		1,0,0,0,256,254,1,0,0,0,257,258,5,44,0,0,258,259,3,4,2,0,259,260,5,43,
-		0,0,260,51,1,0,0,0,261,264,5,18,0,0,262,264,3,48,24,0,263,261,1,0,0,0,
-		263,262,1,0,0,0,264,53,1,0,0,0,265,266,7,4,0,0,266,269,3,54,27,0,267,269,
-		3,58,29,0,268,265,1,0,0,0,268,267,1,0,0,0,269,55,1,0,0,0,270,271,5,21,
-		0,0,271,273,3,38,19,0,272,274,5,20,0,0,273,272,1,0,0,0,273,274,1,0,0,0,
-		274,277,1,0,0,0,275,277,5,37,0,0,276,270,1,0,0,0,276,275,1,0,0,0,277,57,
-		1,0,0,0,278,290,3,60,30,0,279,290,3,46,23,0,280,290,5,18,0,0,281,290,3,
-		26,13,0,282,290,3,28,14,0,283,290,3,50,25,0,284,290,3,16,8,0,285,286,5,
-		38,0,0,286,287,3,44,22,0,287,288,5,39,0,0,288,290,1,0,0,0,289,278,1,0,
-		0,0,289,279,1,0,0,0,289,280,1,0,0,0,289,281,1,0,0,0,289,282,1,0,0,0,289,
-		283,1,0,0,0,289,284,1,0,0,0,289,285,1,0,0,0,290,59,1,0,0,0,291,297,5,1,
-		0,0,292,297,5,40,0,0,293,297,5,41,0,0,294,297,5,15,0,0,295,297,5,16,0,
-		0,296,291,1,0,0,0,296,292,1,0,0,0,296,293,1,0,0,0,296,294,1,0,0,0,296,
-		295,1,0,0,0,297,61,1,0,0,0,30,67,71,83,88,93,100,110,117,125,133,144,163,
-		167,176,184,191,196,202,204,226,228,230,239,254,263,268,273,276,289,296
+		199,6,22,-1,0,199,201,5,18,0,0,200,202,3,56,28,0,201,200,1,0,0,0,201,202,
+		1,0,0,0,202,205,1,0,0,0,203,205,3,54,27,0,204,198,1,0,0,0,204,203,1,0,
+		0,0,205,230,1,0,0,0,206,207,10,5,0,0,207,208,7,0,0,0,208,229,3,44,22,6,
+		209,210,10,4,0,0,210,211,7,1,0,0,211,229,3,44,22,5,212,213,10,3,0,0,213,
+		214,7,2,0,0,214,229,3,44,22,4,215,216,10,2,0,0,216,217,7,3,0,0,217,229,
+		3,44,22,3,218,219,10,8,0,0,219,220,5,42,0,0,220,221,3,44,22,0,221,222,
+		5,43,0,0,222,229,1,0,0,0,223,224,10,7,0,0,224,226,5,18,0,0,225,227,3,56,
+		28,0,226,225,1,0,0,0,226,227,1,0,0,0,227,229,1,0,0,0,228,206,1,0,0,0,228,
+		209,1,0,0,0,228,212,1,0,0,0,228,215,1,0,0,0,228,218,1,0,0,0,228,223,1,
+		0,0,0,229,232,1,0,0,0,230,228,1,0,0,0,230,231,1,0,0,0,231,45,1,0,0,0,232,
+		230,1,0,0,0,233,234,5,42,0,0,234,239,3,44,22,0,235,236,5,22,0,0,236,238,
+		3,44,22,0,237,235,1,0,0,0,238,241,1,0,0,0,239,237,1,0,0,0,239,240,1,0,
+		0,0,240,242,1,0,0,0,241,239,1,0,0,0,242,243,5,43,0,0,243,47,1,0,0,0,244,
+		245,5,42,0,0,245,246,5,18,0,0,246,247,5,43,0,0,247,49,1,0,0,0,248,249,
+		5,42,0,0,249,254,3,12,6,0,250,251,5,22,0,0,251,253,3,12,6,0,252,250,1,
+		0,0,0,253,256,1,0,0,0,254,252,1,0,0,0,254,255,1,0,0,0,255,257,1,0,0,0,
+		256,254,1,0,0,0,257,258,5,44,0,0,258,259,3,4,2,0,259,260,5,43,0,0,260,
+		51,1,0,0,0,261,264,5,18,0,0,262,264,3,48,24,0,263,261,1,0,0,0,263,262,
+		1,0,0,0,264,53,1,0,0,0,265,266,7,4,0,0,266,269,3,54,27,0,267,269,3,58,
+		29,0,268,265,1,0,0,0,268,267,1,0,0,0,269,55,1,0,0,0,270,271,5,21,0,0,271,
+		273,3,38,19,0,272,274,5,20,0,0,273,272,1,0,0,0,273,274,1,0,0,0,274,277,
+		1,0,0,0,275,277,5,37,0,0,276,270,1,0,0,0,276,275,1,0,0,0,277,57,1,0,0,
+		0,278,290,3,60,30,0,279,290,3,46,23,0,280,290,5,18,0,0,281,290,3,26,13,
+		0,282,290,3,28,14,0,283,290,3,50,25,0,284,290,3,16,8,0,285,286,5,38,0,
+		0,286,287,3,44,22,0,287,288,5,39,0,0,288,290,1,0,0,0,289,278,1,0,0,0,289,
+		279,1,0,0,0,289,280,1,0,0,0,289,281,1,0,0,0,289,282,1,0,0,0,289,283,1,
+		0,0,0,289,284,1,0,0,0,289,285,1,0,0,0,290,59,1,0,0,0,291,297,5,1,0,0,292,
+		297,5,40,0,0,293,297,5,41,0,0,294,297,5,15,0,0,295,297,5,16,0,0,296,291,
+		1,0,0,0,296,292,1,0,0,0,296,293,1,0,0,0,296,294,1,0,0,0,296,295,1,0,0,
+		0,297,61,1,0,0,0,30,67,71,83,88,93,100,110,117,125,133,144,163,167,176,
+		184,191,196,201,204,226,228,230,239,254,263,268,273,276,289,296
 	};
 
 	public static readonly ATN _ATN =

@@ -67,13 +67,14 @@ assignExpr: Lhs=equality (ASSIGN Rhs=equality)?;
 
 equality: 
     Expr=equality LBRACKET Index=equality RBRACKET
+    | Caller=equality Callee=ID Call=call?
+    | Callee=ID Call=call?
     | Left=equality Op=(DIVIDE | MULTIPLY) Right=equality
     | Left=equality Op=(PLUS | MINUS) Right=equality
     | Left=equality Op=(GREATER_EQUAL | GREATER | LESS_EQUAL | LESS) Right=equality
     | Left=equality Op=(EQUAL | NOT_EQUAL) Right=equality
     | factor
-    | Caller=equality Callee=ID Call=call?
-    | Callee=ID Call=call?
+    
 ;
 
 arrayInitializer: LBRACKET Exprs+=equality (',' Exprs+=equality)* RBRACKET;

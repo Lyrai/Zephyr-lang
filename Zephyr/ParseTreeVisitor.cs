@@ -222,6 +222,7 @@ namespace Zephyr
                 if (context.Caller is not null)
                 {
                     node = Visit(context.Caller);
+                    node = new GetNode(new Token(TokenType.Id, callee.Text, callee.Column, callee.Line), node);
                 }
                 else
                 {
@@ -232,8 +233,8 @@ namespace Zephyr
                 var call = context.call();
                 
                 var arguments = call.funcArguments() is not null ? GetBody(call.funcArguments()) : new List<Node>();
-                var getNode = new GetNode(new Token(TokenType.Id, callee.Text, callee.Column, callee.Line), node);
-                return new FuncCallNode(getNode, node.Token, arguments);
+                //var getNode = new GetNode(new Token(TokenType.Id, callee.Text, callee.Column, callee.Line), node);
+                return new FuncCallNode(node, node.Token, arguments);
             }
             
             if (context.Caller is not null)
@@ -241,6 +242,12 @@ namespace Zephyr
                 var callee = context.ID().Symbol;
                 var calleeToken = new Token(TokenType.Id, callee.Text, callee.Column, callee.Line);
                 return new GetNode(calleeToken, Visit(context.Caller));
+            }
+
+            if (context.Callee is not null)
+            {
+                var callee = context.ID().Symbol;
+                return new VarNode(new Token(TokenType.Id, callee.Text, callee.Column, callee.Line), false);
             }
 
             var op = context.Op;
