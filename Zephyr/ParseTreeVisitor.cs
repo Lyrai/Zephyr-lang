@@ -14,8 +14,9 @@ namespace Zephyr
 
         public override Node VisitStatementList(ZephyrParser.StatementListContext context)
         {
-            var nodes = context.children.Select(Visit).ToList();
-            return new CompoundNode(nodes);
+            
+            //var nodes = context.children.Select(Visit).ToList();
+            return new CompoundNode(GetBody(context));
         }
 
         public override Node VisitFuncDecl(ZephyrParser.FuncDeclContext context)
@@ -56,7 +57,7 @@ namespace Zephyr
             
             var assign = context.ASSIGN().Symbol;
             var assignToken = new Token(TokenType.Assign, assign.Text, assign.Column, assign.Line);
-            return new BinOpNode(assignToken, node, Visit(context.assignExpr()));
+            return new BinOpNode(assignToken, node, Visit(context.equality()));
         }
 
         public override Node VisitTypedVarDecl(ZephyrParser.TypedVarDeclContext context)
@@ -204,11 +205,13 @@ namespace Zephyr
         
         public override Node VisitEquality(ZephyrParser.EqualityContext context)
         {
+            if (context.Equality is not null)
+            {
+                return Visit(context.Equality);
+            }
+            
             if (context.factor() is not null)
                 return Visit(context.factor());
-            
-            if (context.Inner is not null)
-                return Visit(context.Inner);
 
             if (context.Expr is not null)
             {
@@ -216,6 +219,41 @@ namespace Zephyr
                 var index = Visit(context.Index);
 
                 return new IndexNode(expression, index);
+            }
+
+            if (context.call() is not null)
+            {
+                Node node;
+                var callee = context.ID().Symbol;
+                if (context.Caller is not null)
+                {
+                    node = Visit(context.Caller);
+                    node = new GetNode(new Token(TokenType.Id, callee.Text, callee.Column, callee.Line), node);
+                }
+                else
+                {
+                    node = new VarNode(new Token(TokenType.Id, callee.Text, callee.Column, callee.Line), false);
+                }
+
+                
+                var call = context.call();
+                
+                var arguments = call.funcArguments() is not null ? GetBody(call.funcArguments()) : new List<Node>();
+                //var getNode = new GetNode(new Token(TokenType.Id, callee.Text, callee.Column, callee.Line), node);
+                return new FuncCallNode(node, node.Token, arguments);
+            }
+            
+            if (context.Caller is not null)
+            {
+                var callee = context.ID().Symbol;
+                var calleeToken = new Token(TokenType.Id, callee.Text, callee.Column, callee.Line);
+                return new GetNode(calleeToken, Visit(context.Caller));
+            }
+
+            if (context.Callee is not null)
+            {
+                var callee = context.ID().Symbol;
+                return new VarNode(new Token(TokenType.Id, callee.Text, callee.Column, callee.Line), false);
             }
 
             var op = context.Op;
@@ -252,25 +290,7 @@ namespace Zephyr
                 return new UnOpNode(token, Visit(context.factor()));
             }
 
-            return Visit(context.call());
-        }
-
-        public override Node VisitCall(ZephyrParser.CallContext context)
-        {
-            if(context.primary() is not null)
-                return Visit(context.primary());
-            
-            var node = Visit(context.call());
-            if (context.ID() is null)
-            {
-                var arguments = context.funcArguments() is not null ? GetBody(context.funcArguments()) : new List<Node>();
-                return new FuncCallNode(node, node.Token, arguments);
-            }
-
-            var id = context.ID().Symbol;
-            var token = new Token(TokenType.Id, id.Text, id.Column, id.Line);
-            return new GetNode(token, node);
-
+            return Visit(context.primary());
         }
 
         public override Node VisitArrayInitializer(ZephyrParser.ArrayInitializerContext context)
@@ -304,6 +324,11 @@ namespace Zephyr
             if (context.@namespace() is not null)
             {
                 return Visit(context.@namespace());
+            }
+
+            if (context.equality() is not null)
+            {
+                return Visit(context.equality());
             }
 
             var id = context.ID().Symbol;
@@ -358,6 +383,11 @@ namespace Zephyr
             }
 
             return list;
+        }
+
+        protected override Node AggregateResult(Node aggregate, Node nextResult)
+        {
+            return nextResult is null ? aggregate : base.AggregateResult(aggregate, nextResult);
         }
     }
 }
