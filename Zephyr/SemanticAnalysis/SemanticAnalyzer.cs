@@ -576,7 +576,7 @@ namespace Zephyr.SemanticAnalysis
                     symbol.SetType(right);
                     n.Left.SetType(symbol.Type);
                     n.Right.SetType(right);
-                    return right;
+                    return _voidSymbol;
                 }
                 
                 if (n.Left is not VarNode && n.Left is not VarDeclNode && n.Left is not GetNode && n.Left is not IndexNode)
@@ -592,7 +592,7 @@ namespace Zephyr.SemanticAnalysis
                 
 
                 n.SetType(left);
-                return left;
+                return _voidSymbol;
             }
 
             var tokenType = n.Token.Type;
