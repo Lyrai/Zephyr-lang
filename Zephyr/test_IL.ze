@@ -10,8 +10,8 @@ class Test
     field int
     fn tt: asd string -> string {
         if this field > 0 {
-            print this field;
-            this field = this field - 1;
+            print this field
+            this field = this field - 1
             this tt: asd
         }
         "Class"
@@ -23,7 +23,7 @@ fn at: arr ArrayList, idx int -> object {
 }
 
 fn main! {
-    let sw = Stopwatch!;
+    let sw = Stopwatch!
     sw Start!
     let a = {
         print "Hello from block"
@@ -31,7 +31,7 @@ fn main! {
         5
     }
     let hh = if a == 5 { "true" } else { "false" }
-    let nonGeneric = ArrayList!;
+    let nonGeneric = ArrayList!
     nonGeneric Add: 5555
     print nonGeneric at: 0
     
@@ -39,7 +39,7 @@ fn main! {
     print a ToString!
     let g = "asd"
     let arr [int] = [1, 2]
-    print arr[1];
+    print arr[1]
     arr[1] = 4
     print String Concat: "asd", "fgh"
     let ff = "test"
@@ -48,15 +48,15 @@ fn main! {
 
     let b = Test!
     let d = "asd" + 5
-    print d;
+    print d
     b field = 5
-    print "tt: ";
+    print "tt: "
     b tt: "asd"
     print "end"
-    print b field;
+    print b field
 
     Console WriteLine: 6
-    print a;
+    print a
     sw Stop!
     print "Elapsed: " + sw get_ElapsedMilliseconds!
 }

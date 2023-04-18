@@ -2,7 +2,9 @@ lexer grammar ZephyrLexer;
 
 tokens { STRING_LITERAL }
 
-WS: [ \r\t\n] -> skip;
+WS: [ \r\t] -> skip;
+NEWLINE: '\n';
+COMMENT : '#' ~[\r\n]* '\r'? '\n' -> skip ;
 CLASS: 'class';
 END: 'end';
 PRINT: 'print';
