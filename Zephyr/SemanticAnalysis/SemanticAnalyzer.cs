@@ -130,7 +130,7 @@ namespace Zephyr.SemanticAnalysis
                 _table = _table.Parent;
                 n.Symbol = symbol;
 
-                return null;
+                return _voidSymbol;
             }
 
             if (!CanCast(bodyType, returnType))
@@ -139,7 +139,7 @@ namespace Zephyr.SemanticAnalysis
             }
 
             n.Replace(n.Body, new ConversionNode(bodyType, returnType, n.Body));
-            return null;
+            return _voidSymbol;
 
         }
 
@@ -370,7 +370,7 @@ namespace Zephyr.SemanticAnalysis
             Visit(n.Body);
             _table = enclosing;
             
-            return null;
+            return _voidSymbol;
         }
 
         public object VisitVarNode(VarNode n)
@@ -444,7 +444,7 @@ namespace Zephyr.SemanticAnalysis
 
             _table = _table.Parent;
             _currentClassSymbol = prev;
-            return null;
+            return _voidSymbol;
         }
 
         public object VisitGetNode(GetNode n)
