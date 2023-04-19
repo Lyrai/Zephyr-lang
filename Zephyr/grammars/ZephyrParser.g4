@@ -5,6 +5,7 @@ options { tokenVocab = ZephyrLexer; }
 program: statementList EOF;
 statementList: (statement NEWLINE*)*;
 statement: 
+    NEWLINE* 
     (decl
     | printStmt
     | returnStmt 
