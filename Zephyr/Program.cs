@@ -1,24 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
-using System.Reflection.Metadata;
-using Zephyr.Interpreting;
+﻿using System.Diagnostics;
 using Zephyr.SemanticAnalysis;
 using Antlr4.Runtime;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CodeGen;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Emit;
-using Microsoft.CodeAnalysis.CSharp.Symbols;
-using Microsoft.CodeAnalysis.Emit;
-using Zephyr.Compiling;
 using Zephyr.Compiling.Roslyn;
-using BindingDiagnosticBag = Microsoft.CodeAnalysis.CSharp.BindingDiagnosticBag;
-using MethodBody = Microsoft.CodeAnalysis.CodeGen.MethodBody;
-using MethodCompiler = Microsoft.CodeAnalysis.CSharp.MethodCompiler;
 
 namespace Zephyr
 {
