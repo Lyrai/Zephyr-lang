@@ -112,7 +112,7 @@ namespace Zephyr
 
             if (!options.ContainsKey("output"))
             {
-                options["output"] = Path.ChangeExtension(options["input"], "exe");
+                options["output"] = Path.ChangeExtension(Path.GetFileName(options["input"]), "exe");
             }
 
             return options;
