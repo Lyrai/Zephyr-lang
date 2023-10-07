@@ -431,7 +431,7 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<(Declaration, Symb
             DeclarationModifiers.Public,
             SingleTypeDeclaration.TypeDeclarationFlags.HasAnyNontypeMembers,
             null,
-            new LocationTest(0, position),
+            new ZephyrSourceLocation(0, position),
             members, 
             ImmutableArray<SingleTypeDeclaration>.Empty, 
             ImmutableArray<Diagnostic>.Empty, 
