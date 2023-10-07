@@ -15,6 +15,7 @@ using Microsoft.CodeAnalysis.CSharp.Symbols.PublicModel;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.PooledObjects;
+using Microsoft.CodeAnalysis.Text;
 using Roslyn.Utilities;
 using Zephyr.LexicalAnalysis.Tokens;
 using Zephyr.SemanticAnalysis.Symbols;
@@ -106,7 +107,7 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<(Declaration, Symb
             globalNamespaceMembers = globalNamespaceMembers.Add(decl);
         }*/
 
-        var globalClass = CreateClassDeclaration(GlobalClassName, _classes[GlobalClassName]);
+        var globalClass = CreateClassDeclaration(GlobalClassName, _classes[GlobalClassName], 0);
         globalNamespaceMembers = globalNamespaceMembers.Add(globalClass);
         
         _globalNamespace = CreateNamespaceSymbol("<global namespace>", globalNamespaceMembers);
@@ -284,7 +285,7 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<(Declaration, Symb
         
         _emitContext.Pop();
 
-        return (CreateClassDeclaration(n.Name, _classes[n.Name]), null);
+        return (CreateClassDeclaration(n.Name, _classes[n.Name], n.Token.Line), null);
 
         /*var methodsAdded = n
             .GetChildren()
@@ -388,7 +389,7 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<(Declaration, Symb
     }
 #endif
 
-    private SingleTypeDeclaration CreateClassDeclaration(string name, ImmutableSegmentedDictionary<string, VoidResult> members)
+    private SingleTypeDeclaration CreateClassDeclaration(string name, ImmutableSegmentedDictionary<string, VoidResult> members, int position)
     {
         return new SingleTypeDeclaration(DeclarationKind.Class,
             name,
@@ -396,7 +397,7 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<(Declaration, Symb
             DeclarationModifiers.Public,
             SingleTypeDeclaration.TypeDeclarationFlags.None,
             null,
-            null,
+            new LocationTest(0, position),
             members, 
             ImmutableArray<SingleTypeDeclaration>.Empty, 
             ImmutableArray<Diagnostic>.Empty, 
@@ -423,7 +424,7 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<(Declaration, Symb
     private MethodSymbolTest CreateMethodSymbol(SourceNamedTypeSymbol containingType, FuncDeclNode n)
     {
         var returnType = _compilation.Assembly.GetTypeByMetadataName(n.Symbol.ReturnType.GetNetFullName());
-        var symbol = new MethodSymbolTest(containingType, false, returnType);
+        var symbol = new MethodSymbolTest(containingType, false, returnType, n);
         int i = 0;
         var parameters = new List<ParameterSymbol>();
         foreach (var param in n.Parameters)
@@ -448,10 +449,16 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<(Declaration, Symb
 
 class MethodSymbolTest : SourceMemberMethodSymbol
 {
-    public MethodSymbolTest(NamedTypeSymbol containingType, bool isIterator, TypeSymbol returnType) : base(containingType, null, null, isIterator)
+    public MethodSymbolTest(NamedTypeSymbol containingType, bool isIterator, TypeSymbol returnType, FuncDeclNode n) : base(containingType, null, null, isIterator)
     {
         _parameterSymbols = ImmutableArray<ParameterSymbol>.Empty;
         _returnType = TypeWithAnnotations.Create(returnType);
+        _sortKey = new LexicalSortKey(0, n.Token.Line);
+    }
+
+    internal override LexicalSortKey GetLexicalSortKey()
+    {
+        return _sortKey;
     }
 
     public override bool IsVararg { get => false; }
@@ -488,6 +495,8 @@ class MethodSymbolTest : SourceMemberMethodSymbol
     }
 
     internal override bool IsExpressionBodied { get => false; }
+
+    private LexicalSortKey _sortKey;
 }
 
 class ParameterSymbolTest : ParameterSymbol
