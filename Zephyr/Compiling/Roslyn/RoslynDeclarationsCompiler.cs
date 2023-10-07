@@ -95,6 +95,31 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<(Declaration, Symb
             //globalClass = globalClass.AddMembers(member);
             _emitContext.Pop();
         }
+        
+        if (!_functions.ContainsKey(GlobalClassName + QualifiedNameSeparator + ".ctor"))
+        {
+            var ctorName = GlobalClassName + QualifiedNameSeparator + ".ctor";
+            if (!_functions.ContainsKey(ctorName))
+            {
+                var ctorNode = new FuncDeclNode(
+                    new Token(TokenType.Id, ".ctor", 0, 0),
+                    new NoOpNode(),
+                    new List<Node>(), GlobalClassName
+                );
+
+                ctorNode.Symbol = new FuncSymbol
+                {
+                    Name = ".ctor",
+                    Body = new CompoundNode(new List<Node>()),
+                    ReturnType = new SemanticAnalysis.Symbols.TypeSymbol(GlobalClassName),
+                    Parameters = new List<VarSymbol>(),
+                    Type = new SemanticAnalysis.Symbols.TypeSymbol("function")
+                };
+            
+                _functions.Add(ctorName, ctorNode);
+                _classes[GlobalClassName] = _classes[GlobalClassName].Add(".ctor", new VoidResult());
+            }
+        }
 
         /*if (globalClass is not null)
         {
@@ -125,12 +150,16 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<(Declaration, Symb
 
             _typeSymbols.Push(globalClassSymbol);
             var (_, symbol) = Visit(child);
+            if (symbol is MethodSymbolTest s)
+            {
+                s.SetStatic();
+            }
             globalClassMembers[(child as FuncDeclNode).Name] = new List<Symbol> {symbol}.ToImmutableArray();
             _typeSymbols.Pop();
         }
 
         globalClassSymbol.SetMembersDictionary(globalClassMembers);
-        
+
         foreach (var symbol in _globalNamespace.GetMembersUnordered().OfType<SourceNamedTypeSymbol>())
         {
             symbol.ResetMembersAndInitializers();
@@ -210,7 +239,7 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<(Declaration, Symb
     {
         Debug.Assert(_compilationFinished);
         Debug.Assert(_functions.ContainsKey(EntryPointQualifiedName));
-        var symbol = GetSymbol(moduleBuilder, GlobalClassName, EntryPointName) as MethodSymbol;
+        var symbol = GetSymbol(moduleBuilder, GlobalClassName, EntryPointName) as MethodSymbolTest;
 
         var diagnostics = DiagnosticBag.GetInstance();
         moduleBuilder.SetPEEntryPoint(symbol, diagnostics);
@@ -428,13 +457,13 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<(Declaration, Symb
 
     private MethodSymbolTest CreateMethodSymbol(SourceNamedTypeSymbol containingType, FuncDeclNode n)
     {
-        var returnType = _compilation.Assembly.GetTypeByMetadataName(n.Symbol.ReturnType.GetNetFullName());
+        var returnType = _compilation.Assembly.GetTypeByMetadataName(n.Symbol.ReturnType.GetNetFullName(), true, true, out _);
         var symbol = new MethodSymbolTest(containingType, false, returnType, n);
         int i = 0;
         var parameters = new List<ParameterSymbol>();
         foreach (var param in n.Parameters)
         {
-            var type = _compilation.Assembly.GetTypeByMetadataName(param.TypeSymbol.GetNetFullName());
+            var type = _compilation.Assembly.GetTypeByMetadataName(param.TypeSymbol.GetNetFullName(), true, true, out _);
             var paramSymbol = new ParameterSymbolTest(symbol, i, type);
             parameters.Add(paramSymbol);
             ++i;
@@ -447,7 +476,7 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<(Declaration, Symb
 
     private FieldSymbolTest CreateFieldSymbol(SourceNamedTypeSymbol containingType, VarDeclNode n)
     {
-        var type = _compilation.Assembly.GetTypeByMetadataName(n.TypeSymbol.GetNetFullName());
+        var type = _compilation.Assembly.GetTypeByMetadataName(n.TypeSymbol.GetNetFullName(), true, true, out _);
         return new FieldSymbolTest(containingType, n.Variable.Name, type);
     }
 }
@@ -459,12 +488,16 @@ class MethodSymbolTest : SourceMemberMethodSymbol
         _parameterSymbols = ImmutableArray<ParameterSymbol>.Empty;
         _returnType = TypeWithAnnotations.Create(returnType);
         _sortKey = new LexicalSortKey(0, n.Token.Line);
+        Name = n.Name;
     }
 
     internal override LexicalSortKey GetLexicalSortKey()
     {
         return _sortKey;
     }
+
+    public override Accessibility DeclaredAccessibility { get => Accessibility.Public; }
+    public override string Name { get; }
 
     public override bool IsVararg { get => false; }
     public override RefKind RefKind { get => RefKind.None; }
@@ -497,6 +530,11 @@ class MethodSymbolTest : SourceMemberMethodSymbol
     public void SetParameters(ImmutableArray<ParameterSymbol> parameters)
     {
         _parameterSymbols = parameters;
+    }
+
+    public void SetStatic()
+    {
+        DeclarationModifiers |= DeclarationModifiers.Static;
     }
 
     internal override bool IsExpressionBodied { get => false; }

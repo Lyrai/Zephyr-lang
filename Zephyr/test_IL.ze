@@ -6,62 +6,61 @@ fn test: t string -> string
     t + " test"
 
 
-#class Test
-#    field int
-#    fn tt: asd string -> string {
-#        if this field > 0 {
-#            print this field
-#            this field = this field - 1
-#            this tt: asd
-#        }
-#        "Class"
-#    }
-#end
+class Test
+    field int
+    fn tt: asd string -> string {
+        if this field > 0 {
+            print this field
+            this field = this field - 1
+            this tt: asd
+        }
+        "Class"
+    }
+end
 
-#class Test2
-#    field int
-#end
+class Test2
+    field int
+end
 
-#fn at: arr ArrayList, idx int -> object {
-#    arr get_Item: idx
-#}
+fn at: arr ArrayList, idx int -> object {
+    arr get_Item: idx
+}
 
 fn main! {
-    print "Hello world"
-    #let sw = Stopwatch!
-    #sw Start!
-    #let a = {
-    #    print "Hello from block"
-    #    "This should be dropped"
-    #    5
-    #}
-    #let hh = if a == 5 { "true" } else { "false" }
-    #let nonGeneric = ArrayList!
-    #nonGeneric Add: 5555
-    #print nonGeneric at: 0
+    let sw = Stopwatch!
+    sw Start!
+    let a = {
+        print "Hello from block"
+        "This should be dropped"
+        5
+    }
+    let hh = if a == 5 { "true" } else { "false" }
+    let nonGeneric = ArrayList!
+    nonGeneric Add: 5555
+    print nonGeneric at: 0
     
 	
-    #print a ToString!
-    #let g = "asd"
-    #let arr [int] = [1, 2]
-    #print arr[1]
-    #arr[1] = 4
-    #print String Concat: "asd", "fgh"
-    #let ff = "test"
-    #print ff Contains: "es"
-    #print "asd" test!
+    print a ToString!
+    let g = "asd"
+    let arr [int] = [1, 2]
+    print arr[1]
+    arr[1] = 4
+    print String Concat: "asd", "fgh"
+    let ff = "test"
+    print ff Contains: "es"
+    print "asd" test!
 
-    #let b = Test!
-    #let d = "asd" + 5
-    #print d
-    #b field = 5
-    #print "tt: "
-    #b tt: "asd"
-    #print "end"
-    #print b field
+    let b = Test!
+    let d = "asd" + 5
+    print d
+    b field = 5
+    print "tt: "
+    b tt: "asd"
+    print "end"
+    print b field
 
-    #Console WriteLine: 6
-    #print a
-    #sw Stop!
-    #print "Elapsed: " + sw get_ElapsedMilliseconds!
+    Console WriteLine: 6
+    print a
+    sw Stop!
+    print "Elapsed: " + sw get_ElapsedMilliseconds!
 }

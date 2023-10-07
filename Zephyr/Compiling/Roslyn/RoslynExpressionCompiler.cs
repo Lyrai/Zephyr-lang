@@ -39,7 +39,7 @@ internal class RoslynExpressionCompiler: BaseRoslynCompiler<object>
     public void Compile(ImmutableDictionary<string, Node> functions)
     {
         var bindingDiagnostics = new BindingDiagnosticBag(DiagnosticBag.GetInstance());
-        /*var embeddedTextsCompiler = new Microsoft.CodeAnalysis.CSharp.MethodCompiler(
+        var embeddedTextsCompiler = new Microsoft.CodeAnalysis.CSharp.MethodCompiler(
             _compilation,
             _moduleBuilder,
             false,
@@ -49,7 +49,7 @@ internal class RoslynExpressionCompiler: BaseRoslynCompiler<object>
             null,
             null,
             CancellationToken.None);
-        embeddedTextsCompiler.CompileSynthesizedMethods(_moduleBuilder.GetEmbeddedTypes(bindingDiagnostics), bindingDiagnostics);*/
+        embeddedTextsCompiler.CompileSynthesizedMethods(_moduleBuilder.GetEmbeddedTypes(bindingDiagnostics), bindingDiagnostics);
         
         foreach (var (qualifiedName, node) in functions)
         {
