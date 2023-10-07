@@ -128,8 +128,14 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<(Declaration, Symb
             globalClassMembers[(child as FuncDeclNode).Name] = new List<Symbol> {symbol}.ToImmutableArray();
             _typeSymbols.Pop();
         }
-        
+
         globalClassSymbol.SetMembersDictionary(globalClassMembers);
+        
+        foreach (var symbol in _globalNamespace.GetMembersUnordered().OfType<SourceNamedTypeSymbol>())
+        {
+            symbol.ResetMembersAndInitializers();
+            symbol.BuildMembersAndInitializers(BindingDiagnosticBag.GetInstance());
+        }
         /*foreach (var classDecl in globalNamespaceMembers)
         {
             var symbol = _globalNamespace
@@ -163,7 +169,6 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<(Declaration, Symb
 
         //_compilation = _compilation.AddSyntaxTrees(CSharpSyntaxTree.Create(compilationUnit));
         (_compilation.SourceModule as SourceModuleSymbol).SetGlobalNamespace(_globalNamespace);
-        _globalNamespace.GetMembers();
         //var s = _compilation.SourceModule.GlobalNamespace.GetMembers();
         //_compilation.SourceModule.GlobalNamespace;
         /*var _ = _compilation.SourceAssembly.Modules[0].GlobalNamespace;
@@ -395,7 +400,7 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<(Declaration, Symb
             name,
             0,
             DeclarationModifiers.Public,
-            SingleTypeDeclaration.TypeDeclarationFlags.None,
+            SingleTypeDeclaration.TypeDeclarationFlags.HasAnyNontypeMembers,
             null,
             new LocationTest(0, position),
             members, 
