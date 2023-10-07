@@ -134,7 +134,7 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<(Declaration, Symb
         foreach (var symbol in _globalNamespace.GetMembersUnordered().OfType<SourceNamedTypeSymbol>())
         {
             symbol.ResetMembersAndInitializers();
-            symbol.BuildMembersAndInitializers(BindingDiagnosticBag.GetInstance());
+            symbol.GetMembersAndInitializers();
         }
         /*foreach (var classDecl in globalNamespaceMembers)
         {
