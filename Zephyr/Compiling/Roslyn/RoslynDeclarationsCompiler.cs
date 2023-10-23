@@ -1,26 +1,28 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-
-using System.Collections;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Reflection;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Collections;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Emit;
 using Microsoft.CodeAnalysis.CSharp.Symbols;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Emit;
-using Microsoft.CodeAnalysis.PooledObjects;
+using Roslyn.Utilities;
 using Zephyr.LexicalAnalysis.Tokens;
+using Zephyr.SemanticAnalysis.Symbols;
 using Zephyr.SyntaxAnalysis.ASTNodes;
+using BindingDiagnosticBag = Microsoft.CodeAnalysis.CSharp.BindingDiagnosticBag;
+using ParameterSymbol = Microsoft.CodeAnalysis.CSharp.Symbols.ParameterSymbol;
+using Symbol = Microsoft.CodeAnalysis.CSharp.Symbol;
 
 namespace Zephyr.Compiling.Roslyn;
 
-internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<MemberDeclarationSyntax>
+internal class RoslynDeclarationsCompiler : BaseRoslynCompiler<Declaration>
 {
     private readonly Dictionary<string, Node> _functions = new();
+    private PEModuleBuilder _moduleBuilder;
+    private readonly Stack<string> _emitContext = new();
+    private Dictionary<string, ImmutableSegmentedDictionary<string, VoidResult>> _classes = new();
 
     public RoslynDeclarationsCompiler(string assemblyName)
     {
@@ -42,44 +44,59 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<MemberDeclarationS
             metadataImportOptions: MetadataImportOptions.All));
     }
 
-    private readonly Stack<string> _emitContext = new();
-
-    public ImmutableDictionary<string, Node> Compile(Node n)
+    public (ImmutableDictionary<string, Node>, ImmutableArray<SingleNamespaceOrTypeDeclaration>) Compile(Node n)
     {
         RestartCompiler();
-        
+
         Debug.Assert(n is CompoundNode);
         var node = n as CompoundNode;
-        ClassDeclarationSyntax globalClass = null;
-        var compilationUnit = SyntaxFactory.CompilationUnit();
-        
+
+        var globalNamespaceMembers = ImmutableArray<SingleNamespaceOrTypeDeclaration>.Empty;
+        _classes[GlobalClassName] = ImmutableSegmentedDictionary<string, VoidResult>.Empty;
+
         foreach (var child in node.GetChildren().Where(node => node is not UseNode))
         {
             if (child is ClassNode)
             {
-                compilationUnit = compilationUnit.AddMembers(Visit(child));
+                var decl = Visit(child);
+                globalNamespaceMembers = globalNamespaceMembers.Add((SingleTypeDeclaration)decl);
                 continue;
             }
 
-            globalClass ??= SyntaxFactory
-                .ClassDeclaration(GlobalClassName)
-                .WithModifiers(GetKeywords(SyntaxKind.StaticKeyword));
-
             _emitContext.Push(GlobalClassName);
-            var member = Visit(child)
-                .WithModifiers(GetKeywords(SyntaxKind.StaticKeyword));
-            globalClass = globalClass.AddMembers(member);
+            Visit(child);
             _emitContext.Pop();
         }
 
-        if (globalClass is not null)
+        if (!_functions.ContainsKey(GlobalClassName + QualifiedNameSeparator + ".ctor"))
         {
-            compilationUnit = compilationUnit.AddMembers(globalClass);
+            var ctorName = GlobalClassName + QualifiedNameSeparator + ".ctor";
+            if (!_functions.ContainsKey(ctorName))
+            {
+                var ctorNode = new FuncDeclNode(
+                    new Token(TokenType.Id, ".ctor", 0, 0),
+                    new NoOpNode(),
+                    new List<Node>(), GlobalClassName
+                );
+
+                ctorNode.Symbol = new FuncSymbol
+                {
+                    Name = ".ctor",
+                    Body = new CompoundNode(new List<Node>()),
+                    ReturnType = new SemanticAnalysis.Symbols.TypeSymbol(GlobalClassName),
+                    Parameters = new List<VarSymbol>(),
+                    Type = new SemanticAnalysis.Symbols.TypeSymbol("function")
+                };
+
+                _functions.Add(ctorName, ctorNode);
+                _classes[GlobalClassName] = _classes[GlobalClassName].Add(".ctor", new VoidResult());
+            }
         }
 
-        _compilation = _compilation.AddSyntaxTrees(CSharpSyntaxTree.Create(compilationUnit));
-        
-        return _functions.ToImmutableDictionary();
+        var globalClass = CreateClassDeclaration(GlobalClassName, _classes[GlobalClassName], 0);
+        globalNamespaceMembers = globalNamespaceMembers.Add(globalClass);
+
+        return (_functions.ToImmutableDictionary(), globalNamespaceMembers);
     }
 
     protected override void RestartCompiler()
@@ -89,9 +106,13 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<MemberDeclarationS
         base.RestartCompiler();
     }
 
-    public PEModuleBuilder CreateModuleBuilder(CSharpCompilation compilation)
+    public PEModuleBuilder GetModuleBuilder(CSharpCompilation compilation)
     {
-        Debug.Assert(_compilationFinished);
+        if (_moduleBuilder is not null)
+        {
+            return _moduleBuilder;
+        }
+
         return compilation.CreateModuleBuilder(
             EmitOptions.Default,
             null,
@@ -108,11 +129,11 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<MemberDeclarationS
     {
         Debug.Assert(_compilationFinished);
         Debug.Assert(_functions.ContainsKey(EntryPointQualifiedName));
-        var symbol = GetSymbol(moduleBuilder, GlobalClassName, EntryPointName) as MethodSymbol;
+        var symbol = GetSymbol(moduleBuilder, GlobalClassName, EntryPointName) as ZephyrMethodSymbol;
 
         var diagnostics = DiagnosticBag.GetInstance();
         moduleBuilder.SetPEEntryPoint(symbol, diagnostics);
-        
+
         if (diagnostics.Count > 0)
         {
             foreach (var diagnostic in diagnostics.AsEnumerable())
@@ -123,31 +144,21 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<MemberDeclarationS
             throw new InvalidOperationException("Could not set entry point");
         }
     }
-    
+
     public override void CompilationFinished()
     {
         Debug.Assert(_emitContext.Count == 0);
         base.CompilationFinished();
     }
 
-    public override MemberDeclarationSyntax VisitClassNode(ClassNode n)
+    public override Declaration VisitClassNode(ClassNode n)
     {
-        var classNode = SyntaxFactory.ClassDeclaration(n.Name);
-        
         _emitContext.Push(n.Name);
-        var methodsAdded = n
-            .GetChildren()
-            .OfType<FuncDeclNode>()
-            .Aggregate(classNode,
-                (current, method) => current.AddMembers(Visit(method))
-            );
-
-        var fieldsAdded = n
-            .GetChildren()
-            .OfType<VarDeclNode>()
-            .Aggregate(methodsAdded,
-                (current, field) => current.AddMembers(Visit(field))
-            );
+        _classes[n.Name] = ImmutableSegmentedDictionary<string, VoidResult>.Empty;
+        foreach (var child in n.GetChildren())
+        {
+            Visit(child);
+        }
 
         var ctorName = n.Name + QualifiedNameSeparator + ".ctor";
         if (!_functions.ContainsKey(ctorName))
@@ -157,65 +168,49 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<MemberDeclarationS
                 new NoOpNode(),
                 new List<Node>(), n.Name
             );
-            
+
+            ctorNode.Symbol = new FuncSymbol
+            {
+                Name = ".ctor",
+                Body = new CompoundNode(new List<Node>()),
+                ReturnType = new SemanticAnalysis.Symbols.TypeSymbol(n.Name),
+                Parameters = new List<VarSymbol>(),
+                Type = new SemanticAnalysis.Symbols.TypeSymbol("function")
+            };
+
             _functions.Add(ctorName, ctorNode);
+            _classes[n.Name] = _classes[n.Name].Add(".ctor", new VoidResult());
         }
-        
+
         _emitContext.Pop();
 
-        return fieldsAdded;
+        return CreateClassDeclaration(n.Name, _classes[n.Name], n.Token.Line);
     }
 
-    public override MemberDeclarationSyntax VisitFuncDeclNode(FuncDeclNode n)
+    public override Declaration VisitFuncDeclNode(FuncDeclNode n)
     {
-        var name = _emitContext.Peek() == n.Name ? ".ctor" : n.Name;
-        var parameters = n.Parameters.Select(
-            x => SyntaxFactory
-                .Parameter(
-                    SyntaxFactory.List<AttributeListSyntax>(),
-                    SyntaxFactory.TokenList(),
-                    SyntaxFactory.ParseTypeName(x.TypeSymbol.GetNetFullName()),
-                    SyntaxFactory.ParseToken(x.Token.Value.ToString()),
-                    null)
-            );
-        
-        var methodNode = SyntaxFactory
-            .MethodDeclaration(SyntaxFactory.ParseTypeName(n.ReturnType), name)
-            .WithParameterList(SyntaxFactory.ParameterList(SyntaxFactory.SeparatedList(parameters)))
-            .WithModifiers(GetKeywords(SyntaxKind.PublicKeyword));
-            
-        if (n.Name == "main")
-        {
-            methodNode = methodNode.WithModifiers(new SyntaxTokenList(SyntaxFactory.Token(SyntaxKind.StaticKeyword)));
-        }
-        
+        var className = _emitContext.Peek();
+        var name = className == n.Name ? ".ctor" : n.Name;
+        _classes[className] = _classes[className].Add(name, new VoidResult());
+
         Debug.Assert(_emitContext.Count == 1);
         _functions.Add(_emitContext.Peek() + QualifiedNameSeparator + n.Name, n);
 
-        return methodNode;
+        return null;
     }
 
-    public override MemberDeclarationSyntax VisitVarDeclNode(VarDeclNode n)
+    public override Declaration VisitVarDeclNode(VarDeclNode n)
     {
-        var syntaxList = SyntaxFactory
-            .SeparatedList<VariableDeclaratorSyntax>()
-            .Add(SyntaxFactory.VariableDeclarator(n.Variable.Name));
-        
-        return SyntaxFactory
-            .FieldDeclaration(SyntaxFactory.VariableDeclaration(SyntaxFactory.ParseTypeName(n.TypeSymbol.Name), syntaxList))
-            .WithModifiers(GetKeywords(SyntaxKind.PublicKeyword));
+        var className = _emitContext.Peek();
+        _classes[className] = _classes[className].Add(n.Variable.Name, new VoidResult());
+        return null;
     }
 
-    public override MemberDeclarationSyntax VisitUseNode(UseNode n)
+    public override Declaration VisitUseNode(UseNode n)
     {
         return null;
     }
 
-    private SyntaxTokenList GetKeywords(params SyntaxKind[] keywords)
-    {
-        return new SyntaxTokenList(keywords.Select(SyntaxFactory.Token));
-    }
-    
 #if NET472
     private Assembly GetAssembly(string name)
     {
@@ -225,4 +220,21 @@ internal class RoslynDeclarationsCompiler: BaseRoslynCompiler<MemberDeclarationS
             .FirstOrDefault(asm => asm.GetName().Name == name);
     }
 #endif
+
+    private SingleTypeDeclaration CreateClassDeclaration(string name,
+        ImmutableSegmentedDictionary<string, VoidResult> members, int position)
+    {
+        return new SingleTypeDeclaration(DeclarationKind.Class,
+            name,
+            0,
+            DeclarationModifiers.Public,
+            SingleTypeDeclaration.TypeDeclarationFlags.HasAnyNontypeMembers,
+            null,
+            new ZephyrSourceLocation(0, position),
+            members,
+            ImmutableArray<SingleTypeDeclaration>.Empty,
+            ImmutableArray<Diagnostic>.Empty,
+            QuickAttributes.None
+        );
+    }
 }

@@ -42,7 +42,9 @@ namespace Zephyr
                 //interpreter.Interpret();
                 //sw.Stop();
                 var roslynCompiler = new RoslynDeclarationsCompiler("Test");
-                var functions = roslynCompiler.Compile(nodeTree);
+                var (functions, globalNamespaceMembers) = roslynCompiler.Compile(nodeTree);
+                var symbolsCompiler = new RoslynSymbolsCompiler(roslynCompiler, globalNamespaceMembers);
+                symbolsCompiler.CreateSymbols(nodeTree);
                 var expressionCompiler = new RoslynExpressionCompiler(roslynCompiler);
                 expressionCompiler.Compile(functions);
                 expressionCompiler.CompilationFinished();

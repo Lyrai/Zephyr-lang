@@ -509,7 +509,7 @@ internal class MethodCompiler: INodeVisitor<object>
         return _moduleBuilder
             .Compilation
             .Assembly
-            .GetTypeByMetadataName(type.GetNetFullName(), true, true, out _) as TypeSymbol;
+            .GetType(type);
     }
 
     private MethodSymbol ResolveMethod(ZephyrTypeSymbol type, string methodName, params ZephyrTypeSymbol[] paramsTypes)

@@ -32,7 +32,7 @@ internal class RoslynExpressionCompiler: BaseRoslynCompiler<object>
     {
         compiler.CompilationFinished();
         _compilation = compiler.Compilation;
-        _moduleBuilder = compiler.CreateModuleBuilder(_compilation);
+        _moduleBuilder = compiler.GetModuleBuilder(_compilation);
         compiler.SetEntryPoint(_moduleBuilder);
     }
 

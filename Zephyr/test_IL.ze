@@ -18,6 +18,10 @@ class Test
     }
 end
 
+class Test2
+    field int
+end
+
 fn at: arr ArrayList, idx int -> object {
     arr get_Item: idx
 }
